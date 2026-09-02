@@ -24,3 +24,4 @@ venv/
 #data 
 data/processed/*
 !data/processed/.gitkeep
+docs/data/*.jsonl
