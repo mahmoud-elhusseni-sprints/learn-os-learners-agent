@@ -481,6 +481,148 @@ def test_fixture_carries_no_leaked_github_handle():
     assert "MoHatemTC" not in raw
 
 
+# ------------------------------------------------- provenance & edge payloads
+
+
+def test_provenance_carries_the_full_brief_tuple():
+    """source_system, source_id, timestamp, evidence_type - all four."""
+    ev = _evidence()
+    p = ev.provenance
+    assert p.source_system is M.SourceSystem.LMS
+    assert p.source_id
+    assert p.observed_at.tzinfo is not None
+    assert p.evidence_type is ev.evidence_type
+
+
+def test_evidence_type_is_mirrored_onto_provenance():
+    ev = _evidence(evidence_type=M.EvidenceType.OBSERVED_BEHAVIOR)
+    assert ev.provenance.evidence_type is M.EvidenceType.OBSERVED_BEHAVIOR
+
+
+def test_contradictory_evidence_type_rejected():
+    prov = _prov(evidence_type=M.EvidenceType.SELF_DECLARED)
+    try:
+        M.Evidence(
+            id=deterministic_id("x", "y", "clash"),
+            created_at=NOW,
+            provenance=prov,
+            evidence_type=M.EvidenceType.DIRECT_ASSESSMENT,
+            strength=M.EvidenceStrength.HIGH,
+            title="t",
+            content="c",
+            observed_at=NOW,
+        )
+    except Exception as e:
+        assert "contradicts" in str(e)
+    else:
+        raise AssertionError("contradictory evidence_type accepted")
+
+
+def test_structural_nodes_have_no_evidence_type():
+    """Provenance on a Learner is not evidence, so the field stays None."""
+    assert _learner().provenance.evidence_type is None
+
+
+def test_derived_from_edge_carries_a_locator():
+    ev, sub = _evidence(), M.Submission(
+        id=deterministic_id("vi", "submission", "p"),
+        created_at=NOW,
+        provenance=_prov(),
+        kind="link",
+    )
+    edge = _edge(
+        M.EdgeType.DERIVED_FROM,
+        ev,
+        sub,
+        source_locator="rubric_point:102",
+        excerpt="the grader said this",
+        extraction_confidence=0.85,
+    )
+    assert edge.properties["source_locator"] == "rubric_point:102"
+    assert edge.properties["extraction_confidence"] == 0.85
+
+
+def test_edge_property_ranges_are_enforced():
+    ev, sub = _evidence(), M.Submission(
+        id=deterministic_id("vi", "submission", "q"),
+        created_at=NOW,
+        provenance=_prov(),
+        kind="link",
+    )
+    try:
+        _edge(M.EdgeType.DERIVED_FROM, ev, sub, extraction_confidence=1.7)
+    except Exception as e:
+        assert "less than or equal to 1" in str(e)
+    else:
+        raise AssertionError("out-of-range edge confidence accepted")
+
+
+def test_submission_url_must_be_absolute():
+    try:
+        M.Submission(
+            id=deterministic_id("vi", "submission", "bad"),
+            created_at=NOW,
+            provenance=_prov(),
+            kind="link",
+            submission_url="github.com/x/y",
+        )
+    except Exception as e:
+        assert "absolute URL" in str(e)
+    else:
+        raise AssertionError("relative submission_url accepted")
+
+
+def test_assessment_criteria_breakdown_must_not_exceed_total():
+    try:
+        M.Assessment(
+            id=deterministic_id("ae", "assessment", "x"),
+            created_at=NOW,
+            provenance=_prov(),
+            assessment_kind="grader_call",
+            criteria_total=3,
+            criteria_met=2,
+            criteria_partial=2,
+            criteria_unmet=2,
+        )
+    except Exception as e:
+        assert "exceeds" in str(e)
+    else:
+        raise AssertionError("impossible criteria breakdown accepted")
+
+
+def test_fixture_populates_the_core_entity_properties():
+    """Submission / Assessment / Meeting / Interaction carry real values."""
+    g = _fixture()
+    sub = g.by_label("Submission")[0]
+    assert sub.submitted_at and sub.kind
+    assess = next(
+        a for a in g.by_label("Assessment") if a.criteria_total  # type: ignore[attr-defined]
+    )
+    assert assess.criteria_total == (
+        assess.criteria_met + assess.criteria_partial + assess.criteria_unmet
+    )
+    meeting = next(m for m in g.by_label("Meeting") if m.zoom_meeting_id)
+    assert meeting.kind and meeting.starts_at_utc
+    inter = g.by_label("Interaction")[0]
+    assert inter.entry_index is not None and inter.initiated_by
+
+
+def test_fixture_edges_carry_typed_properties():
+    g = _fixture()
+    with_props = [e for e in g.edges if e.properties]
+    assert len(with_props) > 300, f"only {len(with_props)} edges carry properties"
+    derived = [e for e in g.edges if e.type is M.EdgeType.DERIVED_FROM]
+    located = [e for e in derived if e.properties.get("source_locator")]
+    assert located, "no DERIVED_FROM edge carries a source_locator"
+
+
+def test_submission_artifact_count_matches_edges():
+    g = _fixture()
+    for sub in g.by_label("Submission"):
+        edges = g.edges_of(M.EdgeType.CONTAINS_ARTIFACT, source_id=sub.id)
+        assert sub.artifact_count == len(edges)  # type: ignore[attr-defined]
+
+
 # ---------------------------------------------------------------- cypher export
 
 

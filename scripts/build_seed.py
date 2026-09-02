@@ -325,6 +325,7 @@ class SeedBuilder:
         self.build_skill_assertions(learner)
         self.build_career_goal(learner)
         self.build_employer_access()
+        self.backfill_derived_counts()
         return M.LearnerGraph(
             generated_at=INGESTED_AT,
             description=(
@@ -337,6 +338,23 @@ class SeedBuilder:
             nodes=self.nodes,
             edges=self.edges,
         )
+
+    def backfill_derived_counts(self) -> None:
+        """Fill counters that are only knowable once the graph is complete.
+
+        ``Submission.artifact_count`` depends on how many artifacts the grader
+        ended up citing, which is not known while the submission node is being
+        created.
+        """
+        per_submission: dict[Any, int] = {}
+        for edge in self.edges:
+            if edge.type is M.EdgeType.CONTAINS_ARTIFACT:
+                per_submission[edge.source_id] = (
+                    per_submission.get(edge.source_id, 0) + 1
+                )
+        for node in self.nodes:
+            if isinstance(node, M.Submission):
+                node.artifact_count = per_submission.get(node.id, 0)
 
     # ---- scope + identity -------------------------------------------------
 
@@ -697,6 +715,14 @@ class SeedBuilder:
                     summary=redact(e.get("summary")),
                     trigger_node_id=e.get("trigger_node_id"),
                     occurred_at=occurred,
+                    entry_index=row["entry_index"],
+                    initiated_by=(
+                        "learner"
+                        if "learner_message" in tags or "learner_submission" in tags
+                        else "system"
+                    ),
+                    carries_submission="submission" in e,
+                    carries_feedback="feedback" in e,
                     message_count=len(e.get("actor_messages") or []),
                     participant_roles=sorted(
                         {
@@ -717,7 +743,16 @@ class SeedBuilder:
                 role="learner",
             )
             if lx:
-                self.link(M.EdgeType.OCCURRED_IN, interaction, lx)
+                days_in = None
+                if lx.activated_at:
+                    days_in = max(0, (occurred - lx.activated_at).days)
+                self.link(
+                    M.EdgeType.OCCURRED_IN,
+                    interaction,
+                    lx,
+                    sequence_index=row["entry_index"],
+                    days_into_lx=days_in,
+                )
 
             if "feedback" not in e and "submission" not in e:
                 continue
@@ -767,19 +802,41 @@ class SeedBuilder:
                         kind=s.get("kind") or "unknown",
                         text=text,
                         attachment_count=len(s.get("attachments") or []),
+                        attachment_names=[
+                            redact(str(a.get("name") or a.get("filename") or a))[:120]
+                            for a in (s.get("attachments") or [])
+                            if isinstance(a, dict) or isinstance(a, str)
+                        ][:10],
                         submission_url=(
                             text if text and text.startswith("http") else None
                         ),
+                        submitted_at=occurred,
+                        is_resubmission=attempt_no[lx_key] > 1,
                     )
                 )
-                self.link(M.EdgeType.SUBMITTED, learner, submission)
-                self.link(M.EdgeType.SUBMITTED_IN, submission, attempt)
+                self.link(
+                    M.EdgeType.SUBMITTED,
+                    learner,
+                    submission,
+                    submitted_at=occurred.isoformat(),
+                    attempt_number=attempt_no[lx_key],
+                    is_resubmission=attempt_no[lx_key] > 1,
+                )
+                self.link(
+                    M.EdgeType.SUBMITTED_IN,
+                    submission,
+                    attempt,
+                    attempt_number=attempt_no[lx_key],
+                    is_final_attempt=verdict
+                    in (M.AttemptVerdict.PASSED, M.AttemptVerdict.FAILED_FINAL),
+                )
 
             if "feedback" not in e:
                 continue
 
             # ---- assessment ---------------------------------------------
             fb = e["feedback"]
+            tally = self._criterion_tally(fb)
             assessment = self.add(
                 M.Assessment(
                     id=deterministic_id("assessment_engine", "grader_call", sid),
@@ -793,11 +850,24 @@ class SeedBuilder:
                     assessment_kind="grader_call",
                     verdict=fb.get("verdict"),
                     summary=redact(fb.get("summary")),
+                    mentor_reply=redact(fb.get("mentor_reply")),
+                    criteria_total=tally["total"],
+                    criteria_met=tally["Yes"],
+                    criteria_partial=tally["Partial"],
+                    criteria_unmet=tally["No"],
                     grader_version="grader@export",
                     evaluated_at=occurred,
                 )
             )
-            self.link(M.EdgeType.EVALUATED_BY, attempt, assessment)
+            self.link(
+                M.EdgeType.EVALUATED_BY,
+                attempt,
+                assessment,
+                evaluated_at=occurred.isoformat(),
+                verdict=verdict.value,
+                is_final_evaluation=verdict
+                in (M.AttemptVerdict.PASSED, M.AttemptVerdict.FAILED_FINAL),
+            )
 
             task_key = next(
                 (
@@ -808,7 +878,13 @@ class SeedBuilder:
                 None,
             )
             if task_key and task_key in self._rubrics:
-                self.link(M.EdgeType.USED_RUBRIC, assessment, self._rubrics[task_key])
+                self.link(
+                    M.EdgeType.USED_RUBRIC,
+                    assessment,
+                    self._rubrics[task_key],
+                    rubric_version=self._rubrics[task_key].version,
+                    criteria_evaluated=tally["total"],
+                )
 
             self._evidence_from_grader(
                 learner, assessment, submission, fb, occurred, task_key, sid
@@ -930,9 +1006,29 @@ class SeedBuilder:
                     )
                 )
                 self.link(M.EdgeType.EVIDENCE_FOR_LEARNER, ev, learner)
-                self.link(M.EdgeType.DERIVED_FROM, ev, assessment)
+                locator = (
+                    f"scope:{scope.get('id')}/rubric_point:" f"{point.get('rubric_id')}"
+                )
+                self.link(
+                    M.EdgeType.DERIVED_FROM,
+                    ev,
+                    assessment,
+                    source_locator=locator,
+                    excerpt=(
+                        redact(point.get("reason"))[:1000]
+                        if point.get("reason")
+                        else None
+                    ),
+                    extraction_confidence=min(max(conf, 0.0), 1.0),
+                )
                 if criterion is not None:
-                    self.link(M.EdgeType.DERIVED_FROM, ev, criterion)
+                    self.link(
+                        M.EdgeType.DERIVED_FROM,
+                        ev,
+                        criterion,
+                        source_locator=locator,
+                        extraction_confidence=min(max(conf, 0.0), 1.0),
+                    )
                     self.link(
                         M.EdgeType.SCORED_CRITERION,
                         assessment,
@@ -965,8 +1061,20 @@ class SeedBuilder:
                             artifact_type=self._artifact_type(chunk),
                         )
                     )
-                    self.link(M.EdgeType.CONTAINS_ARTIFACT, submission, art)
-                    self.link(M.EdgeType.DERIVED_FROM, ev, art)
+                    self.link(
+                        M.EdgeType.CONTAINS_ARTIFACT,
+                        submission,
+                        art,
+                        cited_by_grader=True,
+                        citation_count=1,
+                    )
+                    self.link(
+                        M.EdgeType.DERIVED_FROM,
+                        ev,
+                        art,
+                        source_locator=chunk,
+                        extraction_confidence=min(max(conf, 0.0), 1.0),
+                    )
 
                 for spec in match_skills(
                     scope.get("requirement"),
@@ -1017,7 +1125,13 @@ class SeedBuilder:
             )
         )
         self.link(M.EdgeType.EVIDENCE_FOR_LEARNER, ev, learner)
-        self.link(M.EdgeType.DERIVED_FROM, ev, submission)
+        self.link(
+            M.EdgeType.DERIVED_FROM,
+            ev,
+            submission,
+            source_locator=f"submission:{sid}",
+            extraction_confidence=0.9,
+        )
         for tech in td.technologies:
             for spec in match_skills(tech, limit=2):
                 self.link(M.EdgeType.EVIDENCE_ABOUT_SKILL, ev, self.skill(spec))
@@ -1035,6 +1149,17 @@ class SeedBuilder:
         if any(x in low for x in (".py_", ".jsx_", ".sql_", ".ts_")):
             return "code"
         return "unknown"
+
+    def _criterion_tally(self, fb: dict[str, Any]) -> dict[str, int]:
+        """Count Yes / Partial / No across every rubric point the grader scored."""
+        tally = {"total": 0, "Yes": 0, "Partial": 0, "No": 0}
+        for scope in self._parse_scope_results(fb.get("raw") or ""):
+            for point in scope.get("points") or []:
+                status = point.get("status")
+                if status in ("Yes", "Partial", "No"):
+                    tally[status] += 1
+                    tally["total"] += 1
+        return tally
 
     @staticmethod
     def _parse_scope_results(raw: str) -> list[dict[str, Any]]:
@@ -1102,7 +1227,13 @@ class SeedBuilder:
                 )
             )
             self.link(M.EdgeType.EVIDENCE_FOR_LEARNER, ev, learner)
-            self.link(M.EdgeType.DERIVED_FROM, ev, lx)
+            self.link(
+                M.EdgeType.DERIVED_FROM,
+                ev,
+                lx,
+                source_locator=f"lx_outcome:{r['lx_id']}",
+                extraction_confidence=0.85,
+            )
 
             # Skills evidenced by shipping this task: the technologies it
             # declares, plus every skill its rubric explicitly targets. The
@@ -1192,13 +1323,28 @@ class SeedBuilder:
                         ),
                         topic=redact(src.get("topic") or meta.get("meeting_topic")),
                         starts_at_utc=ts(src.get("starts_at_utc")) or observed,
+                        starts_at_local=src.get("starts_at_local"),
                         duration_min=src.get("duration_min"),
                         zoom_meeting_id=str(meta.get("zoom_meeting_id") or "") or None,
+                        zoom_meeting_uuid=(
+                            str(meta.get("zoom_meeting_uuid") or "")[:64] or None
+                        ),
+                        attendee_count=len(src.get("attendee_emails") or []) or None,
+                        transcript_available=bool(meta.get("source_locator")),
                         extraction_status=src.get("extraction_status"),
+                        extracted_at=ts(src.get("extracted_at")),
+                        last_extraction_error=src.get("last_extraction_error"),
                     )
                 )
                 seen_meetings[mid] = meeting  # type: ignore[assignment]
-                self.link(M.EdgeType.HELD_FOR_GROUP, meeting, self._group)
+                self.link(
+                    M.EdgeType.HELD_FOR_GROUP,
+                    meeting,
+                    self._group,
+                    round_key=self._round.round_key,
+                    recurring=src.get("kind")
+                    in ("standup", "sprint_planning", "retro"),
+                )
                 self.link(
                     M.EdgeType.PARTICIPATED_IN,
                     learner,
@@ -1249,7 +1395,14 @@ class SeedBuilder:
                 )
             )
             self.link(M.EdgeType.EVIDENCE_FOR_LEARNER, ev, learner)
-            self.link(M.EdgeType.DERIVED_FROM, ev, meeting)
+            self.link(
+                M.EdgeType.DERIVED_FROM,
+                ev,
+                meeting,
+                source_locator=meta.get("source_locator"),
+                excerpt=(excerpt or content or None),
+                extraction_confidence=conf,
+            )
 
             if is_tech_claim:
                 for spec in match_skills(content, limit=3):
@@ -1286,7 +1439,13 @@ class SeedBuilder:
                 )
             )
             self.link(M.EdgeType.HAS_OBSERVATION, learner, obs)
-            self.link(M.EdgeType.OBSERVED_IN, obs, meeting)
+            self.link(
+                M.EdgeType.OBSERVED_IN,
+                obs,
+                meeting,
+                source_locator=meta.get("source_locator"),
+                excerpt=(excerpt or None),
+            )
             self.link(M.EdgeType.SUPPORTED_BY_EVIDENCE, obs, ev)
 
     # ---- derived skill assertions -----------------------------------------

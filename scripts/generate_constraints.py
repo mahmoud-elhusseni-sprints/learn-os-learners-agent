@@ -70,7 +70,7 @@ DDL_SPEC: dict[str, dict[str, list[str]]] = {
     },
     "Submission": {
         "business_key": ["source_system", "source_id"],
-        "indexes": ["kind"],
+        "indexes": ["kind", "submitted_at", "is_resubmission"],
         "fulltext": ["text"],
     },
     "Artifact": {
@@ -86,17 +86,34 @@ DDL_SPEC: dict[str, dict[str, list[str]]] = {
     },
     "Assessment": {
         "business_key": ["source_system", "source_id"],
-        "indexes": ["assessment_kind", "verdict", "evaluated_at"],
-        "fulltext": ["summary"],
+        "indexes": [
+            "assessment_kind",
+            "verdict",
+            "evaluated_at",
+            "criteria_met",
+            "criteria_total",
+        ],
+        "fulltext": ["summary", "mentor_reply"],
     },
     "Meeting": {
         "business_key": ["meeting_key"],
-        "indexes": ["kind", "starts_at_utc"],
+        "indexes": [
+            "kind",
+            "starts_at_utc",
+            "extraction_status",
+            "transcript_available",
+        ],
         "fulltext": ["topic"],
     },
     "Interaction": {
         "business_key": ["source_system", "source_id"],
-        "indexes": ["interaction_kind", "occurred_at", "struggle_area"],
+        "indexes": [
+            "interaction_kind",
+            "occurred_at",
+            "struggle_area",
+            "initiated_by",
+            "carries_feedback",
+        ],
         "fulltext": ["summary"],
     },
     # Evidence/derived nodes are keyed by their deterministic UUIDv5, which
@@ -161,6 +178,11 @@ REL_INDEXES: list[tuple[str, str]] = [
     ("ASSESSED_ON_SKILL", "status"),
     ("SCORED_CRITERION", "status"),
     ("COMPLETED_TASK", "outcome"),
+    # Evidence provenance lives on the DERIVED_FROM edge; employers filter on it.
+    ("DERIVED_FROM", "extraction_confidence"),
+    ("CONTAINS_ARTIFACT", "cited_by_grader"),
+    ("EVALUATED_BY", "verdict"),
+    ("SUBMITTED", "attempt_number"),
 ]
 
 

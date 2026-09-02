@@ -147,6 +147,10 @@ CREATE INDEX i_assessment_verdict IF NOT EXISTS
 FOR (n:Assessment) ON (n.verdict);
 CREATE INDEX i_assessment_evaluated_at IF NOT EXISTS
 FOR (n:Assessment) ON (n.evaluated_at);
+CREATE INDEX i_assessment_criteria_met IF NOT EXISTS
+FOR (n:Assessment) ON (n.criteria_met);
+CREATE INDEX i_assessment_criteria_total IF NOT EXISTS
+FOR (n:Assessment) ON (n.criteria_total);
 CREATE INDEX i_attempt_verdict IF NOT EXISTS
 FOR (n:Attempt) ON (n.verdict);
 CREATE INDEX i_attempt_evaluated_at IF NOT EXISTS
@@ -177,6 +181,10 @@ CREATE INDEX i_interaction_occurred_at IF NOT EXISTS
 FOR (n:Interaction) ON (n.occurred_at);
 CREATE INDEX i_interaction_struggle_area IF NOT EXISTS
 FOR (n:Interaction) ON (n.struggle_area);
+CREATE INDEX i_interaction_initiated_by IF NOT EXISTS
+FOR (n:Interaction) ON (n.initiated_by);
+CREATE INDEX i_interaction_carries_feedback IF NOT EXISTS
+FOR (n:Interaction) ON (n.carries_feedback);
 CREATE INDEX i_learner_display_name IF NOT EXISTS
 FOR (n:Learner) ON (n.display_name);
 CREATE INDEX i_learner_source_system IF NOT EXISTS
@@ -197,6 +205,10 @@ CREATE INDEX i_meeting_kind IF NOT EXISTS
 FOR (n:Meeting) ON (n.kind);
 CREATE INDEX i_meeting_starts_at_utc IF NOT EXISTS
 FOR (n:Meeting) ON (n.starts_at_utc);
+CREATE INDEX i_meeting_extraction_status IF NOT EXISTS
+FOR (n:Meeting) ON (n.extraction_status);
+CREATE INDEX i_meeting_transcript_available IF NOT EXISTS
+FOR (n:Meeting) ON (n.transcript_available);
 CREATE INDEX i_observation_category IF NOT EXISTS
 FOR (n:Observation) ON (n.category);
 CREATE INDEX i_observation_observed_at IF NOT EXISTS
@@ -231,6 +243,10 @@ CREATE INDEX i_skillassertion_evidence_count IF NOT EXISTS
 FOR (n:SkillAssertion) ON (n.evidence_count);
 CREATE INDEX i_submission_kind IF NOT EXISTS
 FOR (n:Submission) ON (n.kind);
+CREATE INDEX i_submission_submitted_at IF NOT EXISTS
+FOR (n:Submission) ON (n.submitted_at);
+CREATE INDEX i_submission_is_resubmission IF NOT EXISTS
+FOR (n:Submission) ON (n.is_resubmission);
 CREATE INDEX i_taskdefinition_task_archetype IF NOT EXISTS
 FOR (n:TaskDefinition) ON (n.task_archetype);
 
@@ -246,6 +262,14 @@ CREATE INDEX rel_scored_criterion_status IF NOT EXISTS
 FOR ()-[r:SCORED_CRITERION]-() ON (r.status);
 CREATE INDEX rel_completed_task_outcome IF NOT EXISTS
 FOR ()-[r:COMPLETED_TASK]-() ON (r.outcome);
+CREATE INDEX rel_derived_from_extraction_confidence IF NOT EXISTS
+FOR ()-[r:DERIVED_FROM]-() ON (r.extraction_confidence);
+CREATE INDEX rel_contains_artifact_cited_by_grader IF NOT EXISTS
+FOR ()-[r:CONTAINS_ARTIFACT]-() ON (r.cited_by_grader);
+CREATE INDEX rel_evaluated_by_verdict IF NOT EXISTS
+FOR ()-[r:EVALUATED_BY]-() ON (r.verdict);
+CREATE INDEX rel_submitted_attempt_number IF NOT EXISTS
+FOR ()-[r:SUBMITTED]-() ON (r.attempt_number);
 
 // ==========================================================================
 // 4. Full-text indexes  (Community + Enterprise)
@@ -257,7 +281,7 @@ FOR ()-[r:COMPLETED_TASK]-() ON (r.outcome);
 CREATE FULLTEXT INDEX ft_artifact IF NOT EXISTS
 FOR (n:Artifact) ON EACH [n.content_excerpt];
 CREATE FULLTEXT INDEX ft_assessment IF NOT EXISTS
-FOR (n:Assessment) ON EACH [n.summary];
+FOR (n:Assessment) ON EACH [n.summary, n.mentor_reply];
 CREATE FULLTEXT INDEX ft_careergoal IF NOT EXISTS
 FOR (n:CareerGoal) ON EACH [n.target_role];
 CREATE FULLTEXT INDEX ft_evidence IF NOT EXISTS

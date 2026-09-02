@@ -318,6 +318,15 @@ class Provenance(GraphModel):
     source_url: str | None = None
     observed_at: UtcDatetime
     ingested_at: UtcDatetime
+    evidence_type: "EvidenceType | None" = Field(
+        default=None,
+        description=(
+            "Evidence class this record supports. Required on Evidence "
+            "provenance and auto-filled from the node; left None on "
+            "structural nodes (Learner, Round, Task...) which are not "
+            "themselves evidence."
+        ),
+    )
     extraction_method: ExtractionMethod = ExtractionMethod.DIRECT_MAPPING
     extractor_version: str = Field(default=f"ontology@{ONTOLOGY_VERSION}")
 
@@ -550,13 +559,45 @@ class Attempt(SourceNode):
 
 
 class Submission(SourceNode):
-    """What the learner handed in."""
+    """What the learner handed in for one attempt at a task.
+
+    Mirrors ``entry.submission`` in the interaction log. A submission is the
+    unit an assessment is run against, and the container for the artifacts a
+    grader cites, so it is the join point between "work delivered" and
+    "work evaluated".
+    """
 
     label: Literal["Submission"] = "Submission"
     kind: str = Field(description="e.g. 'attachments', 'text', 'link'")
-    text: str | None = None
+    text: str | None = Field(
+        default=None, description="Free-text body or the pasted link"
+    )
     attachment_count: int = Field(default=0, ge=0)
-    submission_url: str | None = None
+    attachment_names: list[str] = Field(
+        default_factory=list, description="Filenames as reported by the source"
+    )
+    submission_url: str | None = Field(
+        default=None, description="Repository, PR or branch URL when one was given"
+    )
+    submitted_at: UtcDatetime | None = Field(
+        default=None, description="When the learner handed it in"
+    )
+    is_resubmission: bool = Field(
+        default=False, description="True when a previous attempt already existed"
+    )
+    artifact_count: int = Field(
+        default=0, ge=0, description="Artifacts extracted from this submission"
+    )
+
+    @model_validator(mode="after")
+    def _url_implies_link(self) -> "Submission":
+        if self.submission_url and not self.submission_url.startswith(
+            ("http://", "https://")
+        ):
+            raise ValueError(
+                f"submission_url must be an absolute URL, got {self.submission_url!r}"
+            )
+        return self
 
 
 class Artifact(SourceNode):
@@ -611,10 +652,25 @@ class Assessment(SourceNode):
     assessment_kind: str = Field(
         description="e.g. 'grader_call', 'quiz', 'coding_challenge'"
     )
-    verdict: str | None = None
-    summary: str | None = None
+    verdict: str | None = Field(
+        default=None, description="Source verdict, e.g. 'passed', 'failed_retry'"
+    )
+    summary: str | None = Field(
+        default=None, description="Grader's overall summary of the submission"
+    )
+    mentor_reply: str | None = Field(
+        default=None, description="Feedback text actually delivered to the learner"
+    )
     score: float | None = Field(default=None, ge=0)
     max_score: float | None = Field(default=None, ge=0)
+    criteria_total: int = Field(
+        default=0, ge=0, description="Rubric points the grader evaluated"
+    )
+    criteria_met: int = Field(default=0, ge=0, description="Points scored 'Yes'")
+    criteria_partial: int = Field(
+        default=0, ge=0, description="Points scored 'Partial'"
+    )
+    criteria_unmet: int = Field(default=0, ge=0, description="Points scored 'No'")
     grader_version: str | None = None
     evaluated_at: UtcDatetime | None = None
 
@@ -626,6 +682,12 @@ class Assessment(SourceNode):
             and self.score > self.max_score
         ):
             raise ValueError(f"score {self.score} exceeds max_score {self.max_score}")
+        breakdown = self.criteria_met + self.criteria_partial + self.criteria_unmet
+        if self.criteria_total and breakdown > self.criteria_total:
+            raise ValueError(
+                f"criteria breakdown ({breakdown}) exceeds "
+                f"criteria_total ({self.criteria_total})"
+            )
         return self
 
 
@@ -635,14 +697,35 @@ class Assessment(SourceNode):
 
 
 class Meeting(SourceNode):
+    """A scheduled session - standup, sprint planning, retro or ad-hoc.
+
+    Meetings are the origin of behavioural evidence, so the extraction fields
+    matter: an un-transcribed meeting must not silently look like a meeting
+    with nothing in it.
+    """
+
     label: Literal["Meeting"] = "Meeting"
     meeting_key: str
     kind: MeetingKind
     topic: str | None = None
     starts_at_utc: UtcDatetime | None = None
+    starts_at_local: str | None = Field(
+        default=None,
+        description="Source-local start string, kept verbatim; never used for "
+        "recency maths - use starts_at_utc for that.",
+    )
     duration_min: int | None = Field(default=None, ge=0)
     zoom_meeting_id: str | None = None
-    extraction_status: str | None = None
+    zoom_meeting_uuid: str | None = None
+    attendee_count: int | None = Field(default=None, ge=0)
+    transcript_available: bool = Field(
+        default=False, description="A transcript exists and was parsed"
+    )
+    extraction_status: str | None = Field(
+        default=None, description="e.g. 'pending', 'done', 'failed'"
+    )
+    extracted_at: UtcDatetime | None = None
+    last_extraction_error: str | None = None
 
 
 class Interaction(SourceNode):
@@ -651,13 +734,31 @@ class Interaction(SourceNode):
 
     label: Literal["Interaction"] = "Interaction"
     interaction_kind: InteractionKind
-    tags: list[str] = Field(default_factory=list)
+    tags: list[str] = Field(
+        default_factory=list, description="Raw source tags, kept verbatim"
+    )
     summary: str | None = None
-    trigger_node_id: str | None = None
+    trigger_node_id: str | None = Field(
+        default=None, description="Orchestrator node that fired this, e.g. n8n"
+    )
     occurred_at: UtcDatetime
+    entry_index: int | None = Field(
+        default=None,
+        ge=0,
+        description="Position within the source log, for stable ordering",
+    )
     message_count: int = Field(default=0, ge=0)
     participant_roles: list[str] = Field(
         default_factory=list, description="e.g. ['learner', 'mentor']"
+    )
+    initiated_by: str | None = Field(
+        default=None, description="'learner', 'mentor', 'manager' or 'system'"
+    )
+    carries_submission: bool = Field(
+        default=False, description="This entry contained a learner submission"
+    )
+    carries_feedback: bool = Field(
+        default=False, description="This entry contained grader or mentor feedback"
     )
     struggle_area: str | None = None
     struggle_resolved: bool | None = None
@@ -696,6 +797,27 @@ class Evidence(SourceNode):
         default=None,
         description="Set when the evidence came from a graded rubric point.",
     )
+
+    @model_validator(mode="after")
+    def _provenance_carries_evidence_type(self) -> "Evidence":
+        """Mirror ``evidence_type`` onto the provenance record.
+
+        The brief specifies provenance as
+        ``(source_system, source_id, timestamp, evidence_type)``. Keeping the
+        authoritative value on the node and copying it down means the full
+        tuple is present wherever provenance is read - including after
+        ``flatten_node`` writes it to Neo4j - without the two being able to
+        drift apart.
+        """
+        prov = self.provenance
+        if prov.evidence_type is None:
+            object.__setattr__(prov, "evidence_type", self.evidence_type)
+        elif prov.evidence_type is not self.evidence_type:
+            raise ValueError(
+                f"provenance.evidence_type ({prov.evidence_type.value}) "
+                f"contradicts Evidence.evidence_type ({self.evidence_type.value})"
+            )
+        return self
 
 
 # ===========================================================================
@@ -1051,6 +1173,90 @@ class SkillTierProps(GraphModel):
     latest_evidence_at: UtcDatetime | None = None
 
 
+class SubmissionProps(GraphModel):
+    """Carried on ``(:Learner)-[:SUBMITTED]->(:Submission)``."""
+
+    submitted_at: UtcDatetime | None = None
+    attempt_number: int = Field(default=1, ge=1)
+    is_resubmission: bool = False
+
+
+class SubmittedInProps(GraphModel):
+    """Carried on ``(:Submission)-[:SUBMITTED_IN]->(:Attempt)``."""
+
+    attempt_number: int = Field(default=1, ge=1)
+    is_final_attempt: bool = False
+
+
+class ArtifactCitationProps(GraphModel):
+    """Carried on ``(:Submission)-[:CONTAINS_ARTIFACT]->(:Artifact)``.
+
+    ``cited_by_grader`` distinguishes a file the grader actually pointed at
+    from one that merely existed in the submission - a much stronger signal
+    when an employer asks to see the evidence.
+    """
+
+    cited_by_grader: bool = False
+    citation_count: int = Field(default=0, ge=0)
+    chunk_index: int | None = Field(default=None, ge=0)
+
+
+class EvaluationProps(GraphModel):
+    """Carried on ``(:Attempt)-[:EVALUATED_BY]->(:Assessment)``."""
+
+    evaluated_at: UtcDatetime | None = None
+    verdict: AttemptVerdict | None = None
+    is_final_evaluation: bool = False
+
+
+class RubricUseProps(GraphModel):
+    """Carried on ``(:Assessment)-[:USED_RUBRIC]->(:Rubric)``."""
+
+    rubric_version: str = "1"
+    criteria_evaluated: int = Field(default=0, ge=0)
+
+
+class MeetingScopeProps(GraphModel):
+    """Carried on ``(:Meeting)-[:HELD_FOR_GROUP]->(:Group)``."""
+
+    round_key: str | None = None
+    recurring: bool = False
+
+
+class OccurredInProps(GraphModel):
+    """Carried on ``(:Interaction)-[:OCCURRED_IN]->(:LearningExperience)``."""
+
+    sequence_index: int | None = Field(default=None, ge=0)
+    days_into_lx: int | None = Field(default=None, ge=0)
+
+
+class DerivedFromProps(GraphModel):
+    """Carried on every ``(:Evidence)-[:DERIVED_FROM]->(...)`` edge.
+
+    Provenance lives on the Evidence node, but the *edge* is where the
+    pointer into the specific source record belongs: which turn of a
+    transcript, which rubric point, which chunk of a file. Employers see
+    these, so they must survive to the database.
+    """
+
+    source_locator: str | None = Field(
+        default=None, description="e.g. 'turn:657', 'rubric_point:102'"
+    )
+    excerpt: str | None = Field(
+        default=None,
+        max_length=1000,
+        description="The quoted span this evidence was drawn from",
+    )
+    extraction_confidence: Confidence = 1.0
+
+
+class ObservedInProps(GraphModel):
+    """Carried on ``(:Observation)-[:OBSERVED_IN]->(...)``."""
+
+    source_locator: str | None = None
+    excerpt: str | None = Field(default=None, max_length=1000)
+
+
 class ScoredCriterionProps(GraphModel):
     """The grader's per-rubric-point result, kept at full fidelity."""
 
@@ -1148,6 +1354,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Submission",
         cardinality=Cardinality.ONE_TO_MANY,
         description="Learner handed this in.",
+        property_model="SubmissionProps",
     ),
     EdgeSpec(
         type=EdgeType.SUBMITTED_IN,
@@ -1155,6 +1362,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Attempt",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Submission belongs to an attempt.",
+        property_model="SubmittedInProps",
     ),
     EdgeSpec(
         type=EdgeType.CONTAINS_ARTIFACT,
@@ -1162,6 +1370,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Artifact",
         cardinality=Cardinality.ONE_TO_MANY,
         description="Files/chunks inside a submission.",
+        property_model="ArtifactCitationProps",
     ),
     # --- assessment ---
     EdgeSpec(
@@ -1184,6 +1393,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Assessment",
         cardinality=Cardinality.ONE_TO_MANY,
         description="Assessment run over an attempt.",
+        property_model="EvaluationProps",
     ),
     EdgeSpec(
         type=EdgeType.USED_RUBRIC,
@@ -1191,6 +1401,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Rubric",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Rubric the assessment applied.",
+        property_model="RubricUseProps",
     ),
     EdgeSpec(
         type=EdgeType.SCORED_CRITERION,
@@ -1237,6 +1448,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Group",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Meeting belongs to a group.",
+        property_model="MeetingScopeProps",
     ),
     EdgeSpec(
         type=EdgeType.OCCURRED_IN,
@@ -1244,6 +1456,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="LearningExperience",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Interaction happened inside a task instance.",
+        property_model="OccurredInProps",
     ),
     # --- the evidence spine ---
     EdgeSpec(
@@ -1259,6 +1472,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Assessment",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Evidence traced to an assessment.",
+        property_model="DerivedFromProps",
     ),
     EdgeSpec(
         type=EdgeType.DERIVED_FROM,
@@ -1266,6 +1480,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Submission",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Evidence traced to a submission.",
+        property_model="DerivedFromProps",
     ),
     # MANY_TO_MANY: one graded rubric point routinely cites several artifact
     # chunks (``chunks_ids_met`` in the real grader payload).
@@ -1275,6 +1490,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Artifact",
         cardinality=Cardinality.MANY_TO_MANY,
         description="Evidence traced to a file/chunk.",
+        property_model="DerivedFromProps",
     ),
     EdgeSpec(
         type=EdgeType.DERIVED_FROM,
@@ -1282,6 +1498,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Interaction",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Evidence traced to a chat exchange.",
+        property_model="DerivedFromProps",
     ),
     EdgeSpec(
         type=EdgeType.DERIVED_FROM,
@@ -1289,6 +1506,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Meeting",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Evidence traced to a meeting.",
+        property_model="DerivedFromProps",
     ),
     EdgeSpec(
         type=EdgeType.DERIVED_FROM,
@@ -1296,6 +1514,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="RubricCriterion",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Evidence traced to a rubric point.",
+        property_model="DerivedFromProps",
     ),
     EdgeSpec(
         type=EdgeType.DERIVED_FROM,
@@ -1303,6 +1522,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="LearningExperience",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Evidence traced to a task instance.",
+        property_model="DerivedFromProps",
     ),
     EdgeSpec(
         type=EdgeType.EVIDENCE_ABOUT_SKILL,
@@ -1386,6 +1606,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Meeting",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Context: a meeting.",
+        property_model="ObservedInProps",
     ),
     EdgeSpec(
         type=EdgeType.OBSERVED_IN,
@@ -1393,6 +1614,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="Interaction",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Context: an interaction.",
+        property_model="ObservedInProps",
     ),
     EdgeSpec(
         type=EdgeType.OBSERVED_IN,
@@ -1400,6 +1622,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="LearningExperience",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Context: a task instance.",
+        property_model="ObservedInProps",
     ),
     # --- career goal and closed loop ---
     EdgeSpec(
@@ -1471,6 +1694,15 @@ _PROPERTY_MODELS: dict[str, type[GraphModel]] = {
     "ParticipationProps": ParticipationProps,
     "SkillTierProps": SkillTierProps,
     "ScoredCriterionProps": ScoredCriterionProps,
+    "SubmissionProps": SubmissionProps,
+    "SubmittedInProps": SubmittedInProps,
+    "ArtifactCitationProps": ArtifactCitationProps,
+    "EvaluationProps": EvaluationProps,
+    "RubricUseProps": RubricUseProps,
+    "MeetingScopeProps": MeetingScopeProps,
+    "OccurredInProps": OccurredInProps,
+    "DerivedFromProps": DerivedFromProps,
+    "ObservedInProps": ObservedInProps,
 }
 
 

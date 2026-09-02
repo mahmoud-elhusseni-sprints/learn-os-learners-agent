@@ -227,7 +227,12 @@ Learner A4's LX 144bd399 has three attempts with different verdicts.
 
 #### `Submission`  (source)
 
-What the learner handed in.
+What the learner handed in for one attempt at a task.
+
+Mirrors ``entry.submission`` in the interaction log. A submission is the
+unit an assessment is run against, and the container for the artifacts a
+grader cites, so it is the join point between "work delivered" and
+"work evaluated".
 
 | property | type | required | notes |
 |---|---|---|---|
@@ -236,9 +241,13 @@ What the learner handed in.
 | `updated_at` | `datetime (UTC) \| None` | no |  |
 | `provenance` | `Provenance` | yes |  |
 | `kind` | `str` | yes | e.g. 'attachments', 'text', 'link' |
-| `text` | `str \| None` | no |  |
+| `text` | `str \| None` | no | Free-text body or the pasted link |
 | `attachment_count` | `int` | no |  |
-| `submission_url` | `str \| None` | no |  |
+| `attachment_names` | `list[str]` | no | Filenames as reported by the source |
+| `submission_url` | `str \| None` | no | Repository, PR or branch URL when one was given |
+| `submitted_at` | `datetime (UTC) \| None` | no | When the learner handed it in |
+| `is_resubmission` | `bool` | no | True when a previous attempt already existed |
+| `artifact_count` | `int` | no | Artifacts extracted from this submission |
 
 #### `Artifact`  (source)
 
@@ -311,10 +320,15 @@ One evaluation event - a grader call, quiz submission or coding test.
 | `updated_at` | `datetime (UTC) \| None` | no |  |
 | `provenance` | `Provenance` | yes |  |
 | `assessment_kind` | `str` | yes | e.g. 'grader_call', 'quiz', 'coding_challenge' |
-| `verdict` | `str \| None` | no |  |
-| `summary` | `str \| None` | no |  |
+| `verdict` | `str \| None` | no | Source verdict, e.g. 'passed', 'failed_retry' |
+| `summary` | `str \| None` | no | Grader's overall summary of the submission |
+| `mentor_reply` | `str \| None` | no | Feedback text actually delivered to the learner |
 | `score` | `float \| None` | no |  |
 | `max_score` | `float \| None` | no |  |
+| `criteria_total` | `int` | no | Rubric points the grader evaluated |
+| `criteria_met` | `int` | no | Points scored 'Yes' |
+| `criteria_partial` | `int` | no | Points scored 'Partial' |
+| `criteria_unmet` | `int` | no | Points scored 'No' |
 | `grader_version` | `str \| None` | no |  |
 | `evaluated_at` | `datetime (UTC) \| None` | no |  |
 
@@ -326,7 +340,11 @@ Where behavioural signal comes from.
 
 #### `Meeting`  (source)
 
-A node that mirrors something that actually happened in a source system.
+A scheduled session - standup, sprint planning, retro or ad-hoc.
+
+Meetings are the origin of behavioural evidence, so the extraction fields
+matter: an un-transcribed meeting must not silently look like a meeting
+with nothing in it.
 
 | property | type | required | notes |
 |---|---|---|---|
@@ -338,9 +356,15 @@ A node that mirrors something that actually happened in a source system.
 | `kind` | `MeetingKind` | yes |  |
 | `topic` | `str \| None` | no |  |
 | `starts_at_utc` | `datetime (UTC) \| None` | no |  |
+| `starts_at_local` | `str \| None` | no | Source-local start string, kept verbatim; never used for recency maths - use starts_at_... |
 | `duration_min` | `int \| None` | no |  |
 | `zoom_meeting_id` | `str \| None` | no |  |
-| `extraction_status` | `str \| None` | no |  |
+| `zoom_meeting_uuid` | `str \| None` | no |  |
+| `attendee_count` | `int \| None` | no |  |
+| `transcript_available` | `bool` | no | A transcript exists and was parsed |
+| `extraction_status` | `str \| None` | no | e.g. 'pending', 'done', 'failed' |
+| `extracted_at` | `datetime (UTC) \| None` | no |  |
+| `last_extraction_error` | `str \| None` | no |  |
 
 #### `Interaction`  (source)
 
@@ -354,12 +378,16 @@ daily check-in, redirect, etc.  Covers the brief's 'Interaction/Chat'.
 | `updated_at` | `datetime (UTC) \| None` | no |  |
 | `provenance` | `Provenance` | yes |  |
 | `interaction_kind` | `InteractionKind` | yes |  |
-| `tags` | `list[str]` | no |  |
+| `tags` | `list[str]` | no | Raw source tags, kept verbatim |
 | `summary` | `str \| None` | no |  |
-| `trigger_node_id` | `str \| None` | no |  |
+| `trigger_node_id` | `str \| None` | no | Orchestrator node that fired this, e.g. n8n |
 | `occurred_at` | `datetime (UTC)` | yes |  |
+| `entry_index` | `int \| None` | no | Position within the source log, for stable ordering |
 | `message_count` | `int` | no |  |
 | `participant_roles` | `list[str]` | no | e.g. ['learner', 'mentor'] |
+| `initiated_by` | `str \| None` | no | 'learner', 'mentor', 'manager' or 'system' |
+| `carries_submission` | `bool` | no | This entry contained a learner submission |
+| `carries_feedback` | `bool` | no | This entry contained grader or mentor feedback |
 | `struggle_area` | `str \| None` | no |  |
 | `struggle_resolved` | `bool \| None` | no |  |
 
@@ -567,17 +595,17 @@ Cardinality is read left-to-right:
 | `(:Recommendation)-[:ADDRESSES_GAP_IN]->(:Skill)` | `N:M` | - | Skill the gap concerns. |
 | `(:Learner)-[:ASSESSED_ON_SKILL]->(:Skill)` | `N:M` | `SkillTierProps` | Tier 3: scored against a rubric. |
 | `(:Learner)-[:COMPLETED_TASK]->(:TaskDefinition)` | `N:M` | `CompletedTaskProps` | Denormalised completion edge for fast history queries. |
-| `(:Submission)-[:CONTAINS_ARTIFACT]->(:Artifact)` | `1:N` | - | Files/chunks inside a submission. |
+| `(:Submission)-[:CONTAINS_ARTIFACT]->(:Artifact)` | `1:N` | `ArtifactCitationProps` | Files/chunks inside a submission. |
 | `(:Learner)-[:DECLARED_SKILL]->(:Skill)` | `N:M` | `SkillTierProps` | Tier 1: self-declared. |
 | `(:Learner)-[:DEMONSTRATED_SKILL]->(:Skill)` | `N:M` | `SkillTierProps` | Tier 4: shipped working artifacts. |
-| `(:Evidence)-[:DERIVED_FROM]->(:Assessment)` | `N:1` | - | Evidence traced to an assessment. |
-| `(:Evidence)-[:DERIVED_FROM]->(:Submission)` | `N:1` | - | Evidence traced to a submission. |
-| `(:Evidence)-[:DERIVED_FROM]->(:Artifact)` | `N:M` | - | Evidence traced to a file/chunk. |
-| `(:Evidence)-[:DERIVED_FROM]->(:Interaction)` | `N:1` | - | Evidence traced to a chat exchange. |
-| `(:Evidence)-[:DERIVED_FROM]->(:Meeting)` | `N:1` | - | Evidence traced to a meeting. |
-| `(:Evidence)-[:DERIVED_FROM]->(:RubricCriterion)` | `N:1` | - | Evidence traced to a rubric point. |
-| `(:Evidence)-[:DERIVED_FROM]->(:LearningExperience)` | `N:1` | - | Evidence traced to a task instance. |
-| `(:Attempt)-[:EVALUATED_BY]->(:Assessment)` | `1:N` | - | Assessment run over an attempt. |
+| `(:Evidence)-[:DERIVED_FROM]->(:Assessment)` | `N:1` | `DerivedFromProps` | Evidence traced to an assessment. |
+| `(:Evidence)-[:DERIVED_FROM]->(:Submission)` | `N:1` | `DerivedFromProps` | Evidence traced to a submission. |
+| `(:Evidence)-[:DERIVED_FROM]->(:Artifact)` | `N:M` | `DerivedFromProps` | Evidence traced to a file/chunk. |
+| `(:Evidence)-[:DERIVED_FROM]->(:Interaction)` | `N:1` | `DerivedFromProps` | Evidence traced to a chat exchange. |
+| `(:Evidence)-[:DERIVED_FROM]->(:Meeting)` | `N:1` | `DerivedFromProps` | Evidence traced to a meeting. |
+| `(:Evidence)-[:DERIVED_FROM]->(:RubricCriterion)` | `N:1` | `DerivedFromProps` | Evidence traced to a rubric point. |
+| `(:Evidence)-[:DERIVED_FROM]->(:LearningExperience)` | `N:1` | `DerivedFromProps` | Evidence traced to a task instance. |
+| `(:Attempt)-[:EVALUATED_BY]->(:Assessment)` | `1:N` | `EvaluationProps` | Assessment run over an attempt. |
 | `(:Evidence)-[:EVIDENCE_ABOUT_SKILL]->(:Skill)` | `N:M` | - | Which skill this evidence speaks to. |
 | `(:Evidence)-[:EVIDENCE_FOR_LEARNER]->(:Learner)` | `N:1` | - | Every evidence item is about exactly one learner. |
 | `(:Learner)-[:EXPOSED_TO_SKILL]->(:Skill)` | `N:M` | `SkillTierProps` | Tier 2: learning exposure. |
@@ -591,14 +619,14 @@ Cardinality is read left-to-right:
 | `(:Learner)-[:HAS_OBSERVATION]->(:Observation)` | `1:N` | - | Behavioural observations. |
 | `(:TaskDefinition)-[:HAS_RUBRIC]->(:Rubric)` | `N:1` | - | Task is graded by this rubric. |
 | `(:Learner)-[:HAS_SKILL_ASSERTION]->(:SkillAssertion)` | `1:N` | - | Learner's derived skill states. |
-| `(:Meeting)-[:HELD_FOR_GROUP]->(:Group)` | `N:1` | - | Meeting belongs to a group. |
+| `(:Meeting)-[:HELD_FOR_GROUP]->(:Group)` | `N:1` | `MeetingScopeProps` | Meeting belongs to a group. |
 | `(:LearnerIdentity)-[:IDENTIFIES]->(:Learner)` | `N:1` | - | A source-system identity resolves to one canonical learner. |
 | `(:LearningExperience)-[:INSTANCE_OF]->(:TaskDefinition)` | `N:1` | - | Which task specification this instance realises. |
 | `(:Learner)-[:MEMBER_OF]->(:Group)` | `N:M` | `MembershipProps` | Learner belongs to a track/group. |
-| `(:Observation)-[:OBSERVED_IN]->(:Meeting)` | `N:1` | - | Context: a meeting. |
-| `(:Observation)-[:OBSERVED_IN]->(:Interaction)` | `N:1` | - | Context: an interaction. |
-| `(:Observation)-[:OBSERVED_IN]->(:LearningExperience)` | `N:1` | - | Context: a task instance. |
-| `(:Interaction)-[:OCCURRED_IN]->(:LearningExperience)` | `N:1` | - | Interaction happened inside a task instance. |
+| `(:Observation)-[:OBSERVED_IN]->(:Meeting)` | `N:1` | `ObservedInProps` | Context: a meeting. |
+| `(:Observation)-[:OBSERVED_IN]->(:Interaction)` | `N:1` | `ObservedInProps` | Context: an interaction. |
+| `(:Observation)-[:OBSERVED_IN]->(:LearningExperience)` | `N:1` | `ObservedInProps` | Context: a task instance. |
+| `(:Interaction)-[:OCCURRED_IN]->(:LearningExperience)` | `N:1` | `OccurredInProps` | Interaction happened inside a task instance. |
 | `(:Learner)-[:PARTICIPATED_IN]->(:Meeting)` | `N:M` | `ParticipationProps` | Learner attended a meeting. |
 | `(:Learner)-[:PARTICIPATED_IN]->(:Interaction)` | `N:M` | `ParticipationProps` | Learner took part in an exchange. |
 | `(:Round)-[:PART_OF_COHORT]->(:Cohort)` | `N:1` | - | Round belongs to a cohort. |
@@ -608,15 +636,29 @@ Cardinality is read left-to-right:
 | `(:Recommendation)-[:RECOMMENDS_SCENARIO]->(:Scenario)` | `N:1` | - | Catalog scenario proposed. |
 | `(:TaskDefinition)-[:REQUIRES_SKILL]->(:Skill)` | `N:M` | - | Skill the task exercises. |
 | `(:Assessment)-[:SCORED_CRITERION]->(:RubricCriterion)` | `N:M` | `ScoredCriterionProps` | Per-point grader result with confidence and artifact citations. |
-| `(:Learner)-[:SUBMITTED]->(:Submission)` | `1:N` | - | Learner handed this in. |
-| `(:Submission)-[:SUBMITTED_IN]->(:Attempt)` | `N:1` | - | Submission belongs to an attempt. |
+| `(:Learner)-[:SUBMITTED]->(:Submission)` | `1:N` | `SubmissionProps` | Learner handed this in. |
+| `(:Submission)-[:SUBMITTED_IN]->(:Attempt)` | `N:1` | `SubmittedInProps` | Submission belongs to an attempt. |
 | `(:Observation)-[:SUPPORTED_BY_EVIDENCE]->(:Evidence)` | `N:M` | - | The evidence backing a behavioural observation. |
 | `(:SkillAssertion)-[:SUPPORTED_BY_EVIDENCE]->(:Evidence)` | `N:M` | - | The evidence backing a derived skill claim. |
 | `(:RubricCriterion)-[:TARGETS_SKILL]->(:Skill)` | `N:M` | - | The criterion measures this skill - the hinge from work to skill. |
-| `(:Assessment)-[:USED_RUBRIC]->(:Rubric)` | `N:1` | - | Rubric the assessment applied. |
+| `(:Assessment)-[:USED_RUBRIC]->(:Rubric)` | `N:1` | `RubricUseProps` | Rubric the assessment applied. |
 | `(:Scenario)-[:VALIDATES_SKILL]->(:Skill)` | `N:M` | - | What the scenario can prove. |
 
 ### Relationship property payloads
+
+#### `ArtifactCitationProps`
+
+Carried on ``(:Submission)-[:CONTAINS_ARTIFACT]->(:Artifact)``.
+
+``cited_by_grader`` distinguishes a file the grader actually pointed at
+from one that merely existed in the submission - a much stronger signal
+when an employer asks to see the evidence.
+
+| property | type | required |
+|---|---|---|
+| `cited_by_grader` | `bool` | no |
+| `citation_count` | `int` | no |
+| `chunk_index` | `int \| None` | no |
 
 #### `CompletedTaskProps`
 
@@ -629,6 +671,40 @@ Denormalised summary of how a learner finished a task definition.
 | `completed_at` | `datetime (UTC) \| None` | no |
 | `attempts` | `int` | no |
 
+#### `DerivedFromProps`
+
+Carried on every ``(:Evidence)-[:DERIVED_FROM]->(...)`` edge.
+
+Provenance lives on the Evidence node, but the *edge* is where the
+pointer into the specific source record belongs: which turn of a
+transcript, which rubric point, which chunk of a file. Employers see
+these, so they must survive to the database.
+
+| property | type | required |
+|---|---|---|
+| `source_locator` | `str \| None` | no |
+| `excerpt` | `str \| None` | no |
+| `extraction_confidence` | `float` | no |
+
+#### `EvaluationProps`
+
+Carried on ``(:Attempt)-[:EVALUATED_BY]->(:Assessment)``.
+
+| property | type | required |
+|---|---|---|
+| `evaluated_at` | `datetime (UTC) \| None` | no |
+| `verdict` | `AttemptVerdict \| None` | no |
+| `is_final_evaluation` | `bool` | no |
+
+#### `MeetingScopeProps`
+
+Carried on ``(:Meeting)-[:HELD_FOR_GROUP]->(:Group)``.
+
+| property | type | required |
+|---|---|---|
+| `round_key` | `str \| None` | no |
+| `recurring` | `bool` | no |
+
 #### `MembershipProps`
 
 Shared config.  ``extra='forbid'`` is deliberate: a typo in an ingestion
@@ -640,6 +716,24 @@ orphan property in Neo4j.
 | `role` | `str` | no |
 | `added_at` | `datetime (UTC) \| None` | no |
 
+#### `ObservedInProps`
+
+Carried on ``(:Observation)-[:OBSERVED_IN]->(...)``.
+
+| property | type | required |
+|---|---|---|
+| `source_locator` | `str \| None` | no |
+| `excerpt` | `str \| None` | no |
+
+#### `OccurredInProps`
+
+Carried on ``(:Interaction)-[:OCCURRED_IN]->(:LearningExperience)``.
+
+| property | type | required |
+|---|---|---|
+| `sequence_index` | `int \| None` | no |
+| `days_into_lx` | `int \| None` | no |
+
 #### `ParticipationProps`
 
 Shared config.  ``extra='forbid'`` is deliberate: a typo in an ingestion
@@ -650,6 +744,15 @@ orphan property in Neo4j.
 |---|---|---|
 | `attendance` | `str` | no |
 | `role` | `str` | no |
+
+#### `RubricUseProps`
+
+Carried on ``(:Assessment)-[:USED_RUBRIC]->(:Rubric)``.
+
+| property | type | required |
+|---|---|---|
+| `rubric_version` | `str` | no |
+| `criteria_evaluated` | `int` | no |
 
 #### `ScoredCriterionProps`
 
@@ -676,6 +779,25 @@ remains the authoritative, versioned record.
 | `confidence` | `float` | no |
 | `evidence_count` | `int` | no |
 | `latest_evidence_at` | `datetime (UTC) \| None` | no |
+
+#### `SubmissionProps`
+
+Carried on ``(:Learner)-[:SUBMITTED]->(:Submission)``.
+
+| property | type | required |
+|---|---|---|
+| `submitted_at` | `datetime (UTC) \| None` | no |
+| `attempt_number` | `int` | no |
+| `is_resubmission` | `bool` | no |
+
+#### `SubmittedInProps`
+
+Carried on ``(:Submission)-[:SUBMITTED_IN]->(:Attempt)``.
+
+| property | type | required |
+|---|---|---|
+| `attempt_number` | `int` | no |
+| `is_final_attempt` | `bool` | no |
 
 ---
 
