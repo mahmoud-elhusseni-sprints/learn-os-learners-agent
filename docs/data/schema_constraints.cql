@@ -75,8 +75,8 @@ CREATE CONSTRAINT c_skillassertion_id_unique IF NOT EXISTS
 FOR (n:SkillAssertion) REQUIRE n.id IS UNIQUE;
 CREATE CONSTRAINT c_submission_id_unique IF NOT EXISTS
 FOR (n:Submission) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT c_taskdefinition_id_unique IF NOT EXISTS
-FOR (n:TaskDefinition) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT c_task_id_unique IF NOT EXISTS
+FOR (n:Task) REQUIRE n.id IS UNIQUE;
 
 // ==========================================================================
 // 2. Business key uniqueness  (Community + Enterprise)
@@ -123,8 +123,8 @@ CREATE CONSTRAINT c_skill_bkey_unique IF NOT EXISTS
 FOR (n:Skill) REQUIRE n.slug IS UNIQUE;
 CREATE CONSTRAINT c_submission_bkey_unique IF NOT EXISTS
 FOR (n:Submission) REQUIRE (n.source_system, n.source_id) IS UNIQUE;
-CREATE CONSTRAINT c_taskdefinition_bkey_unique IF NOT EXISTS
-FOR (n:TaskDefinition) REQUIRE n.task_definition_key IS UNIQUE;
+CREATE CONSTRAINT c_task_bkey_unique IF NOT EXISTS
+FOR (n:Task) REQUIRE n.task_key IS UNIQUE;
 
 // ==========================================================================
 // 3. Range indexes on hot query paths  (Community + Enterprise)
@@ -247,8 +247,8 @@ CREATE INDEX i_submission_submitted_at IF NOT EXISTS
 FOR (n:Submission) ON (n.submitted_at);
 CREATE INDEX i_submission_is_resubmission IF NOT EXISTS
 FOR (n:Submission) ON (n.is_resubmission);
-CREATE INDEX i_taskdefinition_task_archetype IF NOT EXISTS
-FOR (n:TaskDefinition) ON (n.task_archetype);
+CREATE INDEX i_task_task_archetype IF NOT EXISTS
+FOR (n:Task) ON (n.task_archetype);
 
 // Relationship property indexes (Neo4j 5.x).
 
@@ -306,8 +306,8 @@ CREATE FULLTEXT INDEX ft_skillassertion IF NOT EXISTS
 FOR (n:SkillAssertion) ON EACH [n.rationale];
 CREATE FULLTEXT INDEX ft_submission IF NOT EXISTS
 FOR (n:Submission) ON EACH [n.text];
-CREATE FULLTEXT INDEX ft_taskdefinition IF NOT EXISTS
-FOR (n:TaskDefinition) ON EACH [n.headline, n.description];
+CREATE FULLTEXT INDEX ft_task IF NOT EXISTS
+FOR (n:Task) ON EACH [n.headline, n.description];
 
 // ==========================================================================
 // 5. Property existence constraints  (ENTERPRISE ONLY - commented out)
@@ -772,25 +772,25 @@ FOR (n:TaskDefinition) ON EACH [n.headline, n.description];
 // CREATE CONSTRAINT c_submission_source_type_exists IF NOT EXISTS
 // FOR (n:Submission) REQUIRE n.source_type IS NOT NULL;
 
-// --- TaskDefinition ---
-// CREATE CONSTRAINT c_taskdefinition_created_at_exists IF NOT EXISTS
-// FOR (n:TaskDefinition) REQUIRE n.created_at IS NOT NULL;
-// CREATE CONSTRAINT c_taskdefinition_headline_exists IF NOT EXISTS
-// FOR (n:TaskDefinition) REQUIRE n.headline IS NOT NULL;
-// CREATE CONSTRAINT c_taskdefinition_id_exists IF NOT EXISTS
-// FOR (n:TaskDefinition) REQUIRE n.id IS NOT NULL;
-// CREATE CONSTRAINT c_taskdefinition_ingested_at_exists IF NOT EXISTS
-// FOR (n:TaskDefinition) REQUIRE n.ingested_at IS NOT NULL;
-// CREATE CONSTRAINT c_taskdefinition_source_id_exists IF NOT EXISTS
-// FOR (n:TaskDefinition) REQUIRE n.source_id IS NOT NULL;
-// CREATE CONSTRAINT c_taskdefinition_source_observed_at_exists IF NOT EXISTS
-// FOR (n:TaskDefinition) REQUIRE n.source_observed_at IS NOT NULL;
-// CREATE CONSTRAINT c_taskdefinition_source_system_exists IF NOT EXISTS
-// FOR (n:TaskDefinition) REQUIRE n.source_system IS NOT NULL;
-// CREATE CONSTRAINT c_taskdefinition_source_type_exists IF NOT EXISTS
-// FOR (n:TaskDefinition) REQUIRE n.source_type IS NOT NULL;
-// CREATE CONSTRAINT c_taskdefinition_task_definition_key_exists IF NOT EXISTS
-// FOR (n:TaskDefinition) REQUIRE n.task_definition_key IS NOT NULL;
+// --- Task ---
+// CREATE CONSTRAINT c_task_created_at_exists IF NOT EXISTS
+// FOR (n:Task) REQUIRE n.created_at IS NOT NULL;
+// CREATE CONSTRAINT c_task_headline_exists IF NOT EXISTS
+// FOR (n:Task) REQUIRE n.headline IS NOT NULL;
+// CREATE CONSTRAINT c_task_id_exists IF NOT EXISTS
+// FOR (n:Task) REQUIRE n.id IS NOT NULL;
+// CREATE CONSTRAINT c_task_ingested_at_exists IF NOT EXISTS
+// FOR (n:Task) REQUIRE n.ingested_at IS NOT NULL;
+// CREATE CONSTRAINT c_task_source_id_exists IF NOT EXISTS
+// FOR (n:Task) REQUIRE n.source_id IS NOT NULL;
+// CREATE CONSTRAINT c_task_source_observed_at_exists IF NOT EXISTS
+// FOR (n:Task) REQUIRE n.source_observed_at IS NOT NULL;
+// CREATE CONSTRAINT c_task_source_system_exists IF NOT EXISTS
+// FOR (n:Task) REQUIRE n.source_system IS NOT NULL;
+// CREATE CONSTRAINT c_task_source_type_exists IF NOT EXISTS
+// FOR (n:Task) REQUIRE n.source_type IS NOT NULL;
+// CREATE CONSTRAINT c_task_task_key_exists IF NOT EXISTS
+// FOR (n:Task) REQUIRE n.task_key IS NOT NULL;
 
 // Relationship property existence (ENTERPRISE ONLY).
 // Enforces that graded criterion results always carry a verdict and a

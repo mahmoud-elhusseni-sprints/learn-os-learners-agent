@@ -29,6 +29,7 @@ NOW = datetime(2026, 8, 31, 12, 0, tzinfo=timezone.utc)
 
 
 def _prov(**kw):
+    """Base provenance - used by structural nodes, which are not evidence."""
     base = dict(
         source_system=M.SourceSystem.LMS,
         source_id="s1",
@@ -38,6 +39,32 @@ def _prov(**kw):
     )
     base.update(kw)
     return M.Provenance(**base)
+
+
+def _ev_prov(**kw):
+    """Evidence provenance - evidence_type is required here, by type."""
+    base = dict(
+        source_system=M.SourceSystem.LMS,
+        source_id="s1",
+        source_type="t",
+        observed_at=NOW,
+        ingested_at=NOW,
+        evidence_type=M.EvidenceType.DELIVERED_WORK,
+    )
+    base.update(kw)
+    return M.EvidenceProvenance(**base)
+
+
+def _tuple_props(ev, **extra):
+    """The provenance tuple a DERIVED_FROM edge must repeat."""
+    props = dict(
+        source_system=ev.provenance.source_system,
+        source_id=ev.provenance.source_id,
+        observed_at=ev.observed_at,
+        evidence_type=ev.evidence_type,
+    )
+    props.update(extra)
+    return props
 
 
 def _learner(email="a@example.invalid"):
@@ -64,7 +91,7 @@ def _evidence(n=1, **kw):
     base = dict(
         id=deterministic_id("vi", "evidence", str(n)),
         created_at=NOW,
-        provenance=_prov(source_id=f"e{n}"),
+        provenance=_ev_prov(source_id=f"e{n}"),
         evidence_type=M.EvidenceType.DELIVERED_WORK,
         strength=M.EvidenceStrength.HIGH,
         title="t",
@@ -72,6 +99,10 @@ def _evidence(n=1, **kw):
         observed_at=NOW,
     )
     base.update(kw)
+    if "evidence_type" in kw and "provenance" not in kw:
+        base["provenance"] = _ev_prov(
+            source_id=f"e{n}", evidence_type=kw["evidence_type"]
+        )
     return M.Evidence(**base)
 
 
@@ -332,7 +363,7 @@ def _minimal_supported_graph():
             _edge(M.EdgeType.ABOUT_SKILL, a, s),
             _edge(M.EdgeType.SUPPORTED_BY_EVIDENCE, a, ev),
             _edge(M.EdgeType.EVIDENCE_FOR_LEARNER, ev, learner),
-            _edge(M.EdgeType.DERIVED_FROM, ev, sub),
+            _edge(M.EdgeType.DERIVED_FROM, ev, sub, **_tuple_props(ev)),
         ],
     )
 
@@ -485,9 +516,16 @@ def test_fixture_carries_no_leaked_github_handle():
 
 
 def test_provenance_carries_the_full_brief_tuple():
-    """source_system, source_id, timestamp, evidence_type - all four."""
+    """source_system, source_id, timestamp, evidence_type - all four.
+
+    Evidence.provenance is typed as EvidenceProvenance, where evidence_type
+    is a required field - so the tuple is enforced by the type, not by a
+    convention that could be forgotten.
+    """
+    assert M.EvidenceProvenance.model_fields["evidence_type"].is_required()
     ev = _evidence()
     p = ev.provenance
+    assert isinstance(p, M.EvidenceProvenance)
     assert p.source_system is M.SourceSystem.LMS
     assert p.source_id
     assert p.observed_at.tzinfo is not None
@@ -500,7 +538,7 @@ def test_evidence_type_is_mirrored_onto_provenance():
 
 
 def test_contradictory_evidence_type_rejected():
-    prov = _prov(evidence_type=M.EvidenceType.SELF_DECLARED)
+    prov = _ev_prov(evidence_type=M.EvidenceType.SELF_DECLARED)
     try:
         M.Evidence(
             id=deterministic_id("x", "y", "clash"),
@@ -534,9 +572,12 @@ def test_derived_from_edge_carries_a_locator():
         M.EdgeType.DERIVED_FROM,
         ev,
         sub,
-        source_locator="rubric_point:102",
-        excerpt="the grader said this",
-        extraction_confidence=0.85,
+        **_tuple_props(
+            ev,
+            source_locator="rubric_point:102",
+            excerpt="the grader said this",
+            extraction_confidence=0.85,
+        ),
     )
     assert edge.properties["source_locator"] == "rubric_point:102"
     assert edge.properties["extraction_confidence"] == 0.85
@@ -550,7 +591,12 @@ def test_edge_property_ranges_are_enforced():
         kind="link",
     )
     try:
-        _edge(M.EdgeType.DERIVED_FROM, ev, sub, extraction_confidence=1.7)
+        _edge(
+            M.EdgeType.DERIVED_FROM,
+            ev,
+            sub,
+            **_tuple_props(ev, extraction_confidence=1.7),
+        )
     except Exception as e:
         assert "less than or equal to 1" in str(e)
     else:
@@ -621,6 +667,117 @@ def test_submission_artifact_count_matches_edges():
     for sub in g.by_label("Submission"):
         edges = g.edges_of(M.EdgeType.CONTAINS_ARTIFACT, source_id=sub.id)
         assert sub.artifact_count == len(edges)  # type: ignore[attr-defined]
+
+
+# ------------------------------------------- required entity classes & tuple
+
+
+def test_all_specified_entity_classes_are_declared():
+    """The specification names these entity classes explicitly."""
+    for label in (
+        "Learner",
+        "Skill",
+        "Task",
+        "Project",
+        "Submission",
+        "Assessment",
+        "Meeting",
+        "Interaction",
+        "Evidence",
+    ):
+        assert label in M.NODE_CLASSES, f"{label} is not a declared node class"
+
+
+def test_every_specified_entity_has_typed_relationship_endpoints():
+    """Each required entity appears on at least one registered edge spec."""
+    for label in (
+        "Task",
+        "Project",
+        "Submission",
+        "Assessment",
+        "Meeting",
+        "Interaction",
+    ):
+        specs = [
+            sp for sp in M.EDGE_SPECS if label in (sp.source_label, sp.target_label)
+        ]
+        assert specs, f"{label} has no registered relationship endpoints"
+        assert any(
+            sp.property_model for sp in specs
+        ), f"{label} has no edge carrying typed properties"
+
+
+def test_task_and_learning_experience_are_distinct():
+    """One Task definition is handed to several learners; the instance differs."""
+    assert "Task" in M.NODE_CLASSES and "LearningExperience" in M.NODE_CLASSES
+    assert (M.EdgeType.INSTANCE_OF, "LearningExperience", "Task") in {
+        (sp.type, sp.source_label, sp.target_label) for sp in M.EDGE_SPECS
+    }
+
+
+def test_derived_from_edge_requires_the_full_tuple():
+    """The edge schema itself makes all four tuple elements mandatory."""
+    required = {
+        k for k, v in M.DerivedFromProps.model_fields.items() if v.is_required()
+    }
+    assert required == {
+        "source_system",
+        "source_id",
+        "observed_at",
+        "evidence_type",
+    }, required
+
+
+def test_derived_from_edge_missing_tuple_is_rejected():
+    ev = _evidence()
+    sub = M.Submission(
+        id=deterministic_id("vi", "submission", "t"),
+        created_at=NOW,
+        provenance=_prov(),
+        kind="link",
+    )
+    try:
+        _edge(M.EdgeType.DERIVED_FROM, ev, sub, source_locator="x")
+    except Exception as e:
+        assert "source_system" in str(e) or "Field required" in str(e)
+    else:
+        raise AssertionError("DERIVED_FROM without the tuple was accepted")
+
+
+def test_edge_tuple_drift_from_the_node_is_rejected():
+    """An edge whose tuple disagrees with its Evidence node fails the graph."""
+    learner, skill, ev = _learner(), _skill(), _evidence()
+    sub = M.Submission(
+        id=deterministic_id("vi", "submission", "d"),
+        created_at=NOW,
+        provenance=_prov(),
+        kind="link",
+    )
+    bad = _edge(
+        M.EdgeType.DERIVED_FROM,
+        ev,
+        sub,
+        **_tuple_props(ev, source_system=M.SourceSystem.MEETINGS),
+    )
+    try:
+        M.LearnerGraph(
+            generated_at=NOW,
+            nodes=[learner, skill, ev, sub],
+            edges=[_edge(M.EdgeType.EVIDENCE_FOR_LEARNER, ev, learner), bad],
+        )
+    except Exception as e:
+        assert "drift" in str(e)
+    else:
+        raise AssertionError("tuple drift between edge and node was accepted")
+
+
+def test_fixture_derived_from_edges_all_carry_the_tuple():
+    g = _fixture()
+    edges = [e for e in g.edges if e.type is M.EdgeType.DERIVED_FROM]
+    assert edges
+    for e in edges:
+        for key in ("source_system", "source_id", "observed_at", "evidence_type"):
+            assert e.properties.get(key), f"{key} missing on a DERIVED_FROM edge"
 
 
 # ---------------------------------------------------------------- cypher export

@@ -112,7 +112,7 @@
       "repository_url": "https://github.com/learner-a4/ai-video-generation-app"
     },
     {
-      "id": "b7166dc6-7934-50a8-8898-ff5595ebc70f",
+      "id": "80df1e7b-e4a3-5695-a711-d5b71ac925cf",
       "created_at": "2026-08-31T12:00:00Z",
       "provenance": {
         "source_system": "virtual_internship",
@@ -123,8 +123,8 @@
         "extraction_method": "direct_mapping",
         "extractor_version": "ontology@0.1.0"
       },
-      "label": "TaskDefinition",
-      "task_definition_key": "941405f3-ecb0-43e7-81fd-86b4c5c69ab3",
+      "label": "Task",
+      "task_key": "941405f3-ecb0-43e7-81fd-86b4c5c69ab3",
       "headline": "Complete the pipeline integration and finalize the data schema.",
       "description": "Complete the pipeline integration and finalize the data schema.\n\nComplete pipeline integration and db.\nBuild the first step of the pipeline (user text -> script writer agent) . \nstart frontend build\nCoordinate with Learner A6 and Learner A7.",
       "task_archetype": "single_submission",
@@ -673,7 +673,7 @@
       "evaluation_criteria": "Fires if 'start frontend build' produced nothing runnable — there is no initialized frontend project and no user-text input/submit UI, only a claim, a screenshot, or an empty folder. Does NOT fire merely because a genuinely started frontend is not yet wired to the backend while the API contract is still being coordinated."
     },
     {
-      "id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "created_at": "2026-08-31T12:00:00Z",
       "provenance": {
         "source_system": "virtual_internship",
@@ -684,8 +684,8 @@
         "extraction_method": "direct_mapping",
         "extractor_version": "ontology@0.1.0"
       },
-      "label": "TaskDefinition",
-      "task_definition_key": "6d6f5ed5-09d9-443c-86c4-7e08a2735fa6",
+      "label": "Task",
+      "task_key": "6d6f5ed5-09d9-443c-86c4-7e08a2735fa6",
       "headline": "Week 1 - Pipeline Blueprint, DB Schema & Async Job Model",
       "description": "Sprint 1 (Blueprint & Agents) core for the Web App, Orchestration & Jobs lane. Build the pipeline blueprint/orchestration service that runs the stages in sequence (transcript -> planner -> audio -> alignment -> assets -> composition -> animation -> render), passing each stage's structured JSON to the next; add the basic DB schema (users, videos) with job status, metadata, and output link; and model generation as an asynchronous job (status lifecycle).",
       "task_archetype": "single_submission",
@@ -1159,7 +1159,7 @@
       "evaluation_criteria": "The pipeline runs synchronously, blocking the app."
     },
     {
-      "id": "cb6871af-a573-527d-96e3-84b9d136935a",
+      "id": "73f4b101-efc0-5c39-8b5f-c14a7559018d",
       "created_at": "2026-08-31T12:00:00Z",
       "provenance": {
         "source_system": "virtual_internship",
@@ -1170,8 +1170,8 @@
         "extraction_method": "direct_mapping",
         "extractor_version": "ontology@0.1.0"
       },
-      "label": "TaskDefinition",
-      "task_definition_key": "0d018a76-9dcf-4ee4-a7a8-411470cc7df6",
+      "label": "Task",
+      "task_key": "0d018a76-9dcf-4ee4-a7a8-411470cc7df6",
       "headline": "Sprint 4 — Task 1: Script Generation Prompt Enhancement",
       "description": "Enhance the prompt of the agent that turns a simple idea into a video script. The generated script must become materially richer and more detailed, and must explain the underlying concepts clearly to a viewer rather than skimming them. Show the improvement with before/after samples from the same input idea.",
       "task_archetype": "single_submission",
@@ -1354,7 +1354,7 @@
       "evaluation_criteria": "Check structure and sequencing are still valid for downstream scene planning."
     },
     {
-      "id": "6529bf24-6dbb-5c04-96e6-940dcb03b812",
+      "id": "aef1cc63-0195-545f-8736-d4d058891a3f",
       "created_at": "2026-08-31T12:00:00Z",
       "provenance": {
         "source_system": "virtual_internship",
@@ -1365,8 +1365,8 @@
         "extraction_method": "direct_mapping",
         "extractor_version": "ontology@0.1.0"
       },
-      "label": "TaskDefinition",
-      "task_definition_key": "4dbca27c-9c88-43f7-83ee-5e8da17d2c6f",
+      "label": "Task",
+      "task_key": "4dbca27c-9c88-43f7-83ee-5e8da17d2c6f",
       "headline": "Sprint 4 - User Authentication",
       "description": "Build an end-to-end authentication layer across the backend and frontend on top of the existing UI. Support user registration and login using Supabase Auth, storing user profiles in a dedicated Supabase relational table linked to the video table for strict multi-tenant data isolation.",
       "task_archetype": "single_submission",
@@ -1519,7 +1519,7 @@
       "evaluation_criteria": "Execute database queries under User A context and confirm records owned by User B are excluded from result set."
     },
     {
-      "id": "ac47167a-098f-5218-8387-c688eb6adbf0",
+      "id": "dac5bb9b-6a4f-53e6-bcf2-d4bbb0db2e18",
       "created_at": "2026-08-31T12:00:00Z",
       "provenance": {
         "source_system": "virtual_internship",
@@ -1530,8 +1530,8 @@
         "extraction_method": "direct_mapping",
         "extractor_version": "ontology@0.1.0"
       },
-      "label": "TaskDefinition",
-      "task_definition_key": "ec9537a7-9760-47dd-9cbb-7c9c9ad6d9a0",
+      "label": "Task",
+      "task_key": "ec9537a7-9760-47dd-9cbb-7c9c9ad6d9a0",
       "headline": "week 3 -  integration and UI",
       "description": "week 3 -  integration and UI",
       "task_archetype": "single_submission",
@@ -6288,16 +6288,20 @@
     },
     {
       "type": "PART_OF_PROJECT",
-      "source_label": "TaskDefinition",
-      "source_id": "b7166dc6-7934-50a8-8898-ff5595ebc70f",
+      "source_label": "Task",
+      "source_id": "80df1e7b-e4a3-5695-a711-d5b71ac925cf",
       "target_label": "Project",
       "target_id": "5819a361-6681-532c-927a-927812296ca0",
-      "properties": {}
+      "properties": {
+        "sprint_label": null,
+        "sequence": null,
+        "is_primary_deliverable": false
+      }
     },
     {
       "type": "HAS_RUBRIC",
-      "source_label": "TaskDefinition",
-      "source_id": "b7166dc6-7934-50a8-8898-ff5595ebc70f",
+      "source_label": "Task",
+      "source_id": "80df1e7b-e4a3-5695-a711-d5b71ac925cf",
       "target_label": "Rubric",
       "target_id": "0b7043bb-a2ae-50de-8260-3ae77f54e4a1",
       "properties": {}
@@ -6688,72 +6692,76 @@
     },
     {
       "type": "PART_OF_PROJECT",
-      "source_label": "TaskDefinition",
-      "source_id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "source_label": "Task",
+      "source_id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "target_label": "Project",
       "target_id": "5819a361-6681-532c-927a-927812296ca0",
-      "properties": {}
+      "properties": {
+        "sprint_label": null,
+        "sequence": null,
+        "is_primary_deliverable": true
+      }
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "source_label": "Task",
+      "source_id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "target_label": "Skill",
       "target_id": "eea2ef9d-9569-53db-bc4e-0fd2ec41bc69",
       "properties": {}
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "source_label": "Task",
+      "source_id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "target_label": "Skill",
       "target_id": "f1b6b3e4-ede5-58e5-a61e-91ef51814f08",
       "properties": {}
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "source_label": "Task",
+      "source_id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "target_label": "Skill",
       "target_id": "f282daa8-49d3-511b-99b1-a80a0f13cc27",
       "properties": {}
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "source_label": "Task",
+      "source_id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "target_label": "Skill",
       "target_id": "fc151ba1-fb9c-5eaf-968e-d327850eca06",
       "properties": {}
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "source_label": "Task",
+      "source_id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "target_label": "Skill",
       "target_id": "d7e0444b-46c4-50fa-b7ad-d571a7c5777b",
       "properties": {}
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "source_label": "Task",
+      "source_id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "target_label": "Skill",
       "target_id": "1cbd48cf-5b78-5d84-a2c6-1a03b9a598d1",
       "properties": {}
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "source_label": "Task",
+      "source_id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "target_label": "Skill",
       "target_id": "3059b584-9489-55b0-8ee1-ea1e1fab9edc",
       "properties": {}
     },
     {
       "type": "HAS_RUBRIC",
-      "source_label": "TaskDefinition",
-      "source_id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "source_label": "Task",
+      "source_id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "target_label": "Rubric",
       "target_id": "cd4abcec-983f-5001-aa4a-a6f9b6562523",
       "properties": {}
@@ -6976,32 +6984,36 @@
     },
     {
       "type": "PART_OF_PROJECT",
-      "source_label": "TaskDefinition",
-      "source_id": "cb6871af-a573-527d-96e3-84b9d136935a",
+      "source_label": "Task",
+      "source_id": "73f4b101-efc0-5c39-8b5f-c14a7559018d",
       "target_label": "Project",
       "target_id": "5819a361-6681-532c-927a-927812296ca0",
-      "properties": {}
+      "properties": {
+        "sprint_label": null,
+        "sequence": null,
+        "is_primary_deliverable": true
+      }
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "cb6871af-a573-527d-96e3-84b9d136935a",
+      "source_label": "Task",
+      "source_id": "73f4b101-efc0-5c39-8b5f-c14a7559018d",
       "target_label": "Skill",
       "target_id": "551d45b0-0892-59a7-a05a-edec68cd9d06",
       "properties": {}
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "cb6871af-a573-527d-96e3-84b9d136935a",
+      "source_label": "Task",
+      "source_id": "73f4b101-efc0-5c39-8b5f-c14a7559018d",
       "target_label": "Skill",
       "target_id": "3bfc7dd7-4877-5b13-98ea-847189c69f52",
       "properties": {}
     },
     {
       "type": "HAS_RUBRIC",
-      "source_label": "TaskDefinition",
-      "source_id": "cb6871af-a573-527d-96e3-84b9d136935a",
+      "source_label": "Task",
+      "source_id": "73f4b101-efc0-5c39-8b5f-c14a7559018d",
       "target_label": "Rubric",
       "target_id": "60098f2f-5124-5910-a932-d9c82e14a625",
       "properties": {}
@@ -7056,48 +7068,52 @@
     },
     {
       "type": "PART_OF_PROJECT",
-      "source_label": "TaskDefinition",
-      "source_id": "6529bf24-6dbb-5c04-96e6-940dcb03b812",
+      "source_label": "Task",
+      "source_id": "aef1cc63-0195-545f-8736-d4d058891a3f",
       "target_label": "Project",
       "target_id": "5819a361-6681-532c-927a-927812296ca0",
-      "properties": {}
+      "properties": {
+        "sprint_label": null,
+        "sequence": null,
+        "is_primary_deliverable": true
+      }
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "6529bf24-6dbb-5c04-96e6-940dcb03b812",
+      "source_label": "Task",
+      "source_id": "aef1cc63-0195-545f-8736-d4d058891a3f",
       "target_label": "Skill",
       "target_id": "3059b584-9489-55b0-8ee1-ea1e1fab9edc",
       "properties": {}
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "6529bf24-6dbb-5c04-96e6-940dcb03b812",
+      "source_label": "Task",
+      "source_id": "aef1cc63-0195-545f-8736-d4d058891a3f",
       "target_label": "Skill",
       "target_id": "ccf90fc6-fb6b-5b0c-ada1-83c06ffd5263",
       "properties": {}
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "6529bf24-6dbb-5c04-96e6-940dcb03b812",
+      "source_label": "Task",
+      "source_id": "aef1cc63-0195-545f-8736-d4d058891a3f",
       "target_label": "Skill",
       "target_id": "f282daa8-49d3-511b-99b1-a80a0f13cc27",
       "properties": {}
     },
     {
       "type": "REQUIRES_SKILL",
-      "source_label": "TaskDefinition",
-      "source_id": "6529bf24-6dbb-5c04-96e6-940dcb03b812",
+      "source_label": "Task",
+      "source_id": "aef1cc63-0195-545f-8736-d4d058891a3f",
       "target_label": "Skill",
       "target_id": "c6c472b0-d995-5f21-a7a1-4366bd05ed97",
       "properties": {}
     },
     {
       "type": "HAS_RUBRIC",
-      "source_label": "TaskDefinition",
-      "source_id": "6529bf24-6dbb-5c04-96e6-940dcb03b812",
+      "source_label": "Task",
+      "source_id": "aef1cc63-0195-545f-8736-d4d058891a3f",
       "target_label": "Rubric",
       "target_id": "912ada0f-7732-53dd-83e2-72b583f44860",
       "properties": {}
@@ -7168,16 +7184,20 @@
     },
     {
       "type": "PART_OF_PROJECT",
-      "source_label": "TaskDefinition",
-      "source_id": "ac47167a-098f-5218-8387-c688eb6adbf0",
+      "source_label": "Task",
+      "source_id": "dac5bb9b-6a4f-53e6-bcf2-d4bbb0db2e18",
       "target_label": "Project",
       "target_id": "5819a361-6681-532c-927a-927812296ca0",
-      "properties": {}
+      "properties": {
+        "sprint_label": null,
+        "sequence": null,
+        "is_primary_deliverable": false
+      }
     },
     {
       "type": "HAS_RUBRIC",
-      "source_label": "TaskDefinition",
-      "source_id": "ac47167a-098f-5218-8387-c688eb6adbf0",
+      "source_label": "Task",
+      "source_id": "dac5bb9b-6a4f-53e6-bcf2-d4bbb0db2e18",
       "target_label": "Rubric",
       "target_id": "d90ef01d-c216-5e05-94d4-cd7b2cbf48ca",
       "properties": {}
@@ -7402,8 +7422,8 @@
       "type": "INSTANCE_OF",
       "source_label": "LearningExperience",
       "source_id": "1d7f6113-0e08-53c1-9d81-cd9be3481c6f",
-      "target_label": "TaskDefinition",
-      "target_id": "b7166dc6-7934-50a8-8898-ff5595ebc70f",
+      "target_label": "Task",
+      "target_id": "80df1e7b-e4a3-5695-a711-d5b71ac925cf",
       "properties": {}
     },
     {
@@ -7418,16 +7438,16 @@
       "type": "INSTANCE_OF",
       "source_label": "LearningExperience",
       "source_id": "a1fa0455-224a-56d8-8e01-2fab5bdd131d",
-      "target_label": "TaskDefinition",
-      "target_id": "b7166dc6-7934-50a8-8898-ff5595ebc70f",
+      "target_label": "Task",
+      "target_id": "80df1e7b-e4a3-5695-a711-d5b71ac925cf",
       "properties": {}
     },
     {
       "type": "COMPLETED_TASK",
       "source_label": "Learner",
       "source_id": "861ce16e-7e8f-5211-9164-1e14b7a62677",
-      "target_label": "TaskDefinition",
-      "target_id": "b7166dc6-7934-50a8-8898-ff5595ebc70f",
+      "target_label": "Task",
+      "target_id": "80df1e7b-e4a3-5695-a711-d5b71ac925cf",
       "properties": {
         "lx_key": "1435355e-84a6-4261-a621-6daa5fca27c0",
         "outcome": "completed_success",
@@ -7447,8 +7467,8 @@
       "type": "INSTANCE_OF",
       "source_label": "LearningExperience",
       "source_id": "e6b78c2b-c03c-54b7-8e4a-85bf8e36cef1",
-      "target_label": "TaskDefinition",
-      "target_id": "b7166dc6-7934-50a8-8898-ff5595ebc70f",
+      "target_label": "Task",
+      "target_id": "80df1e7b-e4a3-5695-a711-d5b71ac925cf",
       "properties": {}
     },
     {
@@ -7463,8 +7483,8 @@
       "type": "INSTANCE_OF",
       "source_label": "LearningExperience",
       "source_id": "3787e809-0204-5c52-985d-bd63fc638299",
-      "target_label": "TaskDefinition",
-      "target_id": "dbcdf99a-2aa5-5367-9678-38ab41554dbc",
+      "target_label": "Task",
+      "target_id": "baed1b42-7859-5883-b521-df7b0a67925a",
       "properties": {}
     },
     {
@@ -7479,16 +7499,16 @@
       "type": "INSTANCE_OF",
       "source_label": "LearningExperience",
       "source_id": "ca167f27-bdfc-5a04-8425-39eaff63e113",
-      "target_label": "TaskDefinition",
-      "target_id": "cb6871af-a573-527d-96e3-84b9d136935a",
+      "target_label": "Task",
+      "target_id": "73f4b101-efc0-5c39-8b5f-c14a7559018d",
       "properties": {}
     },
     {
       "type": "COMPLETED_TASK",
       "source_label": "Learner",
       "source_id": "861ce16e-7e8f-5211-9164-1e14b7a62677",
-      "target_label": "TaskDefinition",
-      "target_id": "cb6871af-a573-527d-96e3-84b9d136935a",
+      "target_label": "Task",
+      "target_id": "73f4b101-efc0-5c39-8b5f-c14a7559018d",
       "properties": {
         "lx_key": "69084cd9-4c72-428c-be6e-b512269186a5",
         "outcome": "completed_success",
@@ -7508,8 +7528,8 @@
       "type": "INSTANCE_OF",
       "source_label": "LearningExperience",
       "source_id": "f8b4d351-2b73-59e0-a4eb-e848f170229b",
-      "target_label": "TaskDefinition",
-      "target_id": "6529bf24-6dbb-5c04-96e6-940dcb03b812",
+      "target_label": "Task",
+      "target_id": "aef1cc63-0195-545f-8736-d4d058891a3f",
       "properties": {}
     },
     {
@@ -7524,16 +7544,16 @@
       "type": "INSTANCE_OF",
       "source_label": "LearningExperience",
       "source_id": "3156124a-1b19-58fb-bc7c-03d7157aa8a7",
-      "target_label": "TaskDefinition",
-      "target_id": "ac47167a-098f-5218-8387-c688eb6adbf0",
+      "target_label": "Task",
+      "target_id": "dac5bb9b-6a4f-53e6-bcf2-d4bbb0db2e18",
       "properties": {}
     },
     {
       "type": "COMPLETED_TASK",
       "source_label": "Learner",
       "source_id": "861ce16e-7e8f-5211-9164-1e14b7a62677",
-      "target_label": "TaskDefinition",
-      "target_id": "ac47167a-098f-5218-8387-c688eb6adbf0",
+      "target_label": "Task",
+      "target_id": "dac5bb9b-6a4f-53e6-bcf2-d4bbb0db2e18",
       "properties": {
         "lx_key": "ef329ce4-cf90-4f26-8518-30b107060766",
         "outcome": "completed_success",
@@ -7676,6 +7696,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:101",
         "excerpt": "There is clear evidence of an attempt to model the pipeline's core entities with typed fields and keys: the asset schemas (AssetItem, AssetResponseContract) are explicit and typed, and the SQL migration for the 'videos' table includes a primary key, user prompt, status, and JSONB columns for script and run state. The PRD lists core entities (User, Video, Script, Scene, Asset, etc.). However, the schema is not fully explicit for all required entities: the script and run state are stored as JSONB blobs rather than as normalized, relational tables/models with typed columns and foreign keys. There is no explicit table or model for 'Script' or 'Run' as a first-class entity, and relationships are only partially modeled (e.g., video_id is present, but no explicit foreign keys to scripts or runs). Thus, the requirement is only partially met.",
         "extraction_confidence": 0.85
@@ -7688,6 +7712,10 @@
       "target_label": "RubricCriterion",
       "target_id": "d8c61d9f-9129-53b1-aa60-77a1149caed9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:101",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -7730,6 +7758,10 @@
       "target_label": "Artifact",
       "target_id": "e0836324-6cee-592d-b252-eaf700a54fe5",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/schemas/asset.py_1",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -7754,6 +7786,10 @@
       "target_label": "Artifact",
       "target_id": "94f0a109-32bf-5329-8fdd-490b954f0553",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/schemas/asset.py_2",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -7778,6 +7814,10 @@
       "target_label": "Artifact",
       "target_id": "be409ee6-9ec7-588e-bb2b-f999828cdfe1",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/migrations/001_init.sql_1",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -7802,6 +7842,10 @@
       "target_label": "Artifact",
       "target_id": "e4e42364-35e4-588c-b6c7-08314f65379f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "docs/PRD.md_17",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -7838,6 +7882,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:102",
         "excerpt": "The provided code in both script_agent.py chunks shows a function that takes raw user text, builds a prompt for an LLM (with a system prompt instructing the agent to create a structured, segmented script), calls the LLM, and returns a parsed structured script object (VideoScriptBlueprint). This is a real transformation from user text to a structured script artifact, matching the rubric's requirements.",
         "extraction_confidence": 1.0
@@ -7850,6 +7898,10 @@
       "target_label": "RubricCriterion",
       "target_id": "c6209371-bcb5-5c57-8af0-e0126aa8d81a",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:102",
         "excerpt": null,
         "extraction_confidence": 1.0
@@ -7890,6 +7942,10 @@
       "target_label": "Artifact",
       "target_id": "522c4149-5269-581c-9dc9-4c51b3d2ba53",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/script_agent.py_0",
         "excerpt": null,
         "extraction_confidence": 1.0
@@ -7914,6 +7970,10 @@
       "target_label": "Artifact",
       "target_id": "09d61344-5565-52d1-b084-c611dd0e3e03",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/script_agent.py_1",
         "excerpt": null,
         "extraction_confidence": 1.0
@@ -7966,6 +8026,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:103",
         "excerpt": "There is clear evidence that the pipeline is designed to persist job state and stage outputs in a database table ('videos'), with columns for each stage's output (e.g., script_data, scene_data, etc.), and that jobs are created and tracked in the DB. However, there is no direct evidence in the provided chunks that the script writer step (Stage 1) specifically reads its input from and writes its output to the finalized schema/database (i.e., that a run row is created, the produced script is written back, and status is updated DURABLY at the script stage itself). The architecture and API design support this, but the actual implementation of the script writer's DB interaction is not shown. Thus, the requirement is partially met: the DB is defined and used for job tracking, but it's not fully confirmed that the script writer step itself persists its output as required by the rubric.",
         "extraction_confidence": 0.7
@@ -7978,6 +8042,10 @@
       "target_label": "RubricCriterion",
       "target_id": "c7f6430c-d8f6-5deb-bd47-68b0c4fe1b57",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:103",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8010,6 +8078,10 @@
       "target_label": "Artifact",
       "target_id": "be409ee6-9ec7-588e-bb2b-f999828cdfe1",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/migrations/001_init.sql_1",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8034,6 +8106,10 @@
       "target_label": "Artifact",
       "target_id": "d8c7436e-6e68-50fe-8f4d-a9ba7e5c2e66",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/routes/video_routes.py_3",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8058,6 +8134,10 @@
       "target_label": "Artifact",
       "target_id": "d61ba4ad-7d48-5f13-bb97-ae02b137fcc9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/routes/video_routes.py.diff_2",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8082,6 +8162,10 @@
       "target_label": "Artifact",
       "target_id": "892849d5-fc5e-5e2d-994f-5c4753babcce",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "docs/architecture.md_3",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8106,6 +8190,10 @@
       "target_label": "Artifact",
       "target_id": "643e3c14-2842-51e1-a9d1-5210b82a93fd",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "pr.md_2",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8130,6 +8218,10 @@
       "target_label": "Artifact",
       "target_id": "42470982-7e16-57b5-8002-1bde6fd5bdf7",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "pr.md_3",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8166,6 +8258,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:104",
         "excerpt": "There is clear evidence that a React frontend project has been scaffolded (see package.json, index.html, and README updates), but there is no evidence of an actual implemented user text input/submit UI. The documentation and folder structure suggest intent and planning for such a UI, but no code or markup for an input form is present in the provided chunks.",
         "extraction_confidence": 0.95
@@ -8178,6 +8274,10 @@
       "target_label": "RubricCriterion",
       "target_id": "cbba16f5-57c1-5932-a21e-b295675ac31b",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:104",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -8222,6 +8322,10 @@
       "target_label": "Artifact",
       "target_id": "cdaab2ae-63ef-5e02-a84a-4e844c96fd60",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "frontend/README.md_0",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -8246,6 +8350,10 @@
       "target_label": "Artifact",
       "target_id": "89bf6eda-5c7b-54fa-901a-9147bd90e5ba",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "frontend/README.md.diff_1",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -8270,6 +8378,10 @@
       "target_label": "Artifact",
       "target_id": "733e39c5-c267-5169-81cf-2144a32ca095",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "frontend/README.md.diff_2",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -8294,6 +8406,10 @@
       "target_label": "Artifact",
       "target_id": "9cd5fd9f-e00b-5ec2-993f-85ae6e93b9ba",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "frontend/index.html.diff_0",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -8318,6 +8434,10 @@
       "target_label": "Artifact",
       "target_id": "d0758180-a84a-58c1-a992-50451f1bacc6",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "frontend/package.json.diff_0",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -8342,6 +8462,10 @@
       "target_label": "Artifact",
       "target_id": "ad09e01b-c333-5c69-b4c5-ba91461d6824",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "frontend/src/README.md_0",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -8386,6 +8510,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:201",
         "excerpt": "There is clear evidence of an attempted end-to-end pipeline: the orchestrator code wires together the pipeline steps, and the test file ('test_process_video_job_success') mocks the full pipeline, including script generation and persistence. However, the test uses mocks for the DB and does not show a real persisted script being created in the database. The README for scripts suggests a script to run the pipeline on a sample instruction, but no concrete demo or integration test is shown that proves a real input results in a persisted script in the DB. Thus, the requirement is only partially met.",
         "extraction_confidence": 0.8
@@ -8398,6 +8526,10 @@
       "target_label": "RubricCriterion",
       "target_id": "e2fbc7c9-9026-5ab6-8ad0-d405e03e63cd",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:201",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8440,6 +8572,10 @@
       "target_label": "Artifact",
       "target_id": "826608bc-0c3f-5cdb-9461-c031925b1120",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/tests/test_orchestrator.py_1",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8464,6 +8600,10 @@
       "target_label": "Artifact",
       "target_id": "e866ed2c-eaf8-5cff-9109-ae1a491e8986",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/tests/test_orchestrator.py_2",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8488,6 +8628,10 @@
       "target_label": "Artifact",
       "target_id": "0e9e841d-7738-5022-ab3e-4cc159442310",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/pipeline/orchestrator.py_0",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8512,6 +8656,10 @@
       "target_label": "Artifact",
       "target_id": "e44685c4-92ce-581c-b18f-c7c093e2190a",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scripts/README.md_0",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8548,6 +8696,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:202",
         "excerpt": "There is evidence of edge-case and malformed input handling in backend tests (e.g., empty scripts), but there is no explicit evidence that empty or whitespace-only user_text is validated and rejected before reaching the agent/model call. The frontend input form does not show any guard or validation logic for empty input. Thus, related effort is visible, but the requirement is not fully satisfied.",
         "extraction_confidence": 0.7
@@ -8560,6 +8712,10 @@
       "target_label": "RubricCriterion",
       "target_id": "d5bea55e-d6c0-50e5-9edc-e74dc70ec58d",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:202",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8601,6 +8757,10 @@
       "target_label": "Artifact",
       "target_id": "9ef916d0-805f-581c-8bbc-7241f466d2f9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/tests/test_alignment.py_12",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8625,6 +8785,10 @@
       "target_label": "Artifact",
       "target_id": "dff03633-b7bf-5232-b19e-c66291569d99",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/tests/test_alignment.py_13",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8649,6 +8813,10 @@
       "target_label": "Artifact",
       "target_id": "52ef8625-21c9-5258-848c-d1530b4756f3",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "frontend/src/App.jsx.diff_9",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -8685,6 +8853,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:203",
         "excerpt": "There is clear evidence that agent/model call failures are caught and handled to prevent pipeline crashes. In the alignment service, exceptions during model calls are caught, logged, and retried, and after max retries, a RuntimeError is raised. In the orchestrator test, a simulated agent failure is caught and the run is marked as failed in the database. However, the rubric requires that the run status be set to 'failed' (or equivalent) and the pipeline keeps control, rather than raising an unhandled exception. In the alignment service, after retries, a RuntimeError is still raised, which could propagate and potentially crash the pipeline unless caught at a higher level. The orchestrator test does show that failures are caught and the status is set to 'failed', but the alignment service itself does not directly set a run status to 'failed'—it raises an exception. Thus, the requirement is only partially met: the intent and much of the mechanism are present, but the alignment service does",
         "extraction_confidence": 0.8
@@ -8697,6 +8869,10 @@
       "target_label": "RubricCriterion",
       "target_id": "16ba509e-cd18-55e8-bdc3-edef87c49f86",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:203",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8742,6 +8918,10 @@
       "target_label": "Artifact",
       "target_id": "fb666de7-62c3-525f-ad9c-33a8ee53814f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/alignment.py_3",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8766,6 +8946,10 @@
       "target_label": "Artifact",
       "target_id": "c928791d-9b42-55dc-aeb5-4825c789d30f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/alignment.py_4",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8790,6 +8974,10 @@
       "target_label": "Artifact",
       "target_id": "13c9c2e1-5562-51d7-a6f3-9e1ec7b55b1c",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/alignment.py_5",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8814,6 +9002,10 @@
       "target_label": "Artifact",
       "target_id": "9d5972d7-802c-5e59-a3fa-749ff796800b",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/alignment.py_6",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8838,6 +9030,10 @@
       "target_label": "Artifact",
       "target_id": "44c39b6d-e4ac-5b1a-94f0-840effecb29a",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/tests/test_orchestrator.py_3",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8862,6 +9058,10 @@
       "target_label": "Artifact",
       "target_id": "8640654c-25a7-5f02-870f-5be54e97b9a9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/tests/test_orchestrator.py_4",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -8898,6 +9098,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:204",
         "excerpt": "There is clear evidence of a database schema being materialized via SQL migration files that create tables (users and videos). However, there is no evidence in the provided chunks that persistence was verified by reading/writing real rows or inspecting stored data. No chunk shows a query, seed, or inspection script confirming that a row was actually written and could be inspected.",
         "extraction_confidence": 0.9
@@ -8910,6 +9114,10 @@
       "target_label": "RubricCriterion",
       "target_id": "1d4851f8-e6ff-5b31-a89d-5e589622f9d9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:204",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -8950,6 +9158,10 @@
       "target_label": "Artifact",
       "target_id": "2a6c823e-be37-56a6-894d-405a5b2d9a24",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/migrations/001_init.sql_0",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -8962,6 +9174,10 @@
       "target_label": "Artifact",
       "target_id": "be409ee6-9ec7-588e-bb2b-f999828cdfe1",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/migrations/001_init.sql_1",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -9006,6 +9222,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:301",
         "excerpt": "The script writer's model name is sourced from an environment variable (os.getenv(\"LITELLM_MODEL\", \"kimi-k2.5\")), which is correct. However, generation parameters such as temperature and max_tokens are not present at all—neither as inline literals nor as config/env values. Since only the model name is configurable and the other required parameters are missing, the requirement is only partially met.",
         "extraction_confidence": 0.85
@@ -9018,6 +9238,10 @@
       "target_label": "RubricCriterion",
       "target_id": "85902f9e-b5d6-5f8a-95ed-4a671a89b8ea",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:301",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -9046,6 +9270,10 @@
       "target_label": "Artifact",
       "target_id": "522c4149-5269-581c-9dc9-4c51b3d2ba53",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/script_agent.py_0",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -9058,6 +9286,10 @@
       "target_label": "Artifact",
       "target_id": "09d61344-5565-52d1-b084-c611dd0e3e03",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/script_agent.py_1",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -9086,6 +9318,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:302",
         "excerpt": "The chunk shows that database reads use a query builder (supabase.table(...).select(...).eq(...).execute()), which is ORM-like and does not use string-interpolated SQL. User-supplied values (job_id, stage_column) are validated and whitelisted before being passed as parameters, and there is no evidence of string concatenation or interpolation in SQL queries. All queries touching user-supplied text are parameterized or ORM-mediated.",
         "extraction_confidence": 0.95
@@ -9098,6 +9334,10 @@
       "target_label": "RubricCriterion",
       "target_id": "7c1ad4ca-507f-5785-ba73-2eb024fa1e8c",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:302",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -9137,6 +9377,10 @@
       "target_label": "Artifact",
       "target_id": "5e568872-10e0-5085-add6-5c7e4b13f245",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/routes/video_routes.py.diff_3",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -9173,6 +9417,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:303",
         "excerpt": "There is evidence of database connection initialization using Supabase in the FastAPI route file, but the connection is created at the module level and not within a context manager or explicitly closed per request. There is no visible context management (with-block, try/finally, or dependency injection) ensuring connections/sessions are closed after use. This shows an attempt to handle DB connections, but does not fully meet the requirement to prevent connection leaks.",
         "extraction_confidence": 0.85
@@ -9185,6 +9433,10 @@
       "target_label": "RubricCriterion",
       "target_id": "e3ca91f7-1c52-5531-a1ca-70265d0ad722",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:303",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -9225,6 +9477,10 @@
       "target_label": "Artifact",
       "target_id": "ca125c0a-2751-56d8-8eb6-8477deab5fa0",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/routes/video_routes.py_0",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -9249,6 +9505,10 @@
       "target_label": "Artifact",
       "target_id": "f0f0bce4-2344-547b-80b1-3efd415a7941",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/routes/video_routes.py.diff_1",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -9293,6 +9553,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:304",
         "excerpt": "There is clear evidence that Pydantic models are used to validate and parse incoming and outgoing data (see references to AssetRequest/AssetResponse schemas and Pydantic's validation halting corrupted data). There is also mention of error handling and validation in test output. However, there is no explicit, detailed description or code excerpt showing that the agent's raw output (e.g., from an LLM or script writer) is parsed and checked for non-empty/expected structure before being persisted or returned, nor is there a clear failure path described for invalid outputs. The evidence supports that validation is present at the API/data layer, but does not confirm that the specific requirement of validating/parsing the script writer's output before persistence/return is fully and explicitly met.",
         "extraction_confidence": 0.7
@@ -9305,6 +9569,10 @@
       "target_label": "RubricCriterion",
       "target_id": "17bbca33-fa9b-5620-80c2-2567aeff9e18",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:304",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -9346,6 +9614,10 @@
       "target_label": "Artifact",
       "target_id": "d08ed95a-763a-5c16-baf9-528efef6a569",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "Sprint_1_Documentation.md_1",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -9370,6 +9642,10 @@
       "target_label": "Artifact",
       "target_id": "40576c06-a25d-58e7-958c-a7ad057a8556",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "market_research.md_1",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -9394,6 +9670,10 @@
       "target_label": "Artifact",
       "target_id": "6069f1bf-2157-52b7-ac03-e71a4102395a",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "market_research.md_3",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -9438,6 +9718,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:401",
         "excerpt": "There is some justification for schema and contract decisions, such as the rationale for dual-field mapping compatibility in the asset schema (to prevent ValidationError crashes and allow flexible payload initialization) and a brief explanation of why the 'visual_elements' contract is structured as it is (to enable downstream image fetching/generation). However, most explanations are brief and do not consistently provide explicit 'because' rationales for all key schema or agent contract decisions. The write-ups are not just bare feature lists, but the justification is not comprehensive or systematic across all decisions.",
         "extraction_confidence": 0.7
@@ -9450,6 +9734,10 @@
       "target_label": "RubricCriterion",
       "target_id": "548efce3-bb2d-513e-bc3f-18716c25b595",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:401",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -9478,6 +9766,10 @@
       "target_label": "Artifact",
       "target_id": "40576c06-a25d-58e7-958c-a7ad057a8556",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "market_research.md_1",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -9502,6 +9794,10 @@
       "target_label": "Artifact",
       "target_id": "1fae177e-18ee-5b2d-a39d-34dc6c7b41d9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "Sprint_1_Documentation.md_5",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -9522,6 +9818,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:402",
         "excerpt": "There is evidence that the learner attempted to document coordination with Learner A7 and Learner A6: Learner A7 is mentioned as the owner of the animation/render stage, and Learner A6 is mentioned as working on voiceover/alignment. The write-up describes, in general terms, how the asset service interacts with their stages (e.g., Learner A7's rendering routines consume assets, Learner A6's timestamps are used for timing). However, the submission does not concretely record the division of work, explicit interface contracts, or detailed integration boundaries (e.g., schema/API shapes, ownership of pipeline parts) as required by the rubric. The descriptions are functional but lack the specificity and explicitness demanded for a 'Yes'.",
         "extraction_confidence": 0.8
@@ -9534,6 +9834,10 @@
       "target_label": "RubricCriterion",
       "target_id": "a7dcf48b-59de-56e9-8e8e-33048da7a9d7",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:402",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -9574,6 +9878,10 @@
       "target_label": "Artifact",
       "target_id": "aa6cf2b6-e0d6-5054-8ee2-e5c9e62b34f9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "Sprint_1_Documentation.md_7",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -9598,6 +9906,10 @@
       "target_label": "Artifact",
       "target_id": "8d5ab945-80ad-5bac-9b05-e39ff1612887",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "Sprint_1_Documentation.md_8",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -9626,6 +9938,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:403",
         "excerpt": "There is clear evidence of an attempt to provide setup and run documentation: 'docs/setup.md_0' and 'docs/setup.md_1' outline requirements, environment variable setup, and mention updating the guide with run commands. 'docs/tasks.md_2' assigns updating setup instructions as a task. However, the documentation is incomplete: it does not yet provide exact commands for database creation/migration, running the first pipeline step, or starting the frontend. Instead, it instructs the team to update the guide once implementation begins. Thus, the requirement is only partially met.",
         "extraction_confidence": 0.9
@@ -9638,6 +9954,10 @@
       "target_label": "RubricCriterion",
       "target_id": "577dee47-491a-56c0-8aec-81ea5ef19f31",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:403",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -9679,6 +9999,10 @@
       "target_label": "Artifact",
       "target_id": "8126787a-9d74-5178-acd5-61041bcfe660",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "docs/setup.md_0",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -9703,6 +10027,10 @@
       "target_label": "Artifact",
       "target_id": "37aa8252-734a-5904-b59f-c764fc30033c",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "docs/setup.md_1",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -9727,6 +10055,10 @@
       "target_label": "Artifact",
       "target_id": "cd222ae7-8e72-5329-953a-f856f197f6d9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "docs/tasks.md_2",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -9755,6 +10087,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:404",
         "excerpt": "There is clear evidence that public functions and methods in the AudioService class have docstrings describing their purpose, input, and output. However, the public methods (including __init__ and async methods) lack explicit parameter and return type annotations in their signatures. Only private methods show type annotations, and not all public entry points are typed. Thus, the requirement is only partially met.",
         "extraction_confidence": 0.9
@@ -9767,6 +10103,10 @@
       "target_label": "RubricCriterion",
       "target_id": "c6fbafba-f35c-515d-abbb-40c44ea21fa4",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:404",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -9808,6 +10148,10 @@
       "target_label": "Artifact",
       "target_id": "8a36c8b4-ecb0-55ab-af47-837600120d21",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/audio.py_1",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -9832,6 +10176,10 @@
       "target_label": "Artifact",
       "target_id": "2d0d9023-2972-5079-a4bb-4cbcf5aeb9df",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/audio.py_2",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -9856,6 +10204,10 @@
       "target_label": "Artifact",
       "target_id": "f36e3b32-d871-5cff-860b-9e06a875adaa",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/audio.py_4",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -9892,6 +10244,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:501",
         "excerpt": "There is evidence of a database schema for pipeline stages (videos table with JSONB columns for each stage), and the orchestrator imports and references pipeline stages, but there is no clear evidence that the script writer step (or any pipeline stage) actually persists its output to the database. The orchestrator functions return dicts or strings, and there is no code shown that writes to the DB. Thus, the pipeline is not fully wired to persist through the finalized schema, but related work is visible.",
         "extraction_confidence": 0.85
@@ -9904,6 +10260,10 @@
       "target_label": "RubricCriterion",
       "target_id": "c835592e-81fc-59df-b871-c60a6fe66132",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:501",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -9932,6 +10292,10 @@
       "target_label": "Artifact",
       "target_id": "0e9e841d-7738-5022-ab3e-4cc159442310",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/pipeline/orchestrator.py_0",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -9944,6 +10308,10 @@
       "target_label": "Artifact",
       "target_id": "be409ee6-9ec7-588e-bb2b-f999828cdfe1",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/migrations/001_init.sql_1",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -9980,6 +10348,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:502",
         "excerpt": "Both script_agent.py_0 and script_agent.py_1 show the script writer agent calling an LLM via AsyncOpenAI, with model name and API key loaded from environment variables, not hardcoded. There is no evidence of canned/echoed strings or hardcoded model/prompt/API key literals in the stage body.",
         "extraction_confidence": 1.0
@@ -9992,6 +10364,10 @@
       "target_label": "RubricCriterion",
       "target_id": "b4fc36b7-f56e-5fe0-a355-d7534b114f99",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:502",
         "excerpt": null,
         "extraction_confidence": 1.0
@@ -10020,6 +10396,10 @@
       "target_label": "Artifact",
       "target_id": "522c4149-5269-581c-9dc9-4c51b3d2ba53",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/script_agent.py_0",
         "excerpt": null,
         "extraction_confidence": 1.0
@@ -10032,6 +10412,10 @@
       "target_label": "Artifact",
       "target_id": "09d61344-5565-52d1-b084-c611dd0e3e03",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/app/services/script_agent.py_1",
         "excerpt": null,
         "extraction_confidence": 1.0
@@ -10068,6 +10452,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:503",
         "excerpt": "There is clear evidence that the learner attempted to materialize the data schema: SQL migration files are present and define tables with typed fields, including JSONB columns for pipeline stages. However, the videos table is incomplete (truncated definition), and there is no explicit evidence that all fields written by the code are defined in the schema (potential for schema drift). The schema is not fully finalized or confirmed as migrated, so the requirement is only partially met.",
         "extraction_confidence": 0.8
@@ -10080,6 +10468,10 @@
       "target_label": "RubricCriterion",
       "target_id": "19bce454-d84d-56ff-86e0-636bcd7bc25c",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:503",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -10108,6 +10500,10 @@
       "target_label": "Artifact",
       "target_id": "2a6c823e-be37-56a6-894d-405a5b2d9a24",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/migrations/001_init.sql_0",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -10120,6 +10516,10 @@
       "target_label": "Artifact",
       "target_id": "be409ee6-9ec7-588e-bb2b-f999828cdfe1",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "backend/migrations/001_init.sql_1",
         "excerpt": null,
         "extraction_confidence": 0.8
@@ -10156,6 +10556,10 @@
       "target_label": "Assessment",
       "target_id": "d78a49c7-d977-5516-bc8d-daaab1582a3f",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:504",
         "excerpt": "There is clear evidence that a React + Vite frontend project was scaffolded (package.json, package-lock.json, and Vite/React-specific README content). However, there is no evidence of any user-text input or submit UI component in the provided chunks. The frontend is initialized and runnable, but no input/submit UI exists yet.",
         "extraction_confidence": 0.95
@@ -10168,6 +10572,10 @@
       "target_label": "RubricCriterion",
       "target_id": "638637b1-53b1-5deb-be89-5e3057e5adee",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:504",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -10197,6 +10605,10 @@
       "target_label": "Artifact",
       "target_id": "d0758180-a84a-58c1-a992-50451f1bacc6",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "frontend/package.json.diff_0",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -10221,6 +10633,10 @@
       "target_label": "Artifact",
       "target_id": "c3dc88a5-7fb2-5311-bbd3-bfdd3afe97a9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "frontend/package-lock.json.diff_0",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -10233,6 +10649,10 @@
       "target_label": "Artifact",
       "target_id": "89bf6eda-5c7b-54fa-901a-9147bd90e5ba",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+        "observed_at": "2026-07-21T20:33:14.676000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "frontend/README.md.diff_1",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -10337,6 +10757,10 @@
       "target_label": "Assessment",
       "target_id": "7d8f078f-d817-5146-ab8c-4b34913a0954",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:101",
         "excerpt": "The submission shows a screenshot and description of a GitHub PR for a fullstack integration, mentioning backend (FastAPI) and frontend (React) technologies, and references to architectural decisions. However, there is no explicit evidence of a finalized data schema with typed fields, keys, and relationships as required by the rubric. There is evidence of related work and documentation, but not the schema itself.",
         "extraction_confidence": 0.4
@@ -10349,6 +10773,10 @@
       "target_label": "RubricCriterion",
       "target_id": "d8c61d9f-9129-53b1-aa60-77a1149caed9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:101",
         "excerpt": null,
         "extraction_confidence": 0.4
@@ -10390,6 +10818,10 @@
       "target_label": "Artifact",
       "target_id": "7601eed5-3cdf-51cd-bed2-b0be7674c967",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_0_0",
         "excerpt": null,
         "extraction_confidence": 0.4
@@ -10414,6 +10846,10 @@
       "target_label": "Artifact",
       "target_id": "5b16c316-17d8-54d7-bf57-2a26f7991b15",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_0_1",
         "excerpt": null,
         "extraction_confidence": 0.4
@@ -10438,6 +10874,10 @@
       "target_label": "Artifact",
       "target_id": "83871832-b4db-543f-9327-ae92262a1406",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_0_4",
         "excerpt": null,
         "extraction_confidence": 0.4
@@ -10490,6 +10930,10 @@
       "target_label": "Assessment",
       "target_id": "7d8f078f-d817-5146-ab8c-4b34913a0954",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:102",
         "excerpt": "The summary mentions an AI video generation app and integration of backend and frontend, implying a pipeline that transforms user text into a script. However, there is no direct evidence of the actual transformation step or a structured script output. The evidence is indirect and does not confirm the full requirement.",
         "extraction_confidence": 0.3
@@ -10502,6 +10946,10 @@
       "target_label": "RubricCriterion",
       "target_id": "c6209371-bcb5-5c57-8af0-e0126aa8d81a",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:102",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -10529,6 +10977,10 @@
       "target_label": "Artifact",
       "target_id": "83871832-b4db-543f-9327-ae92262a1406",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_0_4",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -10573,6 +11025,10 @@
       "target_label": "Assessment",
       "target_id": "7d8f078f-d817-5146-ab8c-4b34913a0954",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:103",
         "excerpt": "There is mention of fullstack integration and backend technologies, suggesting some pipeline integration, but there is no explicit evidence that the script writer step reads/writes through a finalized schema or persists output to a database. The evidence is circumstantial.",
         "extraction_confidence": 0.3
@@ -10585,6 +11041,10 @@
       "target_label": "RubricCriterion",
       "target_id": "c7f6430c-d8f6-5deb-bd47-68b0c4fe1b57",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:103",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -10612,6 +11072,10 @@
       "target_label": "Artifact",
       "target_id": "83871832-b4db-543f-9327-ae92262a1406",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_0_4",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -10648,6 +11112,10 @@
       "target_label": "Assessment",
       "target_id": "7d8f078f-d817-5146-ab8c-4b34913a0954",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:104",
         "excerpt": "The summary references a React frontend and a fullstack integration, which suggests that a frontend project was started. However, there is no explicit evidence of a user-text input/submit UI or a screenshot of such a component. The evidence is indirect.",
         "extraction_confidence": 0.4
@@ -10660,6 +11128,10 @@
       "target_label": "RubricCriterion",
       "target_id": "cbba16f5-57c1-5932-a21e-b295675ac31b",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:104",
         "excerpt": null,
         "extraction_confidence": 0.4
@@ -10687,6 +11159,10 @@
       "target_label": "Artifact",
       "target_id": "83871832-b4db-543f-9327-ae92262a1406",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_0_4",
         "excerpt": null,
         "extraction_confidence": 0.4
@@ -10731,6 +11207,10 @@
       "target_label": "Assessment",
       "target_id": "7d8f078f-d817-5146-ab8c-4b34913a0954",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:401",
         "excerpt": "The summary mentions 'architectural decisions and feature highlights,' suggesting some justification, but there is no explicit rationale for schema or agent contract decisions. The evidence is indirect.",
         "extraction_confidence": 0.3
@@ -10743,6 +11223,10 @@
       "target_label": "RubricCriterion",
       "target_id": "548efce3-bb2d-513e-bc3f-18716c25b595",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:401",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -10770,6 +11254,10 @@
       "target_label": "Artifact",
       "target_id": "83871832-b4db-543f-9327-ae92262a1406",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+        "observed_at": "2026-07-21T21:26:16.087000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_0_4",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -10866,6 +11354,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:101",
         "excerpt": "There is evidence of a data schema (VideoScriptBlueprint, ScriptSegment) being used as Pydantic models, and job status is tracked in a Supabase table. However, the full finalized schema with explicit typed fields, primary keys, and relationships is not shown in these chunks; only usage and updates via mocks are visible.",
         "extraction_confidence": 0.7
@@ -10878,6 +11370,10 @@
       "target_label": "RubricCriterion",
       "target_id": "d8c61d9f-9129-53b1-aa60-77a1149caed9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:101",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -10921,6 +11417,10 @@
       "target_label": "Artifact",
       "target_id": "319a668d-9373-57e0-a12c-d8b2deca99ec",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_0",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -10945,6 +11445,10 @@
       "target_label": "Artifact",
       "target_id": "a6c116a2-cf4f-5a67-a4c7-9d83b3dde71e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_1",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -10969,6 +11473,10 @@
       "target_label": "Artifact",
       "target_id": "077b8dd3-4526-5f05-b6fa-c6a2d667e5ef",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_2",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -10993,6 +11501,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11017,6 +11529,10 @@
       "target_label": "Artifact",
       "target_id": "e3fc9309-7494-5f30-86b8-5fc4dcf274eb",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_4",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11069,6 +11585,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:102",
         "excerpt": "The pipeline step for script generation is mocked (mock_generate_script), and the test uses a structured VideoScriptBlueprint as output, indicating the intended transformation. However, the actual agent/model call is not shown, only the mock, so the real transformation is not fully demonstrated.",
         "extraction_confidence": 0.6
@@ -11081,6 +11601,10 @@
       "target_label": "RubricCriterion",
       "target_id": "c6209371-bcb5-5c57-8af0-e0126aa8d81a",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:102",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11112,6 +11636,10 @@
       "target_label": "Artifact",
       "target_id": "319a668d-9373-57e0-a12c-d8b2deca99ec",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_0",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11124,6 +11652,10 @@
       "target_label": "Artifact",
       "target_id": "a6c116a2-cf4f-5a67-a4c7-9d83b3dde71e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_1",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11136,6 +11668,10 @@
       "target_label": "Artifact",
       "target_id": "077b8dd3-4526-5f05-b6fa-c6a2d667e5ef",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_2",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11148,6 +11684,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11160,6 +11700,10 @@
       "target_label": "Artifact",
       "target_id": "e3fc9309-7494-5f30-86b8-5fc4dcf274eb",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_4",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11204,6 +11748,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:103",
         "excerpt": "The test verifies that job status and results are updated in the Supabase table, suggesting integration with persistence. However, this is done via mocks, and the actual schema/database integration is not shown, so full end-to-end persistence is not confirmed.",
         "extraction_confidence": 0.7
@@ -11216,6 +11764,10 @@
       "target_label": "RubricCriterion",
       "target_id": "c7f6430c-d8f6-5deb-bd47-68b0c4fe1b57",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:103",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11246,6 +11798,10 @@
       "target_label": "Artifact",
       "target_id": "a6c116a2-cf4f-5a67-a4c7-9d83b3dde71e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_1",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11258,6 +11814,10 @@
       "target_label": "Artifact",
       "target_id": "077b8dd3-4526-5f05-b6fa-c6a2d667e5ef",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_2",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11270,6 +11830,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11282,6 +11846,10 @@
       "target_label": "Artifact",
       "target_id": "e3fc9309-7494-5f30-86b8-5fc4dcf274eb",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_4",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11326,6 +11894,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:201",
         "excerpt": "The test simulates running the first pipeline step with a sample prompt and checks for a completed state in the database mock. However, this is not a real end-to-end run with actual persistence; it is a mocked test.",
         "extraction_confidence": 0.7
@@ -11338,6 +11910,10 @@
       "target_label": "RubricCriterion",
       "target_id": "e2fbc7c9-9026-5ab6-8ad0-d405e03e63cd",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:201",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11367,6 +11943,10 @@
       "target_label": "Artifact",
       "target_id": "a6c116a2-cf4f-5a67-a4c7-9d83b3dde71e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_1",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11379,6 +11959,10 @@
       "target_label": "Artifact",
       "target_id": "077b8dd3-4526-5f05-b6fa-c6a2d667e5ef",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_2",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11391,6 +11975,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11427,6 +12015,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:203",
         "excerpt": "The test 'test_process_video_job_failure' simulates an agent/model failure and verifies that the pipeline catches the exception and updates the job status to 'failed' in the database, rather than crashing.",
         "extraction_confidence": 0.95
@@ -11439,6 +12031,10 @@
       "target_label": "RubricCriterion",
       "target_id": "16ba509e-cd18-55e8-bdc3-edef87c49f86",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:203",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -11467,6 +12063,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -11479,6 +12079,10 @@
       "target_label": "Artifact",
       "target_id": "e3fc9309-7494-5f30-86b8-5fc4dcf274eb",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_4",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -11515,6 +12119,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:204",
         "excerpt": "Database persistence is simulated via mocks, but there is no evidence of actual schema migration or materialization, nor proof of real rows being written/read.",
         "extraction_confidence": 0.7
@@ -11527,6 +12135,10 @@
       "target_label": "RubricCriterion",
       "target_id": "1d4851f8-e6ff-5b31-a89d-5e589622f9d9",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:204",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11557,6 +12169,10 @@
       "target_label": "Artifact",
       "target_id": "a6c116a2-cf4f-5a67-a4c7-9d83b3dde71e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_1",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11569,6 +12185,10 @@
       "target_label": "Artifact",
       "target_id": "077b8dd3-4526-5f05-b6fa-c6a2d667e5ef",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_2",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11581,6 +12201,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11593,6 +12217,10 @@
       "target_label": "Artifact",
       "target_id": "e3fc9309-7494-5f30-86b8-5fc4dcf274eb",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_4",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -11637,6 +12265,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:302",
         "excerpt": "All database interactions in the test are via mocks, so there is no evidence of unsafe string-interpolated SQL, but also no confirmation of ORM/parameterized queries. The use of Supabase client suggests parameterization, but this is not explicit.",
         "extraction_confidence": 0.6
@@ -11649,6 +12281,10 @@
       "target_label": "RubricCriterion",
       "target_id": "7c1ad4ca-507f-5785-ba73-2eb024fa1e8c",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:302",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11679,6 +12315,10 @@
       "target_label": "Artifact",
       "target_id": "a6c116a2-cf4f-5a67-a4c7-9d83b3dde71e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_1",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11691,6 +12331,10 @@
       "target_label": "Artifact",
       "target_id": "077b8dd3-4526-5f05-b6fa-c6a2d667e5ef",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_2",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11703,6 +12347,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11715,6 +12363,10 @@
       "target_label": "Artifact",
       "target_id": "e3fc9309-7494-5f30-86b8-5fc4dcf274eb",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_4",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11751,6 +12403,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:303",
         "excerpt": "Database connections are mocked, so there is no evidence of connection/session leaks, but also no explicit context management or closing. The test setup avoids the issue but does not confirm best practice.",
         "extraction_confidence": 0.6
@@ -11763,6 +12419,10 @@
       "target_label": "RubricCriterion",
       "target_id": "e3ca91f7-1c52-5531-a1ca-70265d0ad722",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:303",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11793,6 +12453,10 @@
       "target_label": "Artifact",
       "target_id": "a6c116a2-cf4f-5a67-a4c7-9d83b3dde71e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_1",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11805,6 +12469,10 @@
       "target_label": "Artifact",
       "target_id": "077b8dd3-4526-5f05-b6fa-c6a2d667e5ef",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_2",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11817,6 +12485,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11829,6 +12501,10 @@
       "target_label": "Artifact",
       "target_id": "e3fc9309-7494-5f30-86b8-5fc4dcf274eb",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_4",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11857,6 +12533,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:304",
         "excerpt": "The test uses a Pydantic model (VideoScriptBlueprint) as the expected output, suggesting some structure validation, but there is no explicit validation/parse step for the agent's raw output before persistence.",
         "extraction_confidence": 0.6
@@ -11869,6 +12549,10 @@
       "target_label": "RubricCriterion",
       "target_id": "17bbca33-fa9b-5620-80c2-2567aeff9e18",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:304",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11896,6 +12580,10 @@
       "target_label": "Artifact",
       "target_id": "319a668d-9373-57e0-a12c-d8b2deca99ec",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_0",
         "excerpt": null,
         "extraction_confidence": 0.6
@@ -11932,6 +12620,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:501",
         "excerpt": "The pipeline step is only tested via mocks and does not persist through a real finalized schema/database; all persistence is simulated.",
         "extraction_confidence": 0.95
@@ -11944,6 +12636,10 @@
       "target_label": "RubricCriterion",
       "target_id": "c835592e-81fc-59df-b871-c60a6fe66132",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:501",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -11974,6 +12670,10 @@
       "target_label": "Artifact",
       "target_id": "a6c116a2-cf4f-5a67-a4c7-9d83b3dde71e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_1",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -11986,6 +12686,10 @@
       "target_label": "Artifact",
       "target_id": "077b8dd3-4526-5f05-b6fa-c6a2d667e5ef",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_2",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -11998,6 +12702,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -12010,6 +12718,10 @@
       "target_label": "Artifact",
       "target_id": "e3fc9309-7494-5f30-86b8-5fc4dcf274eb",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_4",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -12038,6 +12750,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:502",
         "excerpt": "The script writer agent is mocked (not a real LLM call), but there is no evidence of hardcoded model/prompt/API key literals in these chunks.",
         "extraction_confidence": 0.7
@@ -12050,6 +12766,10 @@
       "target_label": "RubricCriterion",
       "target_id": "b4fc36b7-f56e-5fe0-a355-d7534b114f99",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:502",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -12081,6 +12801,10 @@
       "target_label": "Artifact",
       "target_id": "319a668d-9373-57e0-a12c-d8b2deca99ec",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_0",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -12093,6 +12817,10 @@
       "target_label": "Artifact",
       "target_id": "a6c116a2-cf4f-5a67-a4c7-9d83b3dde71e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_1",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -12105,6 +12833,10 @@
       "target_label": "Artifact",
       "target_id": "077b8dd3-4526-5f05-b6fa-c6a2d667e5ef",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_2",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -12117,6 +12849,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -12129,6 +12865,10 @@
       "target_label": "Artifact",
       "target_id": "e3fc9309-7494-5f30-86b8-5fc4dcf274eb",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_4",
         "excerpt": null,
         "extraction_confidence": 0.7
@@ -12157,6 +12897,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:503",
         "excerpt": "There is no evidence of a finalized or migrated schema, and all persistence is via mocks, so the schema is left unfinished and unmigrated.",
         "extraction_confidence": 0.95
@@ -12169,6 +12913,10 @@
       "target_label": "RubricCriterion",
       "target_id": "19bce454-d84d-56ff-86e0-636bcd7bc25c",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:503",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -12199,6 +12947,10 @@
       "target_label": "Artifact",
       "target_id": "a6c116a2-cf4f-5a67-a4c7-9d83b3dde71e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_1",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -12211,6 +12963,10 @@
       "target_label": "Artifact",
       "target_id": "077b8dd3-4526-5f05-b6fa-c6a2d667e5ef",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_2",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -12223,6 +12979,10 @@
       "target_label": "Artifact",
       "target_id": "19777648-d491-58b7-a3b9-96a972dd530e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_3",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -12235,6 +12995,10 @@
       "target_label": "Artifact",
       "target_id": "e3fc9309-7494-5f30-86b8-5fc4dcf274eb",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "file_1_4",
         "excerpt": null,
         "extraction_confidence": 0.95
@@ -12263,6 +13027,10 @@
       "target_label": "Assessment",
       "target_id": "ddb99746-a8fc-5fd5-8407-aa9303598365",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:504",
         "excerpt": "There is no frontend project or input UI present; only a mention of '2 attachments' which does not constitute a frontend build.",
         "extraction_confidence": 1.0
@@ -12275,6 +13043,10 @@
       "target_label": "RubricCriterion",
       "target_id": "638637b1-53b1-5deb-be89-5e3057e5adee",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:5/rubric_point:504",
         "excerpt": null,
         "extraction_confidence": 1.0
@@ -12314,6 +13086,10 @@
       "target_label": "Artifact",
       "target_id": "e76226ba-bf65-5ee3-b6dc-3b050382c8bc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+        "observed_at": "2026-07-21T21:34:58.348000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 1.0
@@ -12476,6 +13252,10 @@
       "target_label": "Assessment",
       "target_id": "df935a8d-0c8a-5095-86b7-53843160d3cc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:1",
         "excerpt": "The submission references a GitHub repository and branch, implying work was done, but no actual code or implementation details are visible in the provided chunks. There is evidence of an attempt, but the content cannot be verified.",
         "extraction_confidence": 0.3
@@ -12488,6 +13268,10 @@
       "target_label": "RubricCriterion",
       "target_id": "98d39bf8-c5d6-5ffe-a068-e1aaec34cfad",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:1",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12527,6 +13311,10 @@
       "target_label": "Artifact",
       "target_id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12571,6 +13359,10 @@
       "target_label": "Assessment",
       "target_id": "df935a8d-0c8a-5095-86b7-53843160d3cc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:2",
         "excerpt": "The learner claims to have made updates, but no code or explicit evidence of async/await usage is present in the visible chunks. There is evidence of an attempt, but not enough to confirm full implementation.",
         "extraction_confidence": 0.3
@@ -12583,6 +13375,10 @@
       "target_label": "RubricCriterion",
       "target_id": "d5253292-42ef-522f-93b7-edb4b05372ed",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:1/rubric_point:2",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12610,6 +13406,10 @@
       "target_label": "Artifact",
       "target_id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12646,6 +13446,10 @@
       "target_label": "Assessment",
       "target_id": "df935a8d-0c8a-5095-86b7-53843160d3cc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:3",
         "excerpt": "The submission references a React-based app repository, suggesting work on a React frontend, but no actual code or UI details are visible in the provided chunks.",
         "extraction_confidence": 0.3
@@ -12658,6 +13462,10 @@
       "target_label": "RubricCriterion",
       "target_id": "f0f70e3d-9a31-55ac-81de-f32681a715ff",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:3",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12685,6 +13493,10 @@
       "target_label": "Artifact",
       "target_id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12721,6 +13533,10 @@
       "target_label": "Assessment",
       "target_id": "df935a8d-0c8a-5095-86b7-53843160d3cc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:4",
         "excerpt": "The repository reference suggests backend integration may exist, but there is no visible code or confirmation of RESTful API usage in the provided chunks.",
         "extraction_confidence": 0.3
@@ -12733,6 +13549,10 @@
       "target_label": "RubricCriterion",
       "target_id": "a898fdf2-25b3-58d2-b045-8a9d8a934894",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:4",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12760,6 +13580,10 @@
       "target_label": "Artifact",
       "target_id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12804,6 +13628,10 @@
       "target_label": "Assessment",
       "target_id": "df935a8d-0c8a-5095-86b7-53843160d3cc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:5",
         "excerpt": "The learner claims to have made updates, but there is no visible UI or evidence of a testable, integrated interface in the provided chunks.",
         "extraction_confidence": 0.3
@@ -12816,6 +13644,10 @@
       "target_label": "RubricCriterion",
       "target_id": "747e6463-8fb6-51c4-a920-6306a4bfaa2d",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:2/rubric_point:5",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12843,6 +13675,10 @@
       "target_label": "Artifact",
       "target_id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12879,6 +13715,10 @@
       "target_label": "Assessment",
       "target_id": "df935a8d-0c8a-5095-86b7-53843160d3cc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:6",
         "excerpt": "There is no explicit evidence of team collaboration, but the repository update may imply some level of coordination. No direct evidence is visible.",
         "extraction_confidence": 0.2
@@ -12891,6 +13731,10 @@
       "target_label": "RubricCriterion",
       "target_id": "887d767c-2ac8-5579-826e-2f130ae22fbe",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:3/rubric_point:6",
         "excerpt": null,
         "extraction_confidence": 0.2
@@ -12918,6 +13762,10 @@
       "target_label": "Artifact",
       "target_id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 0.2
@@ -12938,6 +13786,10 @@
       "target_label": "Assessment",
       "target_id": "df935a8d-0c8a-5095-86b7-53843160d3cc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:7",
         "excerpt": "There is no evidence that the pipeline stages are left disconnected, but also no proof that they are unified. The repository reference suggests an attempt.",
         "extraction_confidence": 0.3
@@ -12950,6 +13802,10 @@
       "target_label": "RubricCriterion",
       "target_id": "7772f472-000d-565f-94dc-9aa77973fdb8",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:7",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -12977,6 +13833,10 @@
       "target_label": "Artifact",
       "target_id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -13005,6 +13865,10 @@
       "target_label": "Assessment",
       "target_id": "df935a8d-0c8a-5095-86b7-53843160d3cc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:8",
         "excerpt": "There is no evidence of blocking/synchronous code, but also no proof of async functions. The repository reference suggests an attempt.",
         "extraction_confidence": 0.3
@@ -13017,6 +13881,10 @@
       "target_label": "RubricCriterion",
       "target_id": "f5814786-b4b9-5ff4-9846-cd5a26973678",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:8",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -13044,6 +13912,10 @@
       "target_label": "Artifact",
       "target_id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -13080,6 +13952,10 @@
       "target_label": "Assessment",
       "target_id": "df935a8d-0c8a-5095-86b7-53843160d3cc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:9",
         "excerpt": "There is no evidence of an incomplete or unconnected frontend, but also no proof of a fully built and connected React frontend. The repository reference suggests an attempt.",
         "extraction_confidence": 0.3
@@ -13092,6 +13968,10 @@
       "target_label": "RubricCriterion",
       "target_id": "7be51dc5-4924-57d0-92c6-8ac85e86eec2",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:9",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -13119,6 +13999,10 @@
       "target_label": "Artifact",
       "target_id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -13155,6 +14039,10 @@
       "target_label": "Assessment",
       "target_id": "df935a8d-0c8a-5095-86b7-53843160d3cc",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:10",
         "excerpt": "There is no evidence of a non-testable UI or lack of team consultation, but also no proof of a testable UI or team coordination. The repository reference suggests an attempt.",
         "extraction_confidence": 0.3
@@ -13167,6 +14055,10 @@
       "target_label": "RubricCriterion",
       "target_id": "0a4efc05-0dfe-5020-9e26-9718693f0559",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "scope:4/rubric_point:10",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -13194,6 +14086,10 @@
       "target_label": "Artifact",
       "target_id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
       "properties": {
+        "source_system": "assessment_engine",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "direct_assessment",
         "source_locator": "text_content_0",
         "excerpt": null,
         "extraction_confidence": 0.3
@@ -13214,6 +14110,10 @@
       "target_label": "Submission",
       "target_id": "1a46072b-ffd1-578f-a55b-c745dfa16463",
       "properties": {
+        "source_system": "virtual_internship",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+        "observed_at": "2026-07-30T19:59:13.871000Z",
+        "evidence_type": "delivered_work",
         "source_locator": "submission:ef329ce4-cf90-4f26-8518-30b107060766:25",
         "excerpt": null,
         "extraction_confidence": 0.9
@@ -13376,6 +14276,10 @@
       "target_label": "LearningExperience",
       "target_id": "a1fa0455-224a-56d8-8e01-2fab5bdd131d",
       "properties": {
+        "source_system": "virtual_internship",
+        "source_id": "1435355e-84a6-4261-a621-6daa5fca27c0",
+        "observed_at": "2026-07-25T08:36:55.764518Z",
+        "evidence_type": "delivered_work",
         "source_locator": "lx_outcome:1435355e-84a6-4261-a621-6daa5fca27c0",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -13428,6 +14332,10 @@
       "target_label": "LearningExperience",
       "target_id": "e6b78c2b-c03c-54b7-8e4a-85bf8e36cef1",
       "properties": {
+        "source_system": "virtual_internship",
+        "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e",
+        "observed_at": "2026-07-21T21:35:10.374959Z",
+        "evidence_type": "delivered_work",
         "source_locator": "lx_outcome:144bd399-aa06-4661-b07b-ea8967462e0e",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -13480,6 +14388,10 @@
       "target_label": "LearningExperience",
       "target_id": "ca167f27-bdfc-5a04-8425-39eaff63e113",
       "properties": {
+        "source_system": "virtual_internship",
+        "source_id": "69084cd9-4c72-428c-be6e-b512269186a5",
+        "observed_at": "2026-08-08T14:48:46.243080Z",
+        "evidence_type": "delivered_work",
         "source_locator": "lx_outcome:69084cd9-4c72-428c-be6e-b512269186a5",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -13516,6 +14428,10 @@
       "target_label": "LearningExperience",
       "target_id": "3156124a-1b19-58fb-bc7c-03d7157aa8a7",
       "properties": {
+        "source_system": "virtual_internship",
+        "source_id": "ef329ce4-cf90-4f26-8518-30b107060766",
+        "observed_at": "2026-07-30T19:59:30.306060Z",
+        "evidence_type": "delivered_work",
         "source_locator": "lx_outcome:ef329ce4-cf90-4f26-8518-30b107060766",
         "excerpt": null,
         "extraction_confidence": 0.85
@@ -13590,6 +14506,10 @@
       "target_label": "Meeting",
       "target_id": "c73d0cf1-add5-5f64-a58b-4209d214b9ae",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "iSBCU287Qmi3EQbd7iCOmw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:26:internship_context.tech_stack",
+        "observed_at": "2026-07-26T07:00:00Z",
+        "evidence_type": "self_declared",
         "source_locator": "turn:26",
         "excerpt": "Learner A4 mentions integrating their workflow with Remotion.",
         "extraction_confidence": 0.95
@@ -13618,6 +14538,10 @@
       "target_label": "Meeting",
       "target_id": "c73d0cf1-add5-5f64-a58b-4209d214b9ae",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "iSBCU287Qmi3EQbd7iCOmw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:545:internship_context.current_blockers",
+        "observed_at": "2026-07-26T07:00:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:545",
         "excerpt": "Learner A4 faced an issue where the company's API went down, requiring a workaround.",
         "extraction_confidence": 0.95
@@ -13665,6 +14589,10 @@
       "target_label": "Meeting",
       "target_id": "c73d0cf1-add5-5f64-a58b-4209d214b9ae",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "iSBCU287Qmi3EQbd7iCOmw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:545:behavioral_engagement.effort_signals",
+        "observed_at": "2026-07-26T07:00:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:545",
         "excerpt": "Learner A4 demonstrated problem-solving effort by adapting his approach when the company's API became unavailable.",
         "extraction_confidence": 0.95
@@ -13712,6 +14640,10 @@
       "target_label": "Meeting",
       "target_id": "c73d0cf1-add5-5f64-a58b-4209d214b9ae",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "iSBCU287Qmi3EQbd7iCOmw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:26:learning_goals.learner_tasks",
+        "observed_at": "2026-07-26T07:00:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:26",
         "excerpt": "Learner A4 stated his planned task for the day is integrating with Remotion.",
         "extraction_confidence": 0.95
@@ -13781,6 +14713,10 @@
       "target_label": "Meeting",
       "target_id": "4c397263-c1c3-5328-b30b-0aa948f138a1",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "/9Lm6b0wSX2Uq/0lkHepaQ==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:77:internship_context.tech_stack",
+        "observed_at": "2026-07-29T14:00:00Z",
+        "evidence_type": "self_declared",
         "source_locator": "turn:77",
         "excerpt": "Learner A4 stated that he started working on Qdrant as well.",
         "extraction_confidence": 0.95
@@ -13809,6 +14745,10 @@
       "target_label": "Meeting",
       "target_id": "4c397263-c1c3-5328-b30b-0aa948f138a1",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "/9Lm6b0wSX2Uq/0lkHepaQ==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:119:internship_context.current_blockers",
+        "observed_at": "2026-07-29T14:00:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:119",
         "excerpt": "Learner A4 noted a blocker regarding running out of API quota while testing.",
         "extraction_confidence": 0.95
@@ -13856,6 +14796,10 @@
       "target_label": "Meeting",
       "target_id": "4c397263-c1c3-5328-b30b-0aa948f138a1",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "/9Lm6b0wSX2Uq/0lkHepaQ==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:174:internship_context.tech_stack",
+        "observed_at": "2026-07-29T14:00:00Z",
+        "evidence_type": "self_declared",
         "source_locator": "turn:174",
         "excerpt": "Learner A4 chose Groq over Hugging Face as it was easier to use.",
         "extraction_confidence": 0.95
@@ -13906,6 +14850,10 @@
       "target_label": "Meeting",
       "target_id": "30d85983-ba6d-5ad9-997d-0c901ca6fe2b",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "XdOkypIySZqMxnsafyGMiw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:643:identity_context.bio",
+        "observed_at": "2026-07-30T18:30:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:643",
         "excerpt": "Learner A4 has prior technical experience in computer graphics and game development.",
         "extraction_confidence": 0.95
@@ -13926,6 +14874,10 @@
       "target_label": "Meeting",
       "target_id": "30d85983-ba6d-5ad9-997d-0c901ca6fe2b",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "XdOkypIySZqMxnsafyGMiw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:251:internship_context.tech_stack",
+        "observed_at": "2026-07-30T18:30:00Z",
+        "evidence_type": "self_declared",
         "source_locator": "turn:251",
         "excerpt": "Learner A4 actively uses Git in his daily project workflow.",
         "extraction_confidence": 0.95
@@ -13954,6 +14906,10 @@
       "target_label": "Meeting",
       "target_id": "30d85983-ba6d-5ad9-997d-0c901ca6fe2b",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "XdOkypIySZqMxnsafyGMiw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:252:internship_context.tech_stack",
+        "observed_at": "2026-07-30T18:30:00Z",
+        "evidence_type": "self_declared",
         "source_locator": "turn:252",
         "excerpt": "Learner A4 is using CircleCI to run workflow actions for testing.",
         "extraction_confidence": 0.95
@@ -13982,6 +14938,10 @@
       "target_label": "Meeting",
       "target_id": "30d85983-ba6d-5ad9-997d-0c901ca6fe2b",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "XdOkypIySZqMxnsafyGMiw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:257:internship_context.tech_stack",
+        "observed_at": "2026-07-30T18:30:00Z",
+        "evidence_type": "self_declared",
         "source_locator": "turn:257",
         "excerpt": "Learner A4 mentions using Remotion as part of his technological workflow.",
         "extraction_confidence": 0.95
@@ -14010,6 +14970,10 @@
       "target_label": "Meeting",
       "target_id": "30d85983-ba6d-5ad9-997d-0c901ca6fe2b",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "XdOkypIySZqMxnsafyGMiw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:257:learning_goals.learner_tasks",
+        "observed_at": "2026-07-30T18:30:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:257",
         "excerpt": "Learner A4 plans to begin working with Remotion next.",
         "extraction_confidence": 0.95
@@ -14079,6 +15043,10 @@
       "target_label": "Meeting",
       "target_id": "8e9bcbd3-97e2-5a0c-b3eb-fa63630ce099",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "3/Er6YtpQZ6/akGJQlWh/A==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:52:internship_context.tech_stack",
+        "observed_at": "2026-08-02T07:00:00Z",
+        "evidence_type": "self_declared",
         "source_locator": "turn:52",
         "excerpt": "Learner A4 states that Remotion is the technology stack they are using for merging and video generation.",
         "extraction_confidence": 0.95
@@ -14107,6 +15075,10 @@
       "target_label": "Meeting",
       "target_id": "8e9bcbd3-97e2-5a0c-b3eb-fa63630ce099",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "3/Er6YtpQZ6/akGJQlWh/A==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:497:internship_context.current_blockers",
+        "observed_at": "2026-08-02T07:00:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:497",
         "excerpt": "Learner A4 anticipates potential availability constraints starting Tuesday due to travel.",
         "extraction_confidence": 0.9
@@ -14154,6 +15126,10 @@
       "target_label": "Meeting",
       "target_id": "8e9bcbd3-97e2-5a0c-b3eb-fa63630ce099",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "3/Er6YtpQZ6/akGJQlWh/A==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:275:learning_goals.learner_tasks",
+        "observed_at": "2026-08-02T07:00:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:275",
         "excerpt": "Learner A4 reports progress on creating an mp4 render file within the backend context.",
         "extraction_confidence": 0.95
@@ -14223,6 +15199,10 @@
       "target_label": "Meeting",
       "target_id": "fe51abcf-1acc-5115-8dbd-89cad51064ef",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "XIpnRlc8TwKuxvDMaxikNw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:354:learning_goals.learner_tasks",
+        "observed_at": "2026-08-03T14:00:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:354",
         "excerpt": "Learner A4 shared that he pushed his changes, provided a pull request link, and communicated availability to help a peer.",
         "extraction_confidence": 0.95
@@ -14270,6 +15250,10 @@
       "target_label": "Meeting",
       "target_id": "fe51abcf-1acc-5115-8dbd-89cad51064ef",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "XIpnRlc8TwKuxvDMaxikNw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:379:learning_goals.learner_tasks",
+        "observed_at": "2026-08-03T14:00:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:379",
         "excerpt": "Learner A4 commits to finishing his assigned part today and sending it over.",
         "extraction_confidence": 0.95
@@ -14317,6 +15301,10 @@
       "target_label": "Meeting",
       "target_id": "fe51abcf-1acc-5115-8dbd-89cad51064ef",
       "properties": {
+        "source_system": "meeting_memory",
+        "source_id": "XIpnRlc8TwKuxvDMaxikNw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:456:learning_goals.learner_tasks",
+        "observed_at": "2026-08-03T14:00:00Z",
+        "evidence_type": "observed_behavior",
         "source_locator": "turn:456",
         "excerpt": "Learner A4 created a file named 'model' in the project repository.",
         "extraction_confidence": 0.9

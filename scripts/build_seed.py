@@ -283,8 +283,15 @@ class SeedBuilder:
         locator: str | None = None,
         url: str | None = None,
         method: M.ExtractionMethod = M.ExtractionMethod.DIRECT_MAPPING,
+        evidence_type: M.EvidenceType | None = None,
     ) -> M.Provenance:
-        return M.Provenance(
+        """Build a provenance record.
+
+        Passing ``evidence_type`` returns an ``EvidenceProvenance``, the
+        stricter type that Evidence nodes require - it makes the full
+        (source_system, source_id, timestamp, evidence_type) tuple mandatory.
+        """
+        fields: dict[str, Any] = dict(
             source_system=system,
             source_type=stype,
             source_id=str(sid),
@@ -294,6 +301,23 @@ class SeedBuilder:
             ingested_at=INGESTED_AT,
             extraction_method=method,
         )
+        if evidence_type is not None:
+            return M.EvidenceProvenance(evidence_type=evidence_type, **fields)
+        return M.Provenance(**fields)
+
+    @staticmethod
+    def evidence_tuple(ev: M.Evidence) -> dict[str, Any]:
+        """The provenance tuple a DERIVED_FROM edge must repeat.
+
+        Read straight off the Evidence node so the edge copy cannot disagree
+        with it - LearnerGraph rejects the graph if it ever does.
+        """
+        return {
+            "source_system": ev.provenance.source_system.value,
+            "source_id": ev.provenance.source_id,
+            "observed_at": ev.observed_at.isoformat(),
+            "evidence_type": ev.evidence_type.value,
+        }
 
     def skill(self, spec: dict[str, Any]) -> M.Skill:
         if spec["slug"] not in self.skill_nodes:
@@ -509,7 +533,7 @@ class SeedBuilder:
             )
         )
         self._project = project
-        self._taskdefs: dict[str, M.TaskDefinition] = {}
+        self._tasks: dict[str, M.Task] = {}
         self._rubrics: dict[str, M.Rubric] = {}
         self._criteria: dict[str, M.RubricCriterion] = {}
 
@@ -517,8 +541,8 @@ class SeedBuilder:
             task = r["config_json"]["task"]
             observed = ts(r["activated_at"]) or INGESTED_AT
             td = self.add(
-                M.TaskDefinition(
-                    id=deterministic_id("virtual_internship", "task_definition", key),
+                M.Task(
+                    id=deterministic_id("virtual_internship", "task", key),
                     created_at=INGESTED_AT,
                     provenance=self.prov(
                         M.SourceSystem.VIRTUAL_INTERNSHIP,
@@ -526,7 +550,7 @@ class SeedBuilder:
                         key,
                         observed,
                     ),
-                    task_definition_key=key,
+                    task_key=key,
                     headline=task.get("headline") or "untitled task",
                     description=task.get("description"),
                     task_archetype=r.get("task_archetype_id"),
@@ -537,8 +561,14 @@ class SeedBuilder:
                     or [],
                 )
             )
-            self._taskdefs[key] = td  # type: ignore[assignment]
-            self.link(M.EdgeType.PART_OF_PROJECT, td, project)
+            self._tasks[key] = td  # type: ignore[assignment]
+            self.link(
+                M.EdgeType.PART_OF_PROJECT,
+                td,
+                project,
+                sprint_label=td.sprint_label,
+                is_primary_deliverable=bool(td.technologies),
+            )
 
             # Skills the task exercises, from its declared technologies.
             for tech in task.get("technologies") or []:
@@ -643,13 +673,13 @@ class SeedBuilder:
             )
             self._lx[r["lx_id"]] = lx  # type: ignore[assignment]
             self.link(M.EdgeType.HAS_LEARNING_EXPERIENCE, learner, lx)
-            if key in self._taskdefs:
-                self.link(M.EdgeType.INSTANCE_OF, lx, self._taskdefs[key])
+            if key in self._tasks:
+                self.link(M.EdgeType.INSTANCE_OF, lx, self._tasks[key])
                 if r.get("outcome") == "completed_success":
                     self.link(
                         M.EdgeType.COMPLETED_TASK,
                         learner,
-                        self._taskdefs[key],
+                        self._tasks[key],
                         lx_key=r["lx_id"],
                         outcome=r["outcome"],
                         completed_at=(
@@ -977,6 +1007,7 @@ class SeedBuilder:
                             occurred,
                             locator=f"scope:{scope.get('id')}/rubric_point:{point.get('rubric_id')}",
                             method=M.ExtractionMethod.RULE_BASED,
+                            evidence_type=M.EvidenceType.DIRECT_ASSESSMENT,
                         ),
                         evidence_type=M.EvidenceType.DIRECT_ASSESSMENT,
                         strength=(
@@ -1013,6 +1044,7 @@ class SeedBuilder:
                     M.EdgeType.DERIVED_FROM,
                     ev,
                     assessment,
+                    **self.evidence_tuple(ev),
                     source_locator=locator,
                     excerpt=(
                         redact(point.get("reason"))[:1000]
@@ -1026,6 +1058,7 @@ class SeedBuilder:
                         M.EdgeType.DERIVED_FROM,
                         ev,
                         criterion,
+                        **self.evidence_tuple(ev),
                         source_locator=locator,
                         extraction_confidence=min(max(conf, 0.0), 1.0),
                     )
@@ -1072,6 +1105,7 @@ class SeedBuilder:
                         M.EdgeType.DERIVED_FROM,
                         ev,
                         art,
+                        **self.evidence_tuple(ev),
                         source_locator=chunk,
                         extraction_confidence=min(max(conf, 0.0), 1.0),
                     )
@@ -1096,7 +1130,7 @@ class SeedBuilder:
         sid: str,
         outcome: str | None,
     ) -> None:
-        td = self._taskdefs.get(task_key or "")
+        td = self._tasks.get(task_key or "")
         if td is None:
             return
         techs = ", ".join(td.technologies) or "none recorded"
@@ -1110,6 +1144,7 @@ class SeedBuilder:
                     sid,
                     occurred,
                     url=submission.submission_url,
+                    evidence_type=M.EvidenceType.DELIVERED_WORK,
                 ),
                 evidence_type=M.EvidenceType.DELIVERED_WORK,
                 strength=M.EvidenceStrength.HIGH,
@@ -1129,6 +1164,7 @@ class SeedBuilder:
             M.EdgeType.DERIVED_FROM,
             ev,
             submission,
+            **self.evidence_tuple(ev),
             source_locator=f"submission:{sid}",
             extraction_confidence=0.9,
         )
@@ -1193,7 +1229,7 @@ class SeedBuilder:
                 continue
             lx = self._lx.get(r["lx_id"])
             task_key = r["config_json"]["task"].get("task_definition_id")
-            td = self._taskdefs.get(task_key or "")
+            td = self._tasks.get(task_key or "")
             if lx is None or td is None:
                 continue
             observed = (
@@ -1210,6 +1246,7 @@ class SeedBuilder:
                         r["lx_id"],
                         observed,
                         method=M.ExtractionMethod.RULE_BASED,
+                        evidence_type=M.EvidenceType.DELIVERED_WORK,
                     ),
                     evidence_type=M.EvidenceType.DELIVERED_WORK,
                     strength=M.EvidenceStrength.HIGH,
@@ -1231,6 +1268,7 @@ class SeedBuilder:
                 M.EdgeType.DERIVED_FROM,
                 ev,
                 lx,
+                **self.evidence_tuple(ev),
                 source_locator=f"lx_outcome:{r['lx_id']}",
                 extraction_confidence=0.85,
             )
@@ -1365,6 +1403,11 @@ class SeedBuilder:
             # not demonstrated. Typing it honestly is what keeps the DECLARED and
             # DEMONSTRATED tiers meaningfully different.
             is_tech_claim = metric == "internship_context.tech_stack"
+            card_evidence_type = (
+                M.EvidenceType.SELF_DECLARED
+                if is_tech_claim
+                else M.EvidenceType.OBSERVED_BEHAVIOR
+            )
             ev = self.add(
                 M.Evidence(
                     id=evidence_uid("meeting_memory", "memory_card", card["card_id"]),
@@ -1376,12 +1419,9 @@ class SeedBuilder:
                         observed,
                         locator=meta.get("source_locator"),
                         method=M.ExtractionMethod.LLM_EXTRACTION,
+                        evidence_type=card_evidence_type,
                     ),
-                    evidence_type=(
-                        M.EvidenceType.SELF_DECLARED
-                        if is_tech_claim
-                        else M.EvidenceType.OBSERVED_BEHAVIOR
-                    ),
+                    evidence_type=card_evidence_type,
                     strength=(
                         M.EvidenceStrength.LOW
                         if is_tech_claim
@@ -1399,6 +1439,7 @@ class SeedBuilder:
                 M.EdgeType.DERIVED_FROM,
                 ev,
                 meeting,
+                **self.evidence_tuple(ev),
                 source_locator=meta.get("source_locator"),
                 excerpt=(excerpt or content or None),
                 extraction_confidence=conf,

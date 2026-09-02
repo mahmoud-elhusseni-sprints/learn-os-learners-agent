@@ -160,7 +160,7 @@ A body of work several tasks contribute to.
 | `description` | `str \| None` | no |  |
 | `repository_url` | `str \| None` | no |  |
 
-#### `TaskDefinition`  (source)
+#### `Task`  (source)
 
 The reusable specification of a task.
 
@@ -174,7 +174,7 @@ would destroy the difference between 'the task' and 'her attempt at it'.
 | `created_at` | `datetime (UTC)` | yes |  |
 | `updated_at` | `datetime (UTC) \| None` | no |  |
 | `provenance` | `Provenance` | yes |  |
-| `task_definition_key` | `str` | yes |  |
+| `task_key` | `str` | yes |  |
 | `headline` | `str` | yes |  |
 | `description` | `str \| None` | no |  |
 | `task_archetype` | `str \| None` | no | e.g. 'single_submission' |
@@ -411,7 +411,7 @@ Every Evidence node must point back at the record it came from
 | `id` | `UUID` | yes |  |
 | `created_at` | `datetime (UTC)` | yes |  |
 | `updated_at` | `datetime (UTC) \| None` | no |  |
-| `provenance` | `Provenance` | yes |  |
+| `provenance` | `EvidenceProvenance` | yes | Stricter than the base Provenance: evidence_type is required, so the full (source_syste... |
 | `evidence_type` | `EvidenceType` | yes |  |
 | `strength` | `EvidenceStrength` | yes |  |
 | `confidence` | `float` | no |  |
@@ -594,7 +594,7 @@ Cardinality is read left-to-right:
 | `(:SkillAssertion)-[:ABOUT_SKILL]->(:Skill)` | `N:1` | - | Which skill the assertion concerns. |
 | `(:Recommendation)-[:ADDRESSES_GAP_IN]->(:Skill)` | `N:M` | - | Skill the gap concerns. |
 | `(:Learner)-[:ASSESSED_ON_SKILL]->(:Skill)` | `N:M` | `SkillTierProps` | Tier 3: scored against a rubric. |
-| `(:Learner)-[:COMPLETED_TASK]->(:TaskDefinition)` | `N:M` | `CompletedTaskProps` | Denormalised completion edge for fast history queries. |
+| `(:Learner)-[:COMPLETED_TASK]->(:Task)` | `N:M` | `CompletedTaskProps` | Denormalised completion edge for fast history queries. |
 | `(:Submission)-[:CONTAINS_ARTIFACT]->(:Artifact)` | `1:N` | `ArtifactCitationProps` | Files/chunks inside a submission. |
 | `(:Learner)-[:DECLARED_SKILL]->(:Skill)` | `N:M` | `SkillTierProps` | Tier 1: self-declared. |
 | `(:Learner)-[:DEMONSTRATED_SKILL]->(:Skill)` | `N:M` | `SkillTierProps` | Tier 4: shipped working artifacts. |
@@ -617,11 +617,11 @@ Cardinality is read left-to-right:
 | `(:Rubric)-[:HAS_CRITERION]->(:RubricCriterion)` | `1:N` | - | Rubric's scope/point criteria. |
 | `(:Learner)-[:HAS_LEARNING_EXPERIENCE]->(:LearningExperience)` | `1:N` | - | A task instance assigned to this learner. |
 | `(:Learner)-[:HAS_OBSERVATION]->(:Observation)` | `1:N` | - | Behavioural observations. |
-| `(:TaskDefinition)-[:HAS_RUBRIC]->(:Rubric)` | `N:1` | - | Task is graded by this rubric. |
+| `(:Task)-[:HAS_RUBRIC]->(:Rubric)` | `N:1` | - | Task is graded by this rubric. |
 | `(:Learner)-[:HAS_SKILL_ASSERTION]->(:SkillAssertion)` | `1:N` | - | Learner's derived skill states. |
 | `(:Meeting)-[:HELD_FOR_GROUP]->(:Group)` | `N:1` | `MeetingScopeProps` | Meeting belongs to a group. |
 | `(:LearnerIdentity)-[:IDENTIFIES]->(:Learner)` | `N:1` | - | A source-system identity resolves to one canonical learner. |
-| `(:LearningExperience)-[:INSTANCE_OF]->(:TaskDefinition)` | `N:1` | - | Which task specification this instance realises. |
+| `(:LearningExperience)-[:INSTANCE_OF]->(:Task)` | `N:1` | - | Which task specification this instance realises. |
 | `(:Learner)-[:MEMBER_OF]->(:Group)` | `N:M` | `MembershipProps` | Learner belongs to a track/group. |
 | `(:Observation)-[:OBSERVED_IN]->(:Meeting)` | `N:1` | `ObservedInProps` | Context: a meeting. |
 | `(:Observation)-[:OBSERVED_IN]->(:Interaction)` | `N:1` | `ObservedInProps` | Context: an interaction. |
@@ -630,11 +630,11 @@ Cardinality is read left-to-right:
 | `(:Learner)-[:PARTICIPATED_IN]->(:Meeting)` | `N:M` | `ParticipationProps` | Learner attended a meeting. |
 | `(:Learner)-[:PARTICIPATED_IN]->(:Interaction)` | `N:M` | `ParticipationProps` | Learner took part in an exchange. |
 | `(:Round)-[:PART_OF_COHORT]->(:Cohort)` | `N:1` | - | Round belongs to a cohort. |
-| `(:TaskDefinition)-[:PART_OF_PROJECT]->(:Project)` | `N:1` | - | Task contributes to a project. |
+| `(:Task)-[:PART_OF_PROJECT]->(:Project)` | `N:1` | `ProjectMembershipProps` | Task contributes to a project. |
 | `(:Group)-[:PART_OF_ROUND]->(:Round)` | `N:1` | - | Group sits inside a round. |
 | `(:Recommendation)-[:RECOMMENDED_FOR]->(:Learner)` | `N:1` | - | Who the recommendation is for. |
 | `(:Recommendation)-[:RECOMMENDS_SCENARIO]->(:Scenario)` | `N:1` | - | Catalog scenario proposed. |
-| `(:TaskDefinition)-[:REQUIRES_SKILL]->(:Skill)` | `N:M` | - | Skill the task exercises. |
+| `(:Task)-[:REQUIRES_SKILL]->(:Skill)` | `N:M` | - | Skill the task exercises. |
 | `(:Assessment)-[:SCORED_CRITERION]->(:RubricCriterion)` | `N:M` | `ScoredCriterionProps` | Per-point grader result with confidence and artifact citations. |
 | `(:Learner)-[:SUBMITTED]->(:Submission)` | `1:N` | `SubmissionProps` | Learner handed this in. |
 | `(:Submission)-[:SUBMITTED_IN]->(:Attempt)` | `N:1` | `SubmittedInProps` | Submission belongs to an attempt. |
@@ -675,13 +675,27 @@ Denormalised summary of how a learner finished a task definition.
 
 Carried on every ``(:Evidence)-[:DERIVED_FROM]->(...)`` edge.
 
-Provenance lives on the Evidence node, but the *edge* is where the
-pointer into the specific source record belongs: which turn of a
-transcript, which rubric point, which chunk of a file. Employers see
-these, so they must survive to the database.
+This edge is the traceability link, so it carries the **full provenance
+tuple required by the specification** -
+``(source_system, source_id, timestamp, evidence_type)`` - as required
+fields, not optional ones.
+
+Duplicating the tuple from the Evidence node is deliberate. In Neo4j the
+edge can then be filtered directly ("show me every high-confidence link
+derived from the assessment engine in July") without touching the node.
+``LearnerGraph._provenance_tuple_consistent`` rejects any edge whose copy
+disagrees with its Evidence node, so the two cannot drift apart.
+
+``source_locator`` and ``excerpt`` are the edge's own contribution: the
+pointer into the specific part of the source record - which transcript
+turn, which rubric point, which chunk of a file.
 
 | property | type | required |
 |---|---|---|
+| `source_system` | `SourceSystem` | yes |
+| `source_id` | `str` | yes |
+| `observed_at` | `datetime (UTC)` | yes |
+| `evidence_type` | `EvidenceType` | yes |
 | `source_locator` | `str \| None` | no |
 | `excerpt` | `str \| None` | no |
 | `extraction_confidence` | `float` | no |
@@ -744,6 +758,20 @@ orphan property in Neo4j.
 |---|---|---|
 | `attendance` | `str` | no |
 | `role` | `str` | no |
+
+#### `ProjectMembershipProps`
+
+Carried on ``(:Task)-[:PART_OF_PROJECT]->(:Project)``.
+
+A project is delivered in ordered stages across sprints, and the same
+project spans several tasks. Recording the sprint and order on the edge
+lets a timeline be reconstructed without inferring it from dates.
+
+| property | type | required |
+|---|---|---|
+| `sprint_label` | `str \| None` | no |
+| `sequence` | `int \| None` | no |
+| `is_primary_deliverable` | `bool` | no |
 
 #### `RubricUseProps`
 

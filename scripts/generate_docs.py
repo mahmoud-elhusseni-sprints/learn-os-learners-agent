@@ -35,7 +35,7 @@ GROUPS: list[tuple[str, list[str], str]] = [
         "Work and learning",
         [
             "Project",
-            "TaskDefinition",
+            "Task",
             "LearningExperience",
             "Attempt",
             "Submission",

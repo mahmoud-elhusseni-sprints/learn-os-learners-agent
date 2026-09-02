@@ -52,8 +52,8 @@ DDL_SPEC: dict[str, dict[str, list[str]]] = {
         "indexes": ["canonical_name", "category"],
         "fulltext": ["canonical_name", "description"],
     },
-    "TaskDefinition": {
-        "business_key": ["task_definition_key"],
+    "Task": {
+        "business_key": ["task_key"],
         "indexes": ["task_archetype"],
         "fulltext": ["headline", "description"],
     },

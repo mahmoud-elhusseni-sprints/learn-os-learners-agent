@@ -331,6 +331,26 @@ class Provenance(GraphModel):
     extractor_version: str = Field(default=f"ontology@{ONTOLOGY_VERSION}")
 
 
+class EvidenceProvenance(Provenance):
+    """Provenance for a record that IS evidence.
+
+    The specification defines the provenance tuple as
+    ``(source_system, source_id, timestamp, evidence_type)``. On the base
+    ``Provenance`` the last element is optional, because structural records
+    such as a Learner or a Round carry provenance without being evidence
+    themselves.
+
+    Here it is **required**, so the complete tuple is enforced by the type
+    system rather than by a convention. ``Evidence.provenance`` is declared
+    as this type, which means an Evidence node whose provenance omits
+    ``evidence_type`` cannot be constructed at all.
+    """
+
+    evidence_type: EvidenceType = Field(
+        description="Evidence class this record supports. Required here."
+    )
+
+
 class GraphNode(GraphModel):
     """Every node has a UUID primary key and a creation timestamp."""
 
@@ -481,7 +501,7 @@ class Skill(GraphNode):
 # ===========================================================================
 
 
-class TaskDefinition(SourceNode):
+class Task(SourceNode):
     """The reusable specification of a task.
 
     Distinct from LearningExperience: in the real export one
@@ -489,8 +509,8 @@ class TaskDefinition(SourceNode):
     would destroy the difference between 'the task' and 'her attempt at it'.
     """
 
-    label: Literal["TaskDefinition"] = "TaskDefinition"
-    task_definition_key: str
+    label: Literal["Task"] = "Task"
+    task_key: str
     headline: str
     description: str | None = None
     task_archetype: str | None = Field(
@@ -779,6 +799,13 @@ class Evidence(SourceNode):
     """
 
     label: Literal["Evidence"] = "Evidence"
+    provenance: EvidenceProvenance = Field(
+        description=(
+            "Stricter than the base Provenance: evidence_type is required, so "
+            "the full (source_system, source_id, timestamp, evidence_type) "
+            "tuple is enforced by the type itself."
+        )
+    )
     evidence_type: EvidenceType
     strength: EvidenceStrength
     confidence: Confidence = 1.0
@@ -810,9 +837,7 @@ class Evidence(SourceNode):
         drift apart.
         """
         prov = self.provenance
-        if prov.evidence_type is None:
-            object.__setattr__(prov, "evidence_type", self.evidence_type)
-        elif prov.evidence_type is not self.evidence_type:
+        if prov.evidence_type is not self.evidence_type:
             raise ValueError(
                 f"provenance.evidence_type ({prov.evidence_type.value}) "
                 f"contradicts Evidence.evidence_type ({self.evidence_type.value})"
@@ -1006,7 +1031,7 @@ AnyNode = Annotated[
         Learner,
         LearnerIdentity,
         Skill,
-        TaskDefinition,
+        Task,
         Project,
         LearningExperience,
         Attempt,
@@ -1038,7 +1063,7 @@ NODE_CLASSES: dict[str, type[GraphNode]] = {
         Learner,
         LearnerIdentity,
         Skill,
-        TaskDefinition,
+        Task,
         Project,
         LearningExperience,
         Attempt,
@@ -1230,15 +1255,54 @@ class OccurredInProps(GraphModel):
     days_into_lx: int | None = Field(default=None, ge=0)
 
 
+class ProjectMembershipProps(GraphModel):
+    """Carried on ``(:Task)-[:PART_OF_PROJECT]->(:Project)``.
+
+    A project is delivered in ordered stages across sprints, and the same
+    project spans several tasks. Recording the sprint and order on the edge
+    lets a timeline be reconstructed without inferring it from dates.
+    """
+
+    sprint_label: str | None = Field(
+        default=None, description="e.g. 'week 3', 'Sprint 4'"
+    )
+    sequence: int | None = Field(
+        default=None, ge=0, description="Order of this task within the project"
+    )
+    is_primary_deliverable: bool = False
+
+
 class DerivedFromProps(GraphModel):
     """Carried on every ``(:Evidence)-[:DERIVED_FROM]->(...)`` edge.
 
-    Provenance lives on the Evidence node, but the *edge* is where the
-    pointer into the specific source record belongs: which turn of a
-    transcript, which rubric point, which chunk of a file. Employers see
-    these, so they must survive to the database.
+    This edge is the traceability link, so it carries the **full provenance
+    tuple required by the specification** -
+    ``(source_system, source_id, timestamp, evidence_type)`` - as required
+    fields, not optional ones.
+
+    Duplicating the tuple from the Evidence node is deliberate. In Neo4j the
+    edge can then be filtered directly ("show me every high-confidence link
+    derived from the assessment engine in July") without touching the node.
+    ``LearnerGraph._provenance_tuple_consistent`` rejects any edge whose copy
+    disagrees with its Evidence node, so the two cannot drift apart.
+
+    ``source_locator`` and ``excerpt`` are the edge's own contribution: the
+    pointer into the specific part of the source record - which transcript
+    turn, which rubric point, which chunk of a file.
     """
 
+    source_system: SourceSystem = Field(
+        description="Which system the evidence came from (tuple element 1)"
+    )
+    source_id: str = Field(
+        min_length=1, description="Primary key in that system (tuple element 2)"
+    )
+    observed_at: UtcDatetime = Field(
+        description="When the evidenced thing happened (tuple element 3)"
+    )
+    evidence_type: EvidenceType = Field(
+        description="Class of evidence this link supports (tuple element 4)"
+    )
     source_locator: str | None = Field(
         default=None, description="e.g. 'turn:657', 'rubric_point:102'"
     )
@@ -1322,24 +1386,25 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
     EdgeSpec(
         type=EdgeType.INSTANCE_OF,
         source_label="LearningExperience",
-        target_label="TaskDefinition",
+        target_label="Task",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Which task specification this instance realises.",
     ),
     EdgeSpec(
         type=EdgeType.COMPLETED_TASK,
         source_label="Learner",
-        target_label="TaskDefinition",
+        target_label="Task",
         cardinality=Cardinality.MANY_TO_MANY,
         description="Denormalised completion edge for fast history queries.",
         property_model="CompletedTaskProps",
     ),
     EdgeSpec(
         type=EdgeType.PART_OF_PROJECT,
-        source_label="TaskDefinition",
+        source_label="Task",
         target_label="Project",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Task contributes to a project.",
+        property_model="ProjectMembershipProps",
     ),
     EdgeSpec(
         type=EdgeType.HAS_ATTEMPT,
@@ -1375,7 +1440,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
     # --- assessment ---
     EdgeSpec(
         type=EdgeType.HAS_RUBRIC,
-        source_label="TaskDefinition",
+        source_label="Task",
         target_label="Rubric",
         cardinality=Cardinality.MANY_TO_ONE,
         description="Task is graded by this rubric.",
@@ -1420,7 +1485,7 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
     ),
     EdgeSpec(
         type=EdgeType.REQUIRES_SKILL,
-        source_label="TaskDefinition",
+        source_label="Task",
         target_label="Skill",
         cardinality=Cardinality.MANY_TO_MANY,
         description="Skill the task exercises.",
@@ -1703,6 +1768,7 @@ _PROPERTY_MODELS: dict[str, type[GraphModel]] = {
     "OccurredInProps": OccurredInProps,
     "DerivedFromProps": DerivedFromProps,
     "ObservedInProps": ObservedInProps,
+    "ProjectMembershipProps": ProjectMembershipProps,
 }
 
 
@@ -1872,6 +1938,41 @@ class LearnerGraph(GraphModel):
                     )
         if problems:
             raise ValueError("cardinality violations: " + "; ".join(problems))
+        return self
+
+    @model_validator(mode="after")
+    def _provenance_tuple_consistent(self) -> "LearnerGraph":
+        """Every DERIVED_FROM edge must repeat its Evidence node's tuple exactly.
+
+        The tuple is duplicated onto the edge so Neo4j can filter traceability
+        links without touching the node. Duplication invites drift, so this
+        check makes drift a construction error rather than a silent data bug.
+        """
+        idx = self.index()
+        problems: list[str] = []
+        for e in self.edges:
+            if e.type is not EdgeType.DERIVED_FROM or not e.properties:
+                continue
+            node = idx.get(e.source_id)
+            if not isinstance(node, Evidence):
+                continue
+            prov = node.provenance
+            expected = {
+                "source_system": prov.source_system.value,
+                "source_id": prov.source_id,
+                "evidence_type": node.evidence_type.value,
+            }
+            for key, want in expected.items():
+                got = e.properties.get(key)
+                if got != want:
+                    problems.append(
+                        f"DERIVED_FROM edge from Evidence {node.id}: "
+                        f"{key}={got!r} on the edge but {want!r} on the node"
+                    )
+        if problems:
+            raise ValueError(
+                "provenance tuple drift between edge and node: " + "; ".join(problems)
+            )
         return self
 
     @model_validator(mode="after")
