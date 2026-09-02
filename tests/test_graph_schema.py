@@ -780,6 +780,88 @@ def test_fixture_derived_from_edges_all_carry_the_tuple():
             assert e.properties.get(key), f"{key} missing on a DERIVED_FROM edge"
 
 
+# --------------------------------- Evidence exposes the tuple directly
+
+
+def test_evidence_exposes_metadata_fields_directly():
+    """source_system, source_id, timestamp and evidence_type are readable
+    on the Evidence model itself, not only inside the nested provenance."""
+    ev = _evidence()
+    assert ev.source_system is ev.provenance.source_system
+    assert ev.source_id == ev.provenance.source_id
+    assert ev.source_type == ev.provenance.source_type
+    assert ev.observed_at is not None
+    assert ev.evidence_type is not None
+
+
+def test_evidence_metadata_fields_appear_in_serialised_output():
+    """They must survive to JSON and therefore to Neo4j, not just exist in
+    Python."""
+    dumped = _evidence().model_dump(mode="json")
+    for key in ("source_system", "source_id", "source_type", "evidence_type"):
+        assert key in dumped, f"{key} missing from serialised Evidence"
+
+
+def test_evidence_derived_fields_cannot_be_set_directly():
+    """They mirror provenance, so they are stripped rather than assignable -
+    which is what stops them drifting from the record they come from."""
+    ev = _evidence()
+    dumped = ev.model_dump(mode="json")
+    dumped["source_id"] = "tampered"
+    reloaded = M.Evidence.model_validate(dumped)
+    assert reloaded.source_id == ev.provenance.source_id
+
+
+def test_fixture_spans_four_distinct_source_systems():
+    """The seed links one learner across LMS, internship, assessment and
+    meeting sources."""
+    g = _fixture()
+    systems = {e.provenance.source_system for e in g.by_label("Evidence")}
+    assert M.SourceSystem.LMS in systems
+    assert M.SourceSystem.VIRTUAL_INTERNSHIP in systems
+    assert M.SourceSystem.ASSESSMENT_ENGINE in systems
+    assert len(systems) >= 4, systems
+
+
+def test_fixture_contains_an_lms_assessment_score():
+    g = _fixture()
+    lms = [
+        e
+        for e in g.by_label("Evidence")
+        if e.provenance.source_system is M.SourceSystem.LMS
+        and e.evidence_type is M.EvidenceType.DIRECT_ASSESSMENT
+    ]
+    assert lms, "no LMS assessment score in the fixture"
+
+
+def test_fixture_contains_an_internship_project_task():
+    """A delivered-work item traced to internship task activity."""
+    g = _fixture()
+    delivered = [
+        e
+        for e in g.by_label("Evidence")
+        if e.evidence_type is M.EvidenceType.DELIVERED_WORK
+        and e.provenance.source_system is M.SourceSystem.VIRTUAL_INTERNSHIP
+    ]
+    assert delivered
+    assert g.by_label("Task") and g.by_label("Project")
+
+
+def test_fixture_populates_all_four_skill_tiers():
+    g = _fixture()
+    tiers = {a.tier for a in g.by_label("SkillAssertion")}
+    assert tiers == set(M.SkillEvidenceTier), sorted(t.value for t in tiers)
+
+
+def test_illustrative_lms_records_are_marked_as_such():
+    """Synthetic records must be impossible to mistake for extracted data."""
+    g = _fixture()
+    for e in g.by_label("Evidence"):
+        if e.provenance.source_system is M.SourceSystem.LMS:
+            assert e.provenance.extraction_method is M.ExtractionMethod.HUMAN_CURATED
+            assert "ILLUSTRATIVE" in e.content
+
+
 # ---------------------------------------------------------------- cypher export
 
 

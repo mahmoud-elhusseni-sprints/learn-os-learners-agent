@@ -346,6 +346,7 @@ class SeedBuilder:
         self.build_interactions_and_assessments(learner, lx_rows)
         self.build_delivered_work_from_outcomes(learner, lx_rows)
         self.build_meetings_and_observations(learner)
+        self.build_lms_evidence(learner)
         self.build_skill_assertions(learner)
         self.build_career_goal(learner)
         self.build_employer_access()
@@ -1488,6 +1489,124 @@ class SeedBuilder:
                 excerpt=(excerpt or None),
             )
             self.link(M.EdgeType.SUPPORTED_BY_EVIDENCE, obs, ev)
+
+    # ---- LMS evidence ------------------------------------------------------
+
+    #: Illustrative LMS records.
+    #:
+    #: The anonymised export contains no LMS extract, but the specification
+    #: requires the seed to show a learner linked across distinct evidence
+    #: sources *including* an LMS assessment score. These two records are
+    #: therefore SYNTHETIC and clearly marked as such via
+    #: ``ExtractionMethod.HUMAN_CURATED`` and an explicit note in the content.
+    #:
+    #: They exist to demonstrate two things the internship data alone cannot:
+    #:   * the ``lms`` source system end to end, and
+    #:   * the ``exposed`` skill tier, which only LMS module completion feeds.
+    #:
+    #: Replace them with a real extract as soon as LMS data is available; the
+    #: node types, edges and DDL already support it unchanged.
+    _LMS_RECORDS: list[dict[str, Any]] = [
+        {
+            "source_id": "lms:quiz:python-fundamentals:attempt-1",
+            "kind": "quiz_score",
+            "title": "LMS quiz: Python Fundamentals - 86%",
+            "content": (
+                "ILLUSTRATIVE RECORD (no LMS extract exists in this export). "
+                "Scored 86% on the Python Fundamentals assessment, covering "
+                "data structures, functions and error handling."
+            ),
+            "evidence_type": M.EvidenceType.DIRECT_ASSESSMENT,
+            "strength": M.EvidenceStrength.HIGH,
+            "confidence": 0.86,
+            "skills": ["python", "error-handling"],
+            "tier": M.SkillEvidenceTier.ASSESSED,
+            "observed": "2026-07-10T09:30:00+00:00",
+        },
+        {
+            "source_id": "lms:module:rest-api-design:completed",
+            "kind": "module_completion",
+            "title": "LMS module completed: REST API Design",
+            "content": (
+                "ILLUSTRATIVE RECORD (no LMS extract exists in this export). "
+                "Completed the REST API Design module. Learning exposure only - "
+                "completion is not evidence of demonstrated ability."
+            ),
+            "evidence_type": M.EvidenceType.LEARNING_EXPOSURE,
+            "strength": M.EvidenceStrength.MEDIUM,
+            "confidence": 0.7,
+            "skills": ["rest-api"],
+            "tier": M.SkillEvidenceTier.EXPOSED,
+            "observed": "2026-07-14T16:05:00+00:00",
+        },
+    ]
+
+    def build_lms_evidence(self, learner: M.Learner) -> None:
+        """Attach illustrative LMS evidence so the seed spans a fourth source.
+
+        Every record created here is marked HUMAN_CURATED and says so in its
+        own content, so it can never be mistaken for extracted data.
+        """
+        for rec in self._LMS_RECORDS:
+            observed = ts(rec["observed"]) or INGESTED_AT
+            module = self.add(
+                M.LearningExperience(
+                    id=deterministic_id("lms", "lms_activity", rec["source_id"]),
+                    created_at=INGESTED_AT,
+                    provenance=self.prov(
+                        M.SourceSystem.LMS,
+                        f"lms.{rec['kind']}",
+                        rec["source_id"],
+                        observed,
+                        method=M.ExtractionMethod.HUMAN_CURATED,
+                    ),
+                    lx_key=rec["source_id"],
+                    status=M.LXStatus.TERMINATED,
+                    outcome=M.LXOutcome.COMPLETED_SUCCESS,
+                    activated_at=observed,
+                    terminated_at=observed,
+                    terminated_reason="illustrative LMS record",
+                )
+            )
+            self.link(M.EdgeType.HAS_LEARNING_EXPERIENCE, learner, module)
+
+            ev = self.add(
+                M.Evidence(
+                    id=evidence_uid("lms", rec["kind"], rec["source_id"]),
+                    created_at=INGESTED_AT,
+                    provenance=self.prov(
+                        M.SourceSystem.LMS,
+                        f"lms.{rec['kind']}",
+                        rec["source_id"],
+                        observed,
+                        method=M.ExtractionMethod.HUMAN_CURATED,
+                        evidence_type=rec["evidence_type"],
+                    ),
+                    evidence_type=rec["evidence_type"],
+                    strength=rec["strength"],
+                    confidence=rec["confidence"],
+                    title=rec["title"],
+                    content=rec["content"],
+                    observed_at=observed,
+                    access_scope=M.AccessScope.EMPLOYER_SHAREABLE,
+                )
+            )
+            self.link(M.EdgeType.EVIDENCE_FOR_LEARNER, ev, learner)
+            self.link(
+                M.EdgeType.DERIVED_FROM,
+                ev,
+                module,
+                **self.evidence_tuple(ev),
+                source_locator=rec["source_id"],
+                extraction_confidence=rec["confidence"],
+            )
+            for slug in rec["skills"]:
+                spec = next((x for x in SKILL_REGISTRY if x["slug"] == slug), None)
+                if spec is None:
+                    continue
+                skill = self.skill(spec)
+                self.link(M.EdgeType.EVIDENCE_ABOUT_SKILL, ev, skill)
+                self.record_skill_evidence(slug, rec["tier"], ev)
 
     # ---- derived skill assertions -----------------------------------------
 

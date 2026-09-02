@@ -53,6 +53,7 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
+    computed_field,
     field_validator,
     model_validator,
 )
@@ -824,6 +825,65 @@ class Evidence(SourceNode):
         default=None,
         description="Set when the evidence came from a graded rubric point.",
     )
+
+    #: Names of the computed mirrors below. They are written on serialisation
+    #: but must be stripped on load, since they are derived rather than set.
+    _DERIVED_KEYS: ClassVar[tuple[str, ...]] = (
+        "source_system",
+        "source_id",
+        "source_type",
+        "source_locator",
+    )
+
+    @model_validator(mode="before")
+    @classmethod
+    def _drop_derived_mirrors(cls, data: Any) -> Any:
+        """Allow an Evidence node to be re-read from its own serialised form.
+
+        ``extra="forbid"`` is kept for real typos; this only removes the four
+        keys this model itself emits, so JSON round-trip works without
+        loosening validation anywhere else.
+        """
+        if isinstance(data, dict):
+            data = {k: v for k, v in data.items() if k not in cls._DERIVED_KEYS}
+        return data
+
+    # ---- the required metadata tuple, exposed directly on Evidence -------
+    #
+    # The authoritative values live on ``provenance``. These computed fields
+    # surface them at the top level of the Evidence model itself, so the full
+    # tuple (source_system, source_id, timestamp, evidence_type) is readable
+    # without opening the nested record - and appears at the top level in
+    # serialised output and in Neo4j. They are derived, never set, so they
+    # cannot drift from the provenance they come from.
+
+    @computed_field(  # type: ignore[prop-decorator]
+        description="Source system this evidence came from (tuple element 1)."
+    )
+    @property
+    def source_system(self) -> SourceSystem:
+        return self.provenance.source_system
+
+    @computed_field(  # type: ignore[prop-decorator]
+        description="Primary key in that source system (tuple element 2)."
+    )
+    @property
+    def source_id(self) -> str:
+        return self.provenance.source_id
+
+    @computed_field(  # type: ignore[prop-decorator]
+        description="Record type in the source system."
+    )
+    @property
+    def source_type(self) -> str:
+        return self.provenance.source_type
+
+    @computed_field(  # type: ignore[prop-decorator]
+        description="Pointer inside the source record, e.g. 'rubric_point:102'."
+    )
+    @property
+    def source_locator(self) -> str | None:
+        return self.provenance.source_locator
 
     @model_validator(mode="after")
     def _provenance_carries_evidence_type(self) -> "Evidence":

@@ -2162,7 +2162,11 @@
       "content": "There is clear evidence of an attempt to model the pipeline's core entities with typed fields and keys: the asset schemas (AssetItem, AssetResponseContract) are explicit and typed, and the SQL migration for the 'videos' table includes a primary key, user prompt, status, and JSONB columns for script and run state. The PRD lists core entities (User, Video, Script, Scene, Asset, etc.). However, the schema is not fully explicit for all required entities: the script and run state are stored as JSONB blobs rather than as normalized, relational tables/models with typed columns and foreign keys. There is no explicit table or model for 'Script' or 'Run' as a first-class entity, and relationships are only partially modeled (e.g., video_id is present, but no explicit foreign keys to scripts or runs). Thus, the requirement is only partially met.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:101"
     },
     {
       "id": "e0836324-6cee-592d-b252-eaf700a54fe5",
@@ -2258,7 +2262,11 @@
       "content": "The provided code in both script_agent.py chunks shows a function that takes raw user text, builds a prompt for an LLM (with a system prompt instructing the agent to create a structured, segmented script), calls the LLM, and returns a parsed structured script object (VideoScriptBlueprint). This is a real transformation from user text to a structured script artifact, matching the rubric's requirements.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Yes"
+      "criterion_status": "Yes",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:102"
     },
     {
       "id": "522c4149-5269-581c-9dc9-4c51b3d2ba53",
@@ -2318,7 +2326,11 @@
       "content": "There is clear evidence that the pipeline is designed to persist job state and stage outputs in a database table ('videos'), with columns for each stage's output (e.g., script_data, scene_data, etc.), and that jobs are created and tracked in the DB. However, there is no direct evidence in the provided chunks that the script writer step (Stage 1) specifically reads its input from and writes its output to the finalized schema/database (i.e., that a run row is created, the produced script is written back, and status is updated DURABLY at the script stage itself). The architecture and API design support this, but the actual implementation of the script writer's DB interaction is not shown. Thus, the requirement is partially met: the DB is defined and used for job tracking, but it's not fully confirmed that the script writer step itself persists its output as required by the rubric.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:103"
     },
     {
       "id": "d8c7436e-6e68-50fe-8f4d-a9ba7e5c2e66",
@@ -2432,7 +2444,11 @@
       "content": "There is clear evidence that a React frontend project has been scaffolded (see package.json, index.html, and README updates), but there is no evidence of an actual implemented user text input/submit UI. The documentation and folder structure suggest intent and planning for such a UI, but no code or markup for an input form is present in the provided chunks.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:104"
     },
     {
       "id": "cdaab2ae-63ef-5e02-a84a-4e844c96fd60",
@@ -2564,7 +2580,11 @@
       "content": "There is clear evidence of an attempted end-to-end pipeline: the orchestrator code wires together the pipeline steps, and the test file ('test_process_video_job_success') mocks the full pipeline, including script generation and persistence. However, the test uses mocks for the DB and does not show a real persisted script being created in the database. The README for scripts suggests a script to run the pipeline on a sample instruction, but no concrete demo or integration test is shown that proves a real input results in a persisted script in the DB. Thus, the requirement is only partially met.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:2/rubric_point:201"
     },
     {
       "id": "826608bc-0c3f-5cdb-9461-c031925b1120",
@@ -2660,7 +2680,11 @@
       "content": "There is evidence of edge-case and malformed input handling in backend tests (e.g., empty scripts), but there is no explicit evidence that empty or whitespace-only user_text is validated and rejected before reaching the agent/model call. The frontend input form does not show any guard or validation logic for empty input. Thus, related effort is visible, but the requirement is not fully satisfied.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:2/rubric_point:202"
     },
     {
       "id": "9ef916d0-805f-581c-8bbc-7241f466d2f9",
@@ -2738,7 +2762,11 @@
       "content": "There is clear evidence that agent/model call failures are caught and handled to prevent pipeline crashes. In the alignment service, exceptions during model calls are caught, logged, and retried, and after max retries, a RuntimeError is raised. In the orchestrator test, a simulated agent failure is caught and the run is marked as failed in the database. However, the rubric requires that the run status be set to 'failed' (or equivalent) and the pipeline keeps control, rather than raising an unhandled exception. In the alignment service, after retries, a RuntimeError is still raised, which could propagate and potentially crash the pipeline unless caught at a higher level. The orchestrator test does show that failures are caught and the status is set to 'failed', but the alignment service itself does not directly set a run status to 'failed'—it raises an exception. Thus, the requirement is only partially met: the intent and much of the mechanism are present, but the alignment service does not itself set a failed status and relies on higher-level exception handling.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:2/rubric_point:203"
     },
     {
       "id": "fb666de7-62c3-525f-ad9c-33a8ee53814f",
@@ -2870,7 +2898,11 @@
       "content": "There is clear evidence of a database schema being materialized via SQL migration files that create tables (users and videos). However, there is no evidence in the provided chunks that persistence was verified by reading/writing real rows or inspecting stored data. No chunk shows a query, seed, or inspection script confirming that a row was actually written and could be inspected.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:2/rubric_point:204"
     },
     {
       "id": "2a6c823e-be37-56a6-894d-405a5b2d9a24",
@@ -2912,7 +2944,11 @@
       "content": "The script writer's model name is sourced from an environment variable (os.getenv(\"LITELLM_MODEL\", \"kimi-k2.5\")), which is correct. However, generation parameters such as temperature and max_tokens are not present at all—neither as inline literals nor as config/env values. Since only the model name is configurable and the other required parameters are missing, the requirement is only partially met.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:3/rubric_point:301"
     },
     {
       "id": "8d3a37f0-7c89-564c-9d35-142598ff8c35",
@@ -2936,7 +2972,11 @@
       "content": "The chunk shows that database reads use a query builder (supabase.table(...).select(...).eq(...).execute()), which is ORM-like and does not use string-interpolated SQL. User-supplied values (job_id, stage_column) are validated and whitelisted before being passed as parameters, and there is no evidence of string concatenation or interpolation in SQL queries. All queries touching user-supplied text are parameterized or ORM-mediated.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Yes"
+      "criterion_status": "Yes",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:3/rubric_point:302"
     },
     {
       "id": "5e568872-10e0-5085-add6-5c7e4b13f245",
@@ -2978,7 +3018,11 @@
       "content": "There is evidence of database connection initialization using Supabase in the FastAPI route file, but the connection is created at the module level and not within a context manager or explicitly closed per request. There is no visible context management (with-block, try/finally, or dependency injection) ensuring connections/sessions are closed after use. This shows an attempt to handle DB connections, but does not fully meet the requirement to prevent connection leaks.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:3/rubric_point:303"
     },
     {
       "id": "ca125c0a-2751-56d8-8eb6-8477deab5fa0",
@@ -3038,7 +3082,11 @@
       "content": "There is clear evidence that Pydantic models are used to validate and parse incoming and outgoing data (see references to AssetRequest/AssetResponse schemas and Pydantic's validation halting corrupted data). There is also mention of error handling and validation in test output. However, there is no explicit, detailed description or code excerpt showing that the agent's raw output (e.g., from an LLM or script writer) is parsed and checked for non-empty/expected structure before being persisted or returned, nor is there a clear failure path described for invalid outputs. The evidence supports that validation is present at the API/data layer, but does not confirm that the specific requirement of validating/parsing the script writer's output before persistence/return is fully and explicitly met.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:3/rubric_point:304"
     },
     {
       "id": "d08ed95a-763a-5c16-baf9-528efef6a569",
@@ -3116,7 +3164,11 @@
       "content": "There is some justification for schema and contract decisions, such as the rationale for dual-field mapping compatibility in the asset schema (to prevent ValidationError crashes and allow flexible payload initialization) and a brief explanation of why the 'visual_elements' contract is structured as it is (to enable downstream image fetching/generation). However, most explanations are brief and do not consistently provide explicit 'because' rationales for all key schema or agent contract decisions. The write-ups are not just bare feature lists, but the justification is not comprehensive or systematic across all decisions.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:4/rubric_point:401"
     },
     {
       "id": "1fae177e-18ee-5b2d-a39d-34dc6c7b41d9",
@@ -3158,7 +3210,11 @@
       "content": "There is evidence that the learner attempted to document coordination with Learner A7 and Learner A6: Learner A7 is mentioned as the owner of the animation/render stage, and Learner A6 is mentioned as working on voiceover/alignment. The write-up describes, in general terms, how the asset service interacts with their stages (e.g., Learner A7's rendering routines consume assets, Learner A6's timestamps are used for timing). However, the submission does not concretely record the division of work, explicit interface contracts, or detailed integration boundaries (e.g., schema/API shapes, ownership of pipeline parts) as required by the rubric. The descriptions are functional but lack the specificity and explicitness demanded for a 'Yes'.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:4/rubric_point:402"
     },
     {
       "id": "aa6cf2b6-e0d6-5054-8ee2-e5c9e62b34f9",
@@ -3218,7 +3274,11 @@
       "content": "There is clear evidence of an attempt to provide setup and run documentation: 'docs/setup.md_0' and 'docs/setup.md_1' outline requirements, environment variable setup, and mention updating the guide with run commands. 'docs/tasks.md_2' assigns updating setup instructions as a task. However, the documentation is incomplete: it does not yet provide exact commands for database creation/migration, running the first pipeline step, or starting the frontend. Instead, it instructs the team to update the guide once implementation begins. Thus, the requirement is only partially met.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:4/rubric_point:403"
     },
     {
       "id": "8126787a-9d74-5178-acd5-61041bcfe660",
@@ -3296,7 +3356,11 @@
       "content": "There is clear evidence that public functions and methods in the AudioService class have docstrings describing their purpose, input, and output. However, the public methods (including __init__ and async methods) lack explicit parameter and return type annotations in their signatures. Only private methods show type annotations, and not all public entry points are typed. Thus, the requirement is only partially met.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:4/rubric_point:404"
     },
     {
       "id": "8a36c8b4-ecb0-55ab-af47-837600120d21",
@@ -3374,7 +3438,11 @@
       "content": "There is evidence of a database schema for pipeline stages (videos table with JSONB columns for each stage), and the orchestrator imports and references pipeline stages, but there is no clear evidence that the script writer step (or any pipeline stage) actually persists its output to the database. The orchestrator functions return dicts or strings, and there is no code shown that writes to the DB. Thus, the pipeline is not fully wired to persist through the finalized schema, but related work is visible.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:5/rubric_point:501"
     },
     {
       "id": "a02cc9fa-070e-5a7f-9f5b-7eeda0d64ac2",
@@ -3398,7 +3466,11 @@
       "content": "Both script_agent.py_0 and script_agent.py_1 show the script writer agent calling an LLM via AsyncOpenAI, with model name and API key loaded from environment variables, not hardcoded. There is no evidence of canned/echoed strings or hardcoded model/prompt/API key literals in the stage body.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Yes"
+      "criterion_status": "Yes",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:5/rubric_point:502"
     },
     {
       "id": "6295298e-c1fc-54d1-96c8-8b71a0ab1deb",
@@ -3422,7 +3494,11 @@
       "content": "There is clear evidence that the learner attempted to materialize the data schema: SQL migration files are present and define tables with typed fields, including JSONB columns for pipeline stages. However, the videos table is incomplete (truncated definition), and there is no explicit evidence that all fields written by the code are defined in the schema (potential for schema drift). The schema is not fully finalized or confirmed as migrated, so the requirement is only partially met.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:5/rubric_point:503"
     },
     {
       "id": "0f3b66d2-5dd3-5582-9506-7077eacbbda7",
@@ -3446,7 +3522,11 @@
       "content": "There is clear evidence that a React + Vite frontend project was scaffolded (package.json, package-lock.json, and Vite/React-specific README content). However, there is no evidence of any user-text input or submit UI component in the provided chunks. The frontend is initialized and runnable, but no input/submit UI exists yet.",
       "observed_at": "2026-07-21T20:33:14.676000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:12",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:5/rubric_point:504"
     },
     {
       "id": "c3dc88a5-7fb2-5311-bbd3-bfdd3afe97a9",
@@ -3587,7 +3667,11 @@
       "content": "The submission shows a screenshot and description of a GitHub PR for a fullstack integration, mentioning backend (FastAPI) and frontend (React) technologies, and references to architectural decisions. However, there is no explicit evidence of a finalized data schema with typed fields, keys, and relationships as required by the rubric. There is evidence of related work and documentation, but not the schema itself.",
       "observed_at": "2026-07-21T21:26:16.087000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:101"
     },
     {
       "id": "7601eed5-3cdf-51cd-bed2-b0be7674c967",
@@ -3679,7 +3763,11 @@
       "content": "The summary mentions an AI video generation app and integration of backend and frontend, implying a pipeline that transforms user text into a script. However, there is no direct evidence of the actual transformation step or a structured script output. The evidence is indirect and does not confirm the full requirement.",
       "observed_at": "2026-07-21T21:26:16.087000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:102"
     },
     {
       "id": "d6f33997-a7bb-5f0e-883e-49e575495057",
@@ -3703,7 +3791,11 @@
       "content": "There is mention of fullstack integration and backend technologies, suggesting some pipeline integration, but there is no explicit evidence that the script writer step reads/writes through a finalized schema or persists output to a database. The evidence is circumstantial.",
       "observed_at": "2026-07-21T21:26:16.087000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:103"
     },
     {
       "id": "4b0c440c-baa0-5810-ad1b-d60cf77cd8e6",
@@ -3727,7 +3819,11 @@
       "content": "The summary references a React frontend and a fullstack integration, which suggests that a frontend project was started. However, there is no explicit evidence of a user-text input/submit UI or a screenshot of such a component. The evidence is indirect.",
       "observed_at": "2026-07-21T21:26:16.087000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:104"
     },
     {
       "id": "27b1f506-cac5-586e-80e6-138f937356ce",
@@ -3751,7 +3847,11 @@
       "content": "The summary mentions 'architectural decisions and feature highlights,' suggesting some justification, but there is no explicit rationale for schema or agent contract decisions. The evidence is indirect.",
       "observed_at": "2026-07-21T21:26:16.087000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:18",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:4/rubric_point:401"
     },
     {
       "id": "1b44db69-d76a-5dc7-8f2b-9a6582ba61d8",
@@ -3876,7 +3976,11 @@
       "content": "There is evidence of a data schema (VideoScriptBlueprint, ScriptSegment) being used as Pydantic models, and job status is tracked in a Supabase table. However, the full finalized schema with explicit typed fields, primary keys, and relationships is not shown in these chunks; only usage and updates via mocks are visible.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:101"
     },
     {
       "id": "319a668d-9373-57e0-a12c-d8b2deca99ec",
@@ -3990,7 +4094,11 @@
       "content": "The pipeline step for script generation is mocked (mock_generate_script), and the test uses a structured VideoScriptBlueprint as output, indicating the intended transformation. However, the actual agent/model call is not shown, only the mock, so the real transformation is not fully demonstrated.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:102"
     },
     {
       "id": "661a9dfb-c56a-5c48-8d0f-47149c576f53",
@@ -4014,7 +4122,11 @@
       "content": "The test verifies that job status and results are updated in the Supabase table, suggesting integration with persistence. However, this is done via mocks, and the actual schema/database integration is not shown, so full end-to-end persistence is not confirmed.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:103"
     },
     {
       "id": "866dc897-67a5-51c7-acd6-bd874c6c04b8",
@@ -4038,7 +4150,11 @@
       "content": "The test simulates running the first pipeline step with a sample prompt and checks for a completed state in the database mock. However, this is not a real end-to-end run with actual persistence; it is a mocked test.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:2/rubric_point:201"
     },
     {
       "id": "af4f7897-7772-5f86-b4ec-2377191570c0",
@@ -4062,7 +4178,11 @@
       "content": "The test 'test_process_video_job_failure' simulates an agent/model failure and verifies that the pipeline catches the exception and updates the job status to 'failed' in the database, rather than crashing.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Yes"
+      "criterion_status": "Yes",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:2/rubric_point:203"
     },
     {
       "id": "7d34cdf9-ae9a-5524-a5d0-579e8f127fd6",
@@ -4086,7 +4206,11 @@
       "content": "Database persistence is simulated via mocks, but there is no evidence of actual schema migration or materialization, nor proof of real rows being written/read.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:2/rubric_point:204"
     },
     {
       "id": "9e4783dc-ee7a-57e5-8991-b4009855fe01",
@@ -4110,7 +4234,11 @@
       "content": "All database interactions in the test are via mocks, so there is no evidence of unsafe string-interpolated SQL, but also no confirmation of ORM/parameterized queries. The use of Supabase client suggests parameterization, but this is not explicit.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:3/rubric_point:302"
     },
     {
       "id": "40290b71-fe3e-57b1-8380-18027d24f733",
@@ -4134,7 +4262,11 @@
       "content": "Database connections are mocked, so there is no evidence of connection/session leaks, but also no explicit context management or closing. The test setup avoids the issue but does not confirm best practice.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:3/rubric_point:303"
     },
     {
       "id": "d1cf7aa7-ec1f-5b5d-88ea-e7d15de04910",
@@ -4158,7 +4290,11 @@
       "content": "The test uses a Pydantic model (VideoScriptBlueprint) as the expected output, suggesting some structure validation, but there is no explicit validation/parse step for the agent's raw output before persistence.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:3/rubric_point:304"
     },
     {
       "id": "b91b0f8e-0158-5e52-bf7e-39f4f41d9e16",
@@ -4182,7 +4318,11 @@
       "content": "The pipeline step is only tested via mocks and does not persist through a real finalized schema/database; all persistence is simulated.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Yes"
+      "criterion_status": "Yes",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:5/rubric_point:501"
     },
     {
       "id": "48dd90bc-8702-50bd-bffb-ae534388467f",
@@ -4206,7 +4346,11 @@
       "content": "The script writer agent is mocked (not a real LLM call), but there is no evidence of hardcoded model/prompt/API key literals in these chunks.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:5/rubric_point:502"
     },
     {
       "id": "04466741-3e59-5b42-8b18-b75a40e43958",
@@ -4230,7 +4374,11 @@
       "content": "There is no evidence of a finalized or migrated schema, and all persistence is via mocks, so the schema is left unfinished and unmigrated.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Yes"
+      "criterion_status": "Yes",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:5/rubric_point:503"
     },
     {
       "id": "ab9482fa-d2b4-50a0-90e0-2a03af7d7046",
@@ -4254,7 +4402,11 @@
       "content": "There is no frontend project or input UI present; only a mention of '2 attachments' which does not constitute a frontend build.",
       "observed_at": "2026-07-21T21:34:58.348000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Yes"
+      "criterion_status": "Yes",
+      "source_system": "assessment_engine",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e:21",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:5/rubric_point:504"
     },
     {
       "id": "e76226ba-bf65-5ee3-b6dc-3b050382c8bc",
@@ -4497,7 +4649,11 @@
       "content": "The submission references a GitHub repository and branch, implying work was done, but no actual code or implementation details are visible in the provided chunks. There is evidence of an attempt, but the content cannot be verified.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:1"
     },
     {
       "id": "f99027b4-8e5e-54c1-8e80-0fc5eb71d70e",
@@ -4539,7 +4695,11 @@
       "content": "The learner claims to have made updates, but no code or explicit evidence of async/await usage is present in the visible chunks. There is evidence of an attempt, but not enough to confirm full implementation.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:1/rubric_point:2"
     },
     {
       "id": "66ee22af-4c70-5dae-9bbe-b02ab744ceb8",
@@ -4563,7 +4723,11 @@
       "content": "The submission references a React-based app repository, suggesting work on a React frontend, but no actual code or UI details are visible in the provided chunks.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:2/rubric_point:3"
     },
     {
       "id": "f781894d-f237-58dd-8b5b-8e3d45e359a7",
@@ -4587,7 +4751,11 @@
       "content": "The repository reference suggests backend integration may exist, but there is no visible code or confirmation of RESTful API usage in the provided chunks.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:2/rubric_point:4"
     },
     {
       "id": "f7a60d0f-0563-59b5-b5f0-97071ab59bf1",
@@ -4611,7 +4779,11 @@
       "content": "The learner claims to have made updates, but there is no visible UI or evidence of a testable, integrated interface in the provided chunks.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:2/rubric_point:5"
     },
     {
       "id": "25663aed-079b-572c-8540-16eec6c462d3",
@@ -4635,7 +4807,11 @@
       "content": "There is no explicit evidence of team collaboration, but the repository update may imply some level of coordination. No direct evidence is visible.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:3/rubric_point:6"
     },
     {
       "id": "a45f8a40-dcdc-5cda-b140-3590852d48bc",
@@ -4659,7 +4835,11 @@
       "content": "There is no evidence that the pipeline stages are left disconnected, but also no proof that they are unified. The repository reference suggests an attempt.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:4/rubric_point:7"
     },
     {
       "id": "b6c7bf91-7713-5229-a902-cb6046d27e32",
@@ -4683,7 +4863,11 @@
       "content": "There is no evidence of blocking/synchronous code, but also no proof of async functions. The repository reference suggests an attempt.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:4/rubric_point:8"
     },
     {
       "id": "d8f0f7f1-30c4-513b-bc33-cec77daffcff",
@@ -4707,7 +4891,11 @@
       "content": "There is no evidence of an incomplete or unconnected frontend, but also no proof of a fully built and connected React frontend. The repository reference suggests an attempt.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:4/rubric_point:9"
     },
     {
       "id": "54b211bd-32a8-55c0-a0c5-aa4484926f91",
@@ -4731,7 +4919,11 @@
       "content": "There is no evidence of a non-testable UI or lack of team consultation, but also no proof of a testable UI or team coordination. The repository reference suggests an attempt.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
       "access_scope": "employer_shareable",
-      "criterion_status": "Partial"
+      "criterion_status": "Partial",
+      "source_system": "assessment_engine",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.feedback.scope_point",
+      "source_locator": "scope:4/rubric_point:10"
     },
     {
       "id": "0163eff8-531e-560f-b843-4a2893135421",
@@ -4754,7 +4946,10 @@
       "title": "Passed task: week 3 -  integration and UI",
       "content": "Submission accepted on a passing attempt for 'week 3 -  integration and UI'. Task outcome: completed_success. Declared technologies: none recorded.",
       "observed_at": "2026-07-30T19:59:13.871000Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "virtual_internship",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
+      "source_type": "interaction_log.submission"
     },
     {
       "id": "3a6c90a5-8188-58c4-b96b-01ce2640ef4a",
@@ -4970,7 +5165,10 @@
       "title": "Completed task instance: Complete the pipeline integration and finalize the data schema.",
       "content": "Task instance closed with outcome 'completed_success'. Task: 'Complete the pipeline integration and finalize the data schema.'. Declared technologies: none recorded. Closing note: submission_passed — pipeline integration (PR#11 merged; bot mis-credited submission) | human-approved",
       "observed_at": "2026-07-25T08:36:55.764518Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "virtual_internship",
+      "source_id": "1435355e-84a6-4261-a621-6daa5fca27c0",
+      "source_type": "lx_config.outcome"
     },
     {
       "id": "c6366134-e9cd-5343-bf64-59bb03e3fe48",
@@ -4992,7 +5190,10 @@
       "title": "Completed task instance: Complete the pipeline integration and finalize the data schema.",
       "content": "Task instance closed with outcome 'completed_success'. Task: 'Complete the pipeline integration and finalize the data schema.'. Declared technologies: none recorded. Closing note: corrected: wrongly failed — real merged submission mis-credited; reviewed and passed | human-approved",
       "observed_at": "2026-07-21T21:35:10.374959Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "virtual_internship",
+      "source_id": "144bd399-aa06-4661-b07b-ea8967462e0e",
+      "source_type": "lx_config.outcome"
     },
     {
       "id": "059100c7-f7f1-5b6d-bd30-7731de3f1e84",
@@ -5014,7 +5215,10 @@
       "title": "Completed task instance: Sprint 4 — Task 1: Script Generation Prompt Enhancement",
       "content": "Task instance closed with outcome 'completed_success'. Task: 'Sprint 4 — Task 1: Script Generation Prompt Enhancement'. Declared technologies: Prompt Engineering, LLM. Closing note: Sprint 4 passed on human review 2026-08-08. Three of four requirements met and merged to main in PR #17. FR3 (before/after sample scripts) was not delivered and is recorded in the submission feedback. The 2026-08-04 11:30 rejection claiming the prompt \"isn't committed to the repository yet\" was false — commit 100468fd landed at 11:24:41, six minutes earlier. He was also given a teammate's brief initially, told his deadline had passed 111 seconds after receiving the correct one, and closed twice in error on 2026-08-05.",
       "observed_at": "2026-08-08T14:48:46.243080Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "virtual_internship",
+      "source_id": "69084cd9-4c72-428c-be6e-b512269186a5",
+      "source_type": "lx_config.outcome"
     },
     {
       "id": "11f17a38-2640-59f7-ad12-7d19fd970158",
@@ -5036,7 +5240,10 @@
       "title": "Completed task instance: week 3 -  integration and UI",
       "content": "Task instance closed with outcome 'completed_success'. Task: 'week 3 -  integration and UI'. Declared technologies: none recorded. Closing note: Acknowledged task completion and officially closed Week 3 task.",
       "observed_at": "2026-07-30T19:59:30.306060Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "virtual_internship",
+      "source_id": "ef329ce4-cf90-4f26-8518-30b107060766",
+      "source_type": "lx_config.outcome"
     },
     {
       "id": "c73d0cf1-add5-5f64-a58b-4209d214b9ae",
@@ -5086,7 +5293,11 @@
       "title": "internship_context.tech_stack (sprint_planning)",
       "content": "Learner A4 mentions integrating their workflow with Remotion.",
       "observed_at": "2026-07-26T07:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "iSBCU287Qmi3EQbd7iCOmw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:26:internship_context.tech_stack",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:26"
     },
     {
       "id": "e897b5fe-0c10-5289-8d68-5e9f1e5eaaba",
@@ -5119,7 +5330,11 @@
       "title": "internship_context.current_blockers (sprint_planning)",
       "content": "Learner A4 faced an issue where the company's API went down, requiring a workaround.",
       "observed_at": "2026-07-26T07:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "iSBCU287Qmi3EQbd7iCOmw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:545:internship_context.current_blockers",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:545"
     },
     {
       "id": "eb7debde-ceca-5ee5-9278-96e19603a4c3",
@@ -5156,7 +5371,11 @@
       "title": "behavioral_engagement.effort_signals (sprint_planning)",
       "content": "Learner A4 demonstrated problem-solving effort by adapting his approach when the company's API became unavailable.",
       "observed_at": "2026-07-26T07:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "iSBCU287Qmi3EQbd7iCOmw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:545:behavioral_engagement.effort_signals",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:545"
     },
     {
       "id": "c7d96386-772c-5acd-91e8-1febf3e1f179",
@@ -5193,7 +5412,11 @@
       "title": "learning_goals.learner_tasks (sprint_planning)",
       "content": "Learner A4 stated his planned task for the day is integrating with Remotion.",
       "observed_at": "2026-07-26T07:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "iSBCU287Qmi3EQbd7iCOmw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:26:learning_goals.learner_tasks",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:26"
     },
     {
       "id": "89df819f-15cd-5e43-a154-54a0816b417a",
@@ -5257,7 +5480,11 @@
       "title": "internship_context.tech_stack (standup)",
       "content": "Learner A4 stated that he started working on Qdrant as well.",
       "observed_at": "2026-07-29T14:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "/9Lm6b0wSX2Uq/0lkHepaQ==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:77:internship_context.tech_stack",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:77"
     },
     {
       "id": "a7515e22-2b83-532d-9122-d1447bfe43a6",
@@ -5293,7 +5520,11 @@
       "title": "internship_context.current_blockers (standup)",
       "content": "Learner A4 noted a blocker regarding running out of API quota while testing.",
       "observed_at": "2026-07-29T14:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "/9Lm6b0wSX2Uq/0lkHepaQ==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:119:internship_context.current_blockers",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:119"
     },
     {
       "id": "a1428dfe-dc2b-587a-892e-82864315cd1b",
@@ -5330,7 +5561,11 @@
       "title": "internship_context.tech_stack (standup)",
       "content": "Learner A4 chose Groq over Hugging Face as it was easier to use.",
       "observed_at": "2026-07-29T14:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "/9Lm6b0wSX2Uq/0lkHepaQ==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:174:internship_context.tech_stack",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:174"
     },
     {
       "id": "30d85983-ba6d-5ad9-997d-0c901ca6fe2b",
@@ -5380,7 +5615,11 @@
       "title": "identity_context.bio (retro)",
       "content": "Learner A4 has prior technical experience in computer graphics and game development.",
       "observed_at": "2026-07-30T18:30:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "XdOkypIySZqMxnsafyGMiw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:643:identity_context.bio",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:643"
     },
     {
       "id": "20250780-45e3-544b-bd54-13a64153806d",
@@ -5403,7 +5642,11 @@
       "title": "internship_context.tech_stack (retro)",
       "content": "Learner A4 actively uses Git in his daily project workflow.",
       "observed_at": "2026-07-30T18:30:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "XdOkypIySZqMxnsafyGMiw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:251:internship_context.tech_stack",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:251"
     },
     {
       "id": "28e04c2b-a4b9-5ce8-bbf8-c9b54c170d27",
@@ -5426,7 +5669,11 @@
       "title": "internship_context.tech_stack (retro)",
       "content": "Learner A4 is using CircleCI to run workflow actions for testing.",
       "observed_at": "2026-07-30T18:30:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "XdOkypIySZqMxnsafyGMiw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:252:internship_context.tech_stack",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:252"
     },
     {
       "id": "b53b91f3-6f38-51d8-9c36-9477b8121d79",
@@ -5463,7 +5710,11 @@
       "title": "internship_context.tech_stack (retro)",
       "content": "Learner A4 mentions using Remotion as part of his technological workflow.",
       "observed_at": "2026-07-30T18:30:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "XdOkypIySZqMxnsafyGMiw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:257:internship_context.tech_stack",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:257"
     },
     {
       "id": "a2d53086-e922-5331-a5bf-ab1b95eb4de9",
@@ -5486,7 +5737,11 @@
       "title": "learning_goals.learner_tasks (retro)",
       "content": "Learner A4 plans to begin working with Remotion next.",
       "observed_at": "2026-07-30T18:30:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "XdOkypIySZqMxnsafyGMiw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:257:learning_goals.learner_tasks",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:257"
     },
     {
       "id": "bb580257-8607-5d70-a210-2b4c575e95ea",
@@ -5550,7 +5805,11 @@
       "title": "internship_context.tech_stack (sprint_planning)",
       "content": "Learner A4 states that Remotion is the technology stack they are using for merging and video generation.",
       "observed_at": "2026-08-02T07:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "3/Er6YtpQZ6/akGJQlWh/A==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:52:internship_context.tech_stack",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:52"
     },
     {
       "id": "7d14ee21-fe80-5ecf-816a-c204d54a0b8c",
@@ -5573,7 +5832,11 @@
       "title": "internship_context.current_blockers (sprint_planning)",
       "content": "Learner A4 anticipates potential availability constraints starting Tuesday due to travel.",
       "observed_at": "2026-08-02T07:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "3/Er6YtpQZ6/akGJQlWh/A==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:497:internship_context.current_blockers",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:497"
     },
     {
       "id": "1597481f-fe55-5ef2-aa58-f2f92c71a07b",
@@ -5610,7 +5873,11 @@
       "title": "learning_goals.learner_tasks (sprint_planning)",
       "content": "Learner A4 reports progress on creating an mp4 render file within the backend context.",
       "observed_at": "2026-08-02T07:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "3/Er6YtpQZ6/akGJQlWh/A==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:275:learning_goals.learner_tasks",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:275"
     },
     {
       "id": "a8289895-84a6-50c3-81fd-80d10d369e60",
@@ -5674,7 +5941,11 @@
       "title": "learning_goals.learner_tasks (standup)",
       "content": "Learner A4 shared that he pushed his changes, provided a pull request link, and communicated availability to help a peer.",
       "observed_at": "2026-08-03T14:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "XIpnRlc8TwKuxvDMaxikNw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:354:learning_goals.learner_tasks",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:354"
     },
     {
       "id": "d59becd6-ca69-529e-8f48-7e37e9be6643",
@@ -5711,7 +5982,11 @@
       "title": "learning_goals.learner_tasks (standup)",
       "content": "Learner A4 commits to finishing his assigned part today and sending it over.",
       "observed_at": "2026-08-03T14:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "XIpnRlc8TwKuxvDMaxikNw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:379:learning_goals.learner_tasks",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:379"
     },
     {
       "id": "fa249293-5452-5f4c-8d81-23b57dbec555",
@@ -5748,7 +6023,11 @@
       "title": "learning_goals.learner_tasks (standup)",
       "content": "Learner A4 created a file named 'model' in the project repository.",
       "observed_at": "2026-08-03T14:00:00Z",
-      "access_scope": "employer_shareable"
+      "access_scope": "employer_shareable",
+      "source_system": "meeting_memory",
+      "source_id": "XIpnRlc8TwKuxvDMaxikNw==:900353f6-f011-4d31-9a8a-b050b891c69c:turn:456:learning_goals.learner_tasks",
+      "source_type": "meeting_memory_card",
+      "source_locator": "turn:456"
     },
     {
       "id": "b7c50200-3e54-5cc9-b391-849b0c6e89e1",
@@ -5763,6 +6042,100 @@
       "outcome": "The learner directly reports a specific task action completed on the project codebase.",
       "observed_at": "2026-08-03T14:00:00Z",
       "confidence": 0.9
+    },
+    {
+      "id": "74b4e29d-1fc1-59f0-a609-c704cd0edcb4",
+      "created_at": "2026-08-31T12:00:00Z",
+      "provenance": {
+        "source_system": "lms",
+        "source_id": "lms:quiz:python-fundamentals:attempt-1",
+        "source_type": "lms.quiz_score",
+        "observed_at": "2026-07-10T09:30:00Z",
+        "ingested_at": "2026-08-31T12:00:00Z",
+        "extraction_method": "human_curated",
+        "extractor_version": "ontology@0.1.0"
+      },
+      "label": "LearningExperience",
+      "lx_key": "lms:quiz:python-fundamentals:attempt-1",
+      "status": "terminated",
+      "outcome": "completed_success",
+      "trial_count": 0,
+      "extension_used": false,
+      "activated_at": "2026-07-10T09:30:00Z",
+      "terminated_at": "2026-07-10T09:30:00Z",
+      "terminated_reason": "illustrative LMS record"
+    },
+    {
+      "id": "6d8c1b0e-2b1b-51fd-b197-42446f0114f5",
+      "created_at": "2026-08-31T12:00:00Z",
+      "provenance": {
+        "source_system": "lms",
+        "source_id": "lms:quiz:python-fundamentals:attempt-1",
+        "source_type": "lms.quiz_score",
+        "observed_at": "2026-07-10T09:30:00Z",
+        "ingested_at": "2026-08-31T12:00:00Z",
+        "evidence_type": "direct_assessment",
+        "extraction_method": "human_curated",
+        "extractor_version": "ontology@0.1.0"
+      },
+      "label": "Evidence",
+      "evidence_type": "direct_assessment",
+      "strength": "high",
+      "confidence": 0.86,
+      "title": "LMS quiz: Python Fundamentals - 86%",
+      "content": "ILLUSTRATIVE RECORD (no LMS extract exists in this export). Scored 86% on the Python Fundamentals assessment, covering data structures, functions and error handling.",
+      "observed_at": "2026-07-10T09:30:00Z",
+      "access_scope": "employer_shareable",
+      "source_system": "lms",
+      "source_id": "lms:quiz:python-fundamentals:attempt-1",
+      "source_type": "lms.quiz_score"
+    },
+    {
+      "id": "420a88a8-94d7-502b-8067-6125fefe752d",
+      "created_at": "2026-08-31T12:00:00Z",
+      "provenance": {
+        "source_system": "lms",
+        "source_id": "lms:module:rest-api-design:completed",
+        "source_type": "lms.module_completion",
+        "observed_at": "2026-07-14T16:05:00Z",
+        "ingested_at": "2026-08-31T12:00:00Z",
+        "extraction_method": "human_curated",
+        "extractor_version": "ontology@0.1.0"
+      },
+      "label": "LearningExperience",
+      "lx_key": "lms:module:rest-api-design:completed",
+      "status": "terminated",
+      "outcome": "completed_success",
+      "trial_count": 0,
+      "extension_used": false,
+      "activated_at": "2026-07-14T16:05:00Z",
+      "terminated_at": "2026-07-14T16:05:00Z",
+      "terminated_reason": "illustrative LMS record"
+    },
+    {
+      "id": "99a8f0b6-c07f-52cc-91b7-9b535468eab3",
+      "created_at": "2026-08-31T12:00:00Z",
+      "provenance": {
+        "source_system": "lms",
+        "source_id": "lms:module:rest-api-design:completed",
+        "source_type": "lms.module_completion",
+        "observed_at": "2026-07-14T16:05:00Z",
+        "ingested_at": "2026-08-31T12:00:00Z",
+        "evidence_type": "learning_exposure",
+        "extraction_method": "human_curated",
+        "extractor_version": "ontology@0.1.0"
+      },
+      "label": "Evidence",
+      "evidence_type": "learning_exposure",
+      "strength": "medium",
+      "confidence": 0.7,
+      "title": "LMS module completed: REST API Design",
+      "content": "ILLUSTRATIVE RECORD (no LMS extract exists in this export). Completed the REST API Design module. Learning exposure only - completion is not evidence of demonstrated ability.",
+      "observed_at": "2026-07-14T16:05:00Z",
+      "access_scope": "employer_shareable",
+      "source_system": "lms",
+      "source_id": "lms:module:rest-api-design:completed",
+      "source_type": "lms.module_completion"
     },
     {
       "id": "90d3e358-dbe2-58eb-a45f-3830f8f582b1",
@@ -5852,13 +6225,13 @@
       "derivation_note": "seed aggregation; Sprint 2 replaces this with the real aggregation service",
       "label": "SkillAssertion",
       "tier": "assessed",
-      "status": "moderate",
-      "confidence": 0.781,
-      "evidence_count": 8,
-      "evidence_source_count": 1,
-      "first_evidence_at": "2026-07-21T20:33:14.676000Z",
+      "status": "strong",
+      "confidence": 0.79,
+      "evidence_count": 9,
+      "evidence_source_count": 2,
+      "first_evidence_at": "2026-07-10T09:30:00Z",
       "latest_evidence_at": "2026-07-21T21:34:58.348000Z",
-      "rationale": "8 assessed evidence item(s) from 1 source system(s): assessment_engine."
+      "rationale": "9 assessed evidence item(s) from 2 source system(s): assessment_engine, lms."
     },
     {
       "id": "3bc6f636-8608-5682-8fc0-63fff76c657e",
@@ -6044,13 +6417,13 @@
       "derivation_note": "seed aggregation; Sprint 2 replaces this with the real aggregation service",
       "label": "SkillAssertion",
       "tier": "assessed",
-      "status": "moderate",
-      "confidence": 1.0,
-      "evidence_count": 2,
-      "evidence_source_count": 1,
-      "first_evidence_at": "2026-07-21T20:33:14.676000Z",
+      "status": "strong",
+      "confidence": 0.953,
+      "evidence_count": 3,
+      "evidence_source_count": 2,
+      "first_evidence_at": "2026-07-10T09:30:00Z",
       "latest_evidence_at": "2026-07-21T20:33:14.676000Z",
-      "rationale": "2 assessed evidence item(s) from 1 source system(s): assessment_engine."
+      "rationale": "3 assessed evidence item(s) from 2 source system(s): assessment_engine, lms."
     },
     {
       "id": "15cb1c34-7fe7-51d7-881a-3444187408b4",
@@ -6131,6 +6504,22 @@
       "first_evidence_at": "2026-07-30T19:59:30.306060Z",
       "latest_evidence_at": "2026-07-30T19:59:30.306060Z",
       "rationale": "1 demonstrated evidence item(s) from 1 source system(s): virtual_internship."
+    },
+    {
+      "id": "4db7739b-4d9b-5d6d-aa59-f8713bbad087",
+      "created_at": "2026-08-31T12:00:00Z",
+      "computed_at": "2026-08-31T12:00:00Z",
+      "computed_by": "skill-aggregator@0.1.0",
+      "derivation_note": "seed aggregation; Sprint 2 replaces this with the real aggregation service",
+      "label": "SkillAssertion",
+      "tier": "exposed",
+      "status": "weak",
+      "confidence": 0.7,
+      "evidence_count": 1,
+      "evidence_source_count": 1,
+      "first_evidence_at": "2026-07-14T16:05:00Z",
+      "latest_evidence_at": "2026-07-14T16:05:00Z",
+      "rationale": "1 exposed evidence item(s) from 1 source system(s): lms."
     },
     {
       "id": "f0889bbc-0dab-506b-bc1d-55fb0d4c5ca4",
@@ -15338,6 +15727,94 @@
       "properties": {}
     },
     {
+      "type": "HAS_LEARNING_EXPERIENCE",
+      "source_label": "Learner",
+      "source_id": "861ce16e-7e8f-5211-9164-1e14b7a62677",
+      "target_label": "LearningExperience",
+      "target_id": "74b4e29d-1fc1-59f0-a609-c704cd0edcb4",
+      "properties": {}
+    },
+    {
+      "type": "EVIDENCE_FOR_LEARNER",
+      "source_label": "Evidence",
+      "source_id": "6d8c1b0e-2b1b-51fd-b197-42446f0114f5",
+      "target_label": "Learner",
+      "target_id": "861ce16e-7e8f-5211-9164-1e14b7a62677",
+      "properties": {}
+    },
+    {
+      "type": "DERIVED_FROM",
+      "source_label": "Evidence",
+      "source_id": "6d8c1b0e-2b1b-51fd-b197-42446f0114f5",
+      "target_label": "LearningExperience",
+      "target_id": "74b4e29d-1fc1-59f0-a609-c704cd0edcb4",
+      "properties": {
+        "source_system": "lms",
+        "source_id": "lms:quiz:python-fundamentals:attempt-1",
+        "observed_at": "2026-07-10T09:30:00Z",
+        "evidence_type": "direct_assessment",
+        "source_locator": "lms:quiz:python-fundamentals:attempt-1",
+        "excerpt": null,
+        "extraction_confidence": 0.86
+      }
+    },
+    {
+      "type": "EVIDENCE_ABOUT_SKILL",
+      "source_label": "Evidence",
+      "source_id": "6d8c1b0e-2b1b-51fd-b197-42446f0114f5",
+      "target_label": "Skill",
+      "target_id": "eea2ef9d-9569-53db-bc4e-0fd2ec41bc69",
+      "properties": {}
+    },
+    {
+      "type": "EVIDENCE_ABOUT_SKILL",
+      "source_label": "Evidence",
+      "source_id": "6d8c1b0e-2b1b-51fd-b197-42446f0114f5",
+      "target_label": "Skill",
+      "target_id": "069a6260-03de-58be-b912-998bf2d1a6f9",
+      "properties": {}
+    },
+    {
+      "type": "HAS_LEARNING_EXPERIENCE",
+      "source_label": "Learner",
+      "source_id": "861ce16e-7e8f-5211-9164-1e14b7a62677",
+      "target_label": "LearningExperience",
+      "target_id": "420a88a8-94d7-502b-8067-6125fefe752d",
+      "properties": {}
+    },
+    {
+      "type": "EVIDENCE_FOR_LEARNER",
+      "source_label": "Evidence",
+      "source_id": "99a8f0b6-c07f-52cc-91b7-9b535468eab3",
+      "target_label": "Learner",
+      "target_id": "861ce16e-7e8f-5211-9164-1e14b7a62677",
+      "properties": {}
+    },
+    {
+      "type": "DERIVED_FROM",
+      "source_label": "Evidence",
+      "source_id": "99a8f0b6-c07f-52cc-91b7-9b535468eab3",
+      "target_label": "LearningExperience",
+      "target_id": "420a88a8-94d7-502b-8067-6125fefe752d",
+      "properties": {
+        "source_system": "lms",
+        "source_id": "lms:module:rest-api-design:completed",
+        "observed_at": "2026-07-14T16:05:00Z",
+        "evidence_type": "learning_exposure",
+        "source_locator": "lms:module:rest-api-design:completed",
+        "excerpt": null,
+        "extraction_confidence": 0.7
+      }
+    },
+    {
+      "type": "EVIDENCE_ABOUT_SKILL",
+      "source_label": "Evidence",
+      "source_id": "99a8f0b6-c07f-52cc-91b7-9b535468eab3",
+      "target_label": "Skill",
+      "target_id": "c6c472b0-d995-5f21-a7a1-4366bd05ed97",
+      "properties": {}
+    },
+    {
       "type": "HAS_SKILL_ASSERTION",
       "source_label": "Learner",
       "source_id": "861ce16e-7e8f-5211-9164-1e14b7a62677",
@@ -15700,6 +16177,14 @@
       "source_label": "SkillAssertion",
       "source_id": "5d4dd073-9041-59af-8704-acfc6bdcc677",
       "target_label": "Evidence",
+      "target_id": "6d8c1b0e-2b1b-51fd-b197-42446f0114f5",
+      "properties": {}
+    },
+    {
+      "type": "SUPPORTED_BY_EVIDENCE",
+      "source_label": "SkillAssertion",
+      "source_id": "5d4dd073-9041-59af-8704-acfc6bdcc677",
+      "target_label": "Evidence",
       "target_id": "6b3797f9-5714-5287-98de-a02b3f4f4c92",
       "properties": {}
     },
@@ -15767,9 +16252,9 @@
       "target_id": "069a6260-03de-58be-b912-998bf2d1a6f9",
       "properties": {
         "assertion_id": "5d4dd073-9041-59af-8704-acfc6bdcc677",
-        "status": "moderate",
-        "confidence": 0.781,
-        "evidence_count": 8,
+        "status": "strong",
+        "confidence": 0.79,
+        "evidence_count": 9,
         "latest_evidence_at": "2026-07-21T21:34:58.348000Z"
       }
     },
@@ -16596,6 +17081,14 @@
       "source_label": "SkillAssertion",
       "source_id": "527a02f8-34ee-516c-b3e9-ca7778ae453c",
       "target_label": "Evidence",
+      "target_id": "6d8c1b0e-2b1b-51fd-b197-42446f0114f5",
+      "properties": {}
+    },
+    {
+      "type": "SUPPORTED_BY_EVIDENCE",
+      "source_label": "SkillAssertion",
+      "source_id": "527a02f8-34ee-516c-b3e9-ca7778ae453c",
+      "target_label": "Evidence",
       "target_id": "bd94f1c0-ea1b-5a39-b0c6-1aaff72a8d11",
       "properties": {}
     },
@@ -16615,9 +17108,9 @@
       "target_id": "eea2ef9d-9569-53db-bc4e-0fd2ec41bc69",
       "properties": {
         "assertion_id": "527a02f8-34ee-516c-b3e9-ca7778ae453c",
-        "status": "moderate",
-        "confidence": 1.0,
-        "evidence_count": 2,
+        "status": "strong",
+        "confidence": 0.953,
+        "evidence_count": 3,
         "latest_evidence_at": "2026-07-21T20:33:14.676000Z"
       }
     },
@@ -16897,6 +17390,44 @@
         "confidence": 0.85,
         "evidence_count": 1,
         "latest_evidence_at": "2026-07-30T19:59:30.306060Z"
+      }
+    },
+    {
+      "type": "HAS_SKILL_ASSERTION",
+      "source_label": "Learner",
+      "source_id": "861ce16e-7e8f-5211-9164-1e14b7a62677",
+      "target_label": "SkillAssertion",
+      "target_id": "4db7739b-4d9b-5d6d-aa59-f8713bbad087",
+      "properties": {}
+    },
+    {
+      "type": "ABOUT_SKILL",
+      "source_label": "SkillAssertion",
+      "source_id": "4db7739b-4d9b-5d6d-aa59-f8713bbad087",
+      "target_label": "Skill",
+      "target_id": "c6c472b0-d995-5f21-a7a1-4366bd05ed97",
+      "properties": {}
+    },
+    {
+      "type": "SUPPORTED_BY_EVIDENCE",
+      "source_label": "SkillAssertion",
+      "source_id": "4db7739b-4d9b-5d6d-aa59-f8713bbad087",
+      "target_label": "Evidence",
+      "target_id": "99a8f0b6-c07f-52cc-91b7-9b535468eab3",
+      "properties": {}
+    },
+    {
+      "type": "EXPOSED_TO_SKILL",
+      "source_label": "Learner",
+      "source_id": "861ce16e-7e8f-5211-9164-1e14b7a62677",
+      "target_label": "Skill",
+      "target_id": "c6c472b0-d995-5f21-a7a1-4366bd05ed97",
+      "properties": {
+        "assertion_id": "4db7739b-4d9b-5d6d-aa59-f8713bbad087",
+        "status": "weak",
+        "confidence": 0.7,
+        "evidence_count": 1,
+        "latest_evidence_at": "2026-07-14T16:05:00Z"
       }
     },
     {
