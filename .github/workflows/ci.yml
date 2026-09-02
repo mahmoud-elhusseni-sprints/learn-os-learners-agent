@@ -1,3 +1,4 @@
+
 name: CI
 
 on:
@@ -15,15 +16,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Check Neo4j secret
-        run: |
-          if [ -z "$NEO4J_PASSWORD" ]; then
-            echo "NEO4J_PASSWORD is NOT available"
-            exit 1
-          else
-            echo "NEO4J_PASSWORD is available"
-          fi
 
       - name: Build Docker services
         run: |
@@ -44,3 +36,4 @@ jobs:
       - name: Run Pytest
         run: |
           docker compose run --rm api pytest
+
