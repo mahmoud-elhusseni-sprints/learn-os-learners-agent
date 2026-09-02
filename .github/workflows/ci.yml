@@ -1,3 +1,4 @@
+```yaml
 name: CI
 
 on:
@@ -44,3 +45,4 @@ jobs:
       - name: Run Pytest
         run: |
           docker compose run --rm api pytest
+```
