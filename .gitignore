@@ -24,3 +24,6 @@ venv/
 #data 
 data/processed/*
 !data/processed/.gitkeep
+# Generated from tests/fixtures/sample_learner_seed.json
+# Regenerate: python3 scripts/validate_seed.py
+docs/data/sample_learner_seed.cql
