@@ -2112,7 +2112,6 @@
       "attachment_names": [
         "submission-link-1"
       ],
-      "submission_url": "https://github.com/learner-a4/ai-video-generation-app/pull/11",
       "code_repositories": [
         "https://github.com/learner-a4/ai-video-generation-app/pull/11"
       ],
@@ -4654,7 +4653,6 @@
       "attachment_names": [
         "submission-link-1"
       ],
-      "submission_url": "https://github.com/learner-a4/ai-video-generation-app/tree/fix/copilot-review-regressions\nthats the latest updates i just made check the link",
       "code_repositories": [
         "https://github.com/learner-a4/ai-video-generation-app/tree/fix/copilot-review-regressions"
       ],
@@ -5004,7 +5002,7 @@
         "source_system": "virtual_internship",
         "source_id": "ef329ce4-cf90-4f26-8518-30b107060766:25",
         "source_type": "interaction_log.submission",
-        "source_url": "https://github.com/learner-a4/ai-video-generation-app/tree/fix/copilot-review-regressions\nthats the latest updates i just made check the link",
+        "source_url": "https://github.com/learner-a4/ai-video-generation-app/tree/fix/copilot-review-regressions",
         "observed_at": "2026-07-30T19:59:13.871000Z",
         "ingested_at": "2026-08-31T12:00:00Z",
         "evidence_type": "delivered_work",
@@ -5159,7 +5157,6 @@
       "attachment_names": [
         "submission-link-1"
       ],
-      "submission_url": "https://github.com/learner-a4/ai-video-generation-app/pull/17",
       "code_repositories": [
         "https://github.com/learner-a4/ai-video-generation-app/pull/17"
       ],

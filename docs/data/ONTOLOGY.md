@@ -244,7 +244,6 @@ grader cites, so it is the join point between "work delivered" and
 | `text` | `str \| None` | no | Free-text body or the pasted link |
 | `attachment_count` | `int` | no |  |
 | `attachment_names` | `list[str]` | no | Filenames as reported by the source |
-| `submission_url` | `str \| None` | no | Repository, PR or branch URL when one was given |
 | `code_repositories` | `list[str]` | no | Git repository links called out in the submission text. |
 | `media_assets` | `list[str]` | no | Non-repository links or files in the submission - demo videos, design files, hosted pre... |
 | `submitted_at` | `datetime (UTC) \| None` | no | When the learner handed it in |

@@ -853,9 +853,6 @@ class SeedBuilder:
                             for a in (s.get("attachments") or [])
                             if isinstance(a, dict) or isinstance(a, str)
                         ][:10],
-                        submission_url=(
-                            text if text and text.startswith("http") else None
-                        ),
                         code_repositories=repo_links,
                         media_assets=other_links,
                         submitted_at=occurred,
@@ -1163,7 +1160,7 @@ class SeedBuilder:
                     "interaction_log.submission",
                     sid,
                     occurred,
-                    url=submission.submission_url,
+                    url=(submission.code_repositories or [None])[0],
                     evidence_type=M.EvidenceType.DELIVERED_WORK,
                 ),
                 evidence_type=M.EvidenceType.DELIVERED_WORK,

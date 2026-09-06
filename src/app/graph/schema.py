@@ -606,9 +606,6 @@ class Submission(SourceNode):
     attachment_names: list[str] = Field(
         default_factory=list, description="Filenames as reported by the source"
     )
-    submission_url: str | None = Field(
-        default=None, description="Repository, PR or branch URL when one was given"
-    )
     code_repositories: list[str] = Field(
         default_factory=list,
         description="Git repository links called out in the submission text.",
@@ -642,13 +639,14 @@ class Submission(SourceNode):
     )
 
     @model_validator(mode="after")
-    def _url_implies_link(self) -> "Submission":
-        if self.submission_url and not self.submission_url.startswith(
-            ("http://", "https://")
-        ):
-            raise ValueError(
-                f"submission_url must be an absolute URL, got {self.submission_url!r}"
-            )
+    def _repo_links_are_absolute(self) -> "Submission":
+        bad = [
+            u
+            for u in self.code_repositories
+            if not u.startswith(("http://", "https://"))
+        ]
+        if bad:
+            raise ValueError(f"code_repositories must be absolute URLs, got {bad!r}")
         return self
 
 

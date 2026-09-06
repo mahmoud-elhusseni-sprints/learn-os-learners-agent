@@ -603,19 +603,25 @@ def test_edge_property_ranges_are_enforced():
         raise AssertionError("out-of-range edge confidence accepted")
 
 
-def test_submission_url_must_be_absolute():
+def test_code_repository_links_must_be_absolute():
     try:
         M.Submission(
             id=deterministic_id("vi", "submission", "bad"),
             created_at=NOW,
             provenance=_prov(),
             kind="link",
-            submission_url="github.com/x/y",
+            code_repositories=["github.com/x/y"],
         )
     except Exception as e:
         assert "absolute URL" in str(e)
     else:
-        raise AssertionError("relative submission_url accepted")
+        raise AssertionError("relative code_repositories entry accepted")
+
+
+def test_submission_has_no_redundant_url_field():
+    """submission_url was removed - superseded by code_repositories /
+    media_assets, which is what the MD-proposed TaskSubmission shape uses."""
+    assert "submission_url" not in M.Submission.model_fields
 
 
 def test_assessment_criteria_breakdown_must_not_exceed_total():

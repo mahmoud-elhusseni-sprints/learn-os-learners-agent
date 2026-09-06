@@ -8,7 +8,7 @@ document**. This is that document.
 - **Owner:** Task 2 (graph ontology)
 - **Audience:** Task 4 (submissions & assessments), Task 5 (meetings & chats),
   Task 3 (batch loader)
-- **Ontology version:** `0.1.0` — 25 node types, 42 relationship types
+- **Ontology version:** `0.1.0` — 26 node types, 42 relationship types
 - **Full reference:** [`ONTOLOGY.md`](ONTOLOGY.md)
 
 ---
@@ -126,9 +126,9 @@ Raised for team review as part of this change.
 | Source | Produces | Key field mapping |
 | --- | --- | --- |
 | `learners.jsonl` | `Learner`, `LearnerIdentity`, `Round`, `Group` | `email`→`canonical_email`, `name`→`display_name`, `round_name`→`round_key`, `group_id`→`group_key` |
-| `lx_configs.jsonl` | `TaskDefinition`, `LearningExperience`, `Rubric`, `RubricCriterion` | `lx_id`→`lx_key`, `task.headline`→`headline`, `task_definition_id`→`task_definition_key`, `status`/`outcome`→enums |
+| `lx_configs.jsonl` | `Task`, `LearningExperience`, `Rubric`, `RubricCriterion` | `lx_id`→`lx_key`, `task.headline`→`headline`, `task_definition_id`→`task_key`, `status`/`outcome`→enums |
 | `…rubric.scopes[]` | `RubricCriterion` | `criterion_key = "{task_def}:{scope.id}:{point.id}"` — must be globally unique |
-| `interaction_logs.jsonl` → `entry.submission` | `Submission`, `Attempt`, `Artifact` | `kind`→`kind`, `text`→`text`/`submission_url`, `attachments`→`attachment_count` |
+| `interaction_logs.jsonl` → `entry.submission` | `Submission`, `Attempt`, `Artifact` | `kind`→`kind`, `text`→`text`, links parsed out of `text`→`code_repositories`/`media_assets`, `attachments`→`attachment_count` |
 | `interaction_logs.jsonl` → `entry.feedback` | `Assessment`, `Evidence` | `verdict`→`verdict`, `summary`→`summary`, **`raw` → parse the JSON array** |
 | `…feedback.raw` scope points | `Evidence` (one per point) | `reason`→`content`, `confidence_score`→`confidence`, `status`→`criterion_status`, `chunks_ids_met`→`Artifact` links |
 | LMS *(not in current export)* | `Evidence`, tier `exposed` | tier, edges and DDL exist; nothing populates them yet |
@@ -172,7 +172,7 @@ Additionally:
 | `Learner` | `canonical_email`, `display_name` |
 | `LearnerIdentity` | `source_learner_id` |
 | `Round` / `Group` / `Cohort` | `*_key`, `name` |
-| `TaskDefinition` | `task_definition_key`, `headline` |
+| `Task` | `task_key`, `headline` |
 | `LearningExperience` | `lx_key`, `status` |
 | `Attempt` | `attempt_number`, `verdict` |
 | `Submission` | `kind` |
@@ -241,7 +241,7 @@ Found while building the seed fixture across all 14 learners in both groups.
 | **246** | Real GitHub handle `MoHatemTC` survived anonymisation in `interaction_logs.jsonl` | **Scrub in the pipeline.** The export README flags glued strings as a known limit. |
 | 47 | `task.technologies` empty | Fall back to `rubric.scopes[].requirement` — a better skill signal anyway |
 | 31 | `extraction_status != done` on meetings | No transcript. Do not emit Evidence; mark pending |
-| 18 | Task has no rubric scopes | `Rubric`/`RubricCriterion` optional — skip, still emit `TaskDefinition` |
+| 18 | Task has no rubric scopes | `Rubric`/`RubricCriterion` optional — skip, still emit `Task` |
 | 17 | `status=terminated` with `outcome=null` | `outcome` is nullable by design. Leave null; do not guess |
 | 10 | `attendee_emails` empty | Derive attendance from memory cards' `learner_id` |
 | 1 | LX `1435355e` has `deadline_at` before `activated_at` | Source bug. Ingest as-is and flag; do not correct source truth |
@@ -257,7 +257,7 @@ learners.jsonl   meeting_memory_cards.jsonl   interaction_logs.jsonl
 ```
 
 **`lx_configs.jsonl` is missing.** That file holds every task definition,
-rubric and rubric criterion. Without it, `TaskDefinition`, `Rubric` and
+rubric and rubric criterion. Without it, `Task`, `Rubric` and
 `RubricCriterion` cannot be populated and the assessment side of the graph is
 lost. Needs a team decision.
 
