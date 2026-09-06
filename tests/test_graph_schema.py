@@ -862,6 +862,105 @@ def test_illustrative_lms_records_are_marked_as_such():
             assert "ILLUSTRATIVE" in e.content
 
 
+# --------------------------------------------- MD-review round additions
+
+
+def test_provenance_carries_source_dataset():
+    """Which extracted file a record came from, distinct from its own id."""
+    p = _prov(source_dataset="interaction_logs.jsonl")
+    assert p.source_dataset == "interaction_logs.jsonl"
+
+
+def test_source_dataset_is_optional():
+    assert _prov().source_dataset is None
+
+
+def test_submission_carries_attempt_metadata():
+    sub = M.Submission(
+        id=deterministic_id("vi", "submission", "s1"),
+        created_at=NOW,
+        provenance=_prov(),
+        kind="link",
+        attempt_number=2,
+        hours_before_deadline=-3.5,
+        code_repositories=["https://github.com/x/y"],
+        media_assets=["https://example.com/demo.mp4"],
+    )
+    assert sub.attempt_number == 2
+    assert sub.hours_before_deadline == -3.5  # negative -> submitted late
+    assert sub.code_repositories == ["https://github.com/x/y"]
+    assert sub.media_assets == ["https://example.com/demo.mp4"]
+
+
+def test_evidence_metric_key_and_profile_hints_are_optional_tags():
+    ev = _evidence()
+    assert ev.metric_key is None
+    assert ev.profile_hints == []
+    tagged = _evidence(metric_key="python_async_io", profile_hints=["python_async_io"])
+    assert tagged.metric_key == "python_async_io"
+    assert tagged.profile_hints == ["python_async_io"]
+
+
+def test_assessment_answer_is_declared_and_typed():
+    assert "AssessmentAnswer" in M.NODE_CLASSES
+    answer = M.AssessmentAnswer(
+        id=deterministic_id("lms", "answer", "QA_01"),
+        created_at=NOW,
+        provenance=_prov(),
+        question_key="QA_01",
+        domain="Python Core & Scripting",
+        learner_answer="Familiar with the basics.",
+        score=43.0,
+        max_score=100.0,
+    )
+    assert answer.question_key == "QA_01"
+
+
+def test_assessment_answer_score_within_max_enforced():
+    try:
+        M.AssessmentAnswer(
+            id=deterministic_id("lms", "answer", "bad"),
+            created_at=NOW,
+            provenance=_prov(),
+            question_key="QA_99",
+            score=120.0,
+            max_score=100.0,
+        )
+    except Exception as e:
+        assert "exceeds" in str(e)
+    else:
+        raise AssertionError("score exceeding max_score was accepted")
+
+
+def test_has_answer_edge_is_registered():
+    specs = {(s.type, s.source_label, s.target_label) for s in M.EDGE_SPECS}
+    assert (M.EdgeType.HAS_ANSWER, "Assessment", "AssessmentAnswer") in specs
+
+
+def test_fixture_has_assessment_answers_with_real_scores():
+    g = _fixture()
+    answers = g.by_label("AssessmentAnswer")
+    assert answers, "no AssessmentAnswer nodes in the fixture"
+    for a in answers:
+        assert a.question_key and a.score is not None
+
+
+def test_fixture_submissions_carry_attempt_and_timing_data():
+    g = _fixture()
+    subs = g.by_label("Submission")
+    assert subs
+    for sub in subs:
+        assert sub.attempt_number >= 1
+    with_repos = [s for s in subs if s.code_repositories]
+    assert with_repos, "no submission carries a parsed code repository link"
+
+
+def test_fixture_evidence_metric_keys_match_source_memory_cards():
+    g = _fixture()
+    tagged = [e for e in g.by_label("Evidence") if e.metric_key]
+    assert tagged, "no Evidence carries a metric_key from the real memory cards"
+
+
 # ---------------------------------------------------------------- cypher export
 
 

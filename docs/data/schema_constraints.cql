@@ -4,8 +4,8 @@
 
 // ontology version : 0.1.0
 // schema version   : learner-graph/0.1.0
-// node labels      : 25
-// relationship types: 42
+// node labels      : 26
+// relationship types: 43
 //
 // GENERATED FILE - produced by generate_schema.py from learner_graph_models.py.
 // Edit the models (or DDL_SPEC) and regenerate; do not hand-edit this file.
@@ -33,6 +33,8 @@ CREATE CONSTRAINT c_artifact_id_unique IF NOT EXISTS
 FOR (n:Artifact) REQUIRE n.id IS UNIQUE;
 CREATE CONSTRAINT c_assessment_id_unique IF NOT EXISTS
 FOR (n:Assessment) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT c_assessmentanswer_id_unique IF NOT EXISTS
+FOR (n:AssessmentAnswer) REQUIRE n.id IS UNIQUE;
 CREATE CONSTRAINT c_attempt_id_unique IF NOT EXISTS
 FOR (n:Attempt) REQUIRE n.id IS UNIQUE;
 CREATE CONSTRAINT c_careergoal_id_unique IF NOT EXISTS
@@ -91,6 +93,8 @@ CREATE CONSTRAINT c_artifact_bkey_unique IF NOT EXISTS
 FOR (n:Artifact) REQUIRE (n.source_system, n.source_id) IS UNIQUE;
 CREATE CONSTRAINT c_assessment_bkey_unique IF NOT EXISTS
 FOR (n:Assessment) REQUIRE (n.source_system, n.source_id) IS UNIQUE;
+CREATE CONSTRAINT c_assessmentanswer_bkey_unique IF NOT EXISTS
+FOR (n:AssessmentAnswer) REQUIRE (n.source_system, n.source_id) IS UNIQUE;
 CREATE CONSTRAINT c_attempt_bkey_unique IF NOT EXISTS
 FOR (n:Attempt) REQUIRE (n.source_system, n.source_id) IS UNIQUE;
 CREATE CONSTRAINT c_cohort_bkey_unique IF NOT EXISTS
@@ -151,6 +155,14 @@ CREATE INDEX i_assessment_criteria_met IF NOT EXISTS
 FOR (n:Assessment) ON (n.criteria_met);
 CREATE INDEX i_assessment_criteria_total IF NOT EXISTS
 FOR (n:Assessment) ON (n.criteria_total);
+CREATE INDEX i_assessmentanswer_question_key IF NOT EXISTS
+FOR (n:AssessmentAnswer) ON (n.question_key);
+CREATE INDEX i_assessmentanswer_domain IF NOT EXISTS
+FOR (n:AssessmentAnswer) ON (n.domain);
+CREATE INDEX i_assessmentanswer_metric_key IF NOT EXISTS
+FOR (n:AssessmentAnswer) ON (n.metric_key);
+CREATE INDEX i_assessmentanswer_score IF NOT EXISTS
+FOR (n:AssessmentAnswer) ON (n.score);
 CREATE INDEX i_attempt_verdict IF NOT EXISTS
 FOR (n:Attempt) ON (n.verdict);
 CREATE INDEX i_attempt_evaluated_at IF NOT EXISTS
@@ -282,6 +294,8 @@ CREATE FULLTEXT INDEX ft_artifact IF NOT EXISTS
 FOR (n:Artifact) ON EACH [n.content_excerpt];
 CREATE FULLTEXT INDEX ft_assessment IF NOT EXISTS
 FOR (n:Assessment) ON EACH [n.summary, n.mentor_reply];
+CREATE FULLTEXT INDEX ft_assessmentanswer IF NOT EXISTS
+FOR (n:AssessmentAnswer) ON EACH [n.learner_answer, n.evaluation_notes];
 CREATE FULLTEXT INDEX ft_careergoal IF NOT EXISTS
 FOR (n:CareerGoal) ON EACH [n.target_role];
 CREATE FULLTEXT INDEX ft_evidence IF NOT EXISTS
@@ -375,6 +389,24 @@ FOR (n:Task) ON EACH [n.headline, n.description];
 // FOR (n:Assessment) REQUIRE n.source_system IS NOT NULL;
 // CREATE CONSTRAINT c_assessment_source_type_exists IF NOT EXISTS
 // FOR (n:Assessment) REQUIRE n.source_type IS NOT NULL;
+
+// --- AssessmentAnswer ---
+// CREATE CONSTRAINT c_assessmentanswer_created_at_exists IF NOT EXISTS
+// FOR (n:AssessmentAnswer) REQUIRE n.created_at IS NOT NULL;
+// CREATE CONSTRAINT c_assessmentanswer_id_exists IF NOT EXISTS
+// FOR (n:AssessmentAnswer) REQUIRE n.id IS NOT NULL;
+// CREATE CONSTRAINT c_assessmentanswer_ingested_at_exists IF NOT EXISTS
+// FOR (n:AssessmentAnswer) REQUIRE n.ingested_at IS NOT NULL;
+// CREATE CONSTRAINT c_assessmentanswer_question_key_exists IF NOT EXISTS
+// FOR (n:AssessmentAnswer) REQUIRE n.question_key IS NOT NULL;
+// CREATE CONSTRAINT c_assessmentanswer_source_id_exists IF NOT EXISTS
+// FOR (n:AssessmentAnswer) REQUIRE n.source_id IS NOT NULL;
+// CREATE CONSTRAINT c_assessmentanswer_source_observed_at_exists IF NOT EXISTS
+// FOR (n:AssessmentAnswer) REQUIRE n.source_observed_at IS NOT NULL;
+// CREATE CONSTRAINT c_assessmentanswer_source_system_exists IF NOT EXISTS
+// FOR (n:AssessmentAnswer) REQUIRE n.source_system IS NOT NULL;
+// CREATE CONSTRAINT c_assessmentanswer_source_type_exists IF NOT EXISTS
+// FOR (n:AssessmentAnswer) REQUIRE n.source_type IS NOT NULL;
 
 // --- Attempt ---
 // CREATE CONSTRAINT c_attempt_attempt_number_exists IF NOT EXISTS

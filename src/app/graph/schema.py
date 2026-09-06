@@ -317,6 +317,15 @@ class Provenance(GraphModel):
         ),
     )
     source_url: str | None = None
+    source_dataset: str | None = Field(
+        default=None,
+        description=(
+            "Which extracted file this record came from, e.g. "
+            "'json/extracted_submissions.json'. Distinct from source_id (the "
+            "record's own primary key) - this is provenance for the whole "
+            "batch, useful when the ingestion pipeline runs per-file."
+        ),
+    )
     observed_at: UtcDatetime
     ingested_at: UtcDatetime
     evidence_type: "EvidenceType | None" = Field(
@@ -600,8 +609,30 @@ class Submission(SourceNode):
     submission_url: str | None = Field(
         default=None, description="Repository, PR or branch URL when one was given"
     )
+    code_repositories: list[str] = Field(
+        default_factory=list,
+        description="Git repository links called out in the submission text.",
+    )
+    media_assets: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Non-repository links or files in the submission - demo videos, "
+            "design files, hosted previews."
+        ),
+    )
     submitted_at: UtcDatetime | None = Field(
         default=None, description="When the learner handed it in"
+    )
+    attempt_number: int = Field(
+        default=1, ge=1, description="Which attempt at the task this submission is"
+    )
+    hours_before_deadline: float | None = Field(
+        default=None,
+        description=(
+            "Hours between submission and the task deadline. Negative means "
+            "submitted late. Denormalised from submitted_at + the task's "
+            "deadline for cheap querying without a join."
+        ),
     )
     is_resubmission: bool = Field(
         default=False, description="True when a previous attempt already existed"
@@ -717,6 +748,39 @@ class Assessment(SourceNode):
 # ===========================================================================
 
 
+class AssessmentAnswer(SourceNode):
+    """One question-answer pair inside a broader Assessment.
+
+    Required by the MD-proposed LMSAssessment shape: an LMS pre/post-course
+    assessment scores each question individually
+    (question_id, domain, learner_answer, per-question score), which is a
+    different shape from a graded rubric point (see RubricCriterion /
+    ScoredCriterionProps) - there is no rubric requirement text here, just a
+    free-text answer and a per-question score.
+    """
+
+    label: Literal["AssessmentAnswer"] = "AssessmentAnswer"
+    question_key: str = Field(description="e.g. 'QA_01'")
+    domain: str | None = Field(
+        default=None, description="e.g. 'Python Core & Scripting'"
+    )
+    metric_key: str | None = None
+    learner_answer: str | None = None
+    score: float | None = Field(default=None, ge=0)
+    max_score: float | None = Field(default=None, ge=0)
+    evaluation_notes: str | None = None
+
+    @model_validator(mode="after")
+    def _score_within_max(self) -> "AssessmentAnswer":
+        if (
+            self.score is not None
+            and self.max_score is not None
+            and self.score > self.max_score
+        ):
+            raise ValueError(f"score {self.score} exceeds max_score {self.max_score}")
+        return self
+
+
 class Meeting(SourceNode):
     """A scheduled session - standup, sprint planning, retro or ad-hoc.
 
@@ -824,6 +888,24 @@ class Evidence(SourceNode):
     criterion_status: CriterionStatus | None = Field(
         default=None,
         description="Set when the evidence came from a graded rubric point.",
+    )
+    metric_key: str | None = Field(
+        default=None,
+        description=(
+            "Free-form taxonomy tag from the source extraction, e.g. "
+            "'python_async_io'. Distinct from evidence_type (the fixed "
+            "6-value enum): this is an open vocabulary for whatever the "
+            "extraction pipeline names the underlying competency."
+        ),
+    )
+    profile_hints: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Short tags the extraction pipeline attached, e.g. "
+            "['python_proficient', 'async_architecture']. Advisory only - "
+            "never a substitute for a SkillAssertion, which is what Epic 2/3 "
+            "actually query."
+        ),
     )
 
     #: Names of the computed mirrors below. They are written on serialisation
@@ -1100,6 +1182,7 @@ AnyNode = Annotated[
         Rubric,
         RubricCriterion,
         Assessment,
+        AssessmentAnswer,
         Meeting,
         Interaction,
         Evidence,
@@ -1132,6 +1215,7 @@ NODE_CLASSES: dict[str, type[GraphNode]] = {
         Rubric,
         RubricCriterion,
         Assessment,
+        AssessmentAnswer,
         Meeting,
         Interaction,
         Evidence,
@@ -1171,6 +1255,7 @@ class EdgeType(str, Enum):
     # assessment
     HAS_RUBRIC = "HAS_RUBRIC"
     HAS_CRITERION = "HAS_CRITERION"
+    HAS_ANSWER = "HAS_ANSWER"
     EVALUATED_BY = "EVALUATED_BY"
     USED_RUBRIC = "USED_RUBRIC"
     SCORED_CRITERION = "SCORED_CRITERION"
@@ -1511,6 +1596,16 @@ EDGE_SPECS: tuple[EdgeSpec, ...] = (
         target_label="RubricCriterion",
         cardinality=Cardinality.ONE_TO_MANY,
         description="Rubric's scope/point criteria.",
+    ),
+    EdgeSpec(
+        type=EdgeType.HAS_ANSWER,
+        source_label="Assessment",
+        target_label="AssessmentAnswer",
+        cardinality=Cardinality.ONE_TO_MANY,
+        description=(
+            "Per-question breakdown of an LMS-style assessment - distinct "
+            "from SCORED_CRITERION, which is for rubric-graded work."
+        ),
     ),
     EdgeSpec(
         type=EdgeType.EVALUATED_BY,

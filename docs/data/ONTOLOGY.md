@@ -2,8 +2,8 @@
 
 - ontology version: `0.1.0`
 - schema version: `learner-graph/0.1.0`
-- node labels: **25**
-- relationship types: **42** across **52** legal endpoint pairs
+- node labels: **26**
+- relationship types: **43** across **53** legal endpoint pairs
 
 > **Generated file.** Produced by `generate_docs.py` from
 > `learner_graph_models.py`. Edit the models and regenerate.
@@ -245,7 +245,11 @@ grader cites, so it is the join point between "work delivered" and
 | `attachment_count` | `int` | no |  |
 | `attachment_names` | `list[str]` | no | Filenames as reported by the source |
 | `submission_url` | `str \| None` | no | Repository, PR or branch URL when one was given |
+| `code_repositories` | `list[str]` | no | Git repository links called out in the submission text. |
+| `media_assets` | `list[str]` | no | Non-repository links or files in the submission - demo videos, design files, hosted pre... |
 | `submitted_at` | `datetime (UTC) \| None` | no | When the learner handed it in |
+| `attempt_number` | `int` | no | Which attempt at the task this submission is |
+| `hours_before_deadline` | `float \| None` | no | Hours between submission and the task deadline. Negative means submitted late. Denormal... |
 | `is_resubmission` | `bool` | no | True when a previous attempt already existed |
 | `artifact_count` | `int` | no | Artifacts extracted from this submission |
 
@@ -420,6 +424,8 @@ Every Evidence node must point back at the record it came from
 | `observed_at` | `datetime (UTC)` | yes | When the evidenced behaviour occurred (drives recency weighting). |
 | `access_scope` | `AccessScope` | no |  |
 | `criterion_status` | `CriterionStatus \| None` | no | Set when the evidence came from a graded rubric point. |
+| `metric_key` | `str \| None` | no | Free-form taxonomy tag from the source extraction, e.g. 'python_async_io'. Distinct fro... |
+| `profile_hints` | `list[str]` | no | Short tags the extraction pipeline attached, e.g. ['python_proficient', 'async_architec... |
 
 ---
 
@@ -612,6 +618,7 @@ Cardinality is read left-to-right:
 | `(:CareerGoal)-[:GOAL_TARGETS_SKILL]->(:Skill)` | `N:M` | - | Target competency for the goal. |
 | `(:AccessGrant)-[:GRANTS_ACCESS_TO]->(:Round)` | `N:M` | - | Rounds the grant unlocks. |
 | `(:Employer)-[:HAS_ACCESS_GRANT]->(:AccessGrant)` | `1:N` | - | Grants held by an employer. |
+| `(:Assessment)-[:HAS_ANSWER]->(:AssessmentAnswer)` | `1:N` | - | Per-question breakdown of an LMS-style assessment - distinct from SCORED_CRITERION, which is for rubric-graded work. |
 | `(:LearningExperience)-[:HAS_ATTEMPT]->(:Attempt)` | `1:N` | - | Graded attempts, in order. |
 | `(:Learner)-[:HAS_CAREER_GOAL]->(:CareerGoal)` | `1:1` | - | Current career goal or unknown state. |
 | `(:Rubric)-[:HAS_CRITERION]->(:RubricCriterion)` | `1:N` | - | Rubric's scope/point criteria. |
@@ -860,7 +867,7 @@ never has to translate between two vocabularies.
 
 **`EdgeType`** - str(object='') -> str
 
-  `IDENTIFIES`, `MEMBER_OF`, `PART_OF_ROUND`, `PART_OF_COHORT`, `HAS_LEARNING_EXPERIENCE`, `INSTANCE_OF`, `COMPLETED_TASK`, `PART_OF_PROJECT`, `HAS_ATTEMPT`, `SUBMITTED`, `SUBMITTED_IN`, `CONTAINS_ARTIFACT`, `HAS_RUBRIC`, `HAS_CRITERION`, `EVALUATED_BY`, `USED_RUBRIC`, `SCORED_CRITERION`, `TARGETS_SKILL`, `REQUIRES_SKILL`, `PARTICIPATED_IN`, `HELD_FOR_GROUP`, `OCCURRED_IN`, `EVIDENCE_FOR_LEARNER`, `DERIVED_FROM`, `SUPPORTED_BY_EVIDENCE`, `EVIDENCE_ABOUT_SKILL`, `HAS_SKILL_ASSERTION`, `ABOUT_SKILL`, `DECLARED_SKILL`, `EXPOSED_TO_SKILL`, `ASSESSED_ON_SKILL`, `DEMONSTRATED_SKILL`, `HAS_OBSERVATION`, `OBSERVED_IN`, `HAS_CAREER_GOAL`, `GOAL_TARGETS_SKILL`, `RECOMMENDED_FOR`, `RECOMMENDS_SCENARIO`, `ADDRESSES_GAP_IN`, `VALIDATES_SKILL`, `HAS_ACCESS_GRANT`, `GRANTS_ACCESS_TO`
+  `IDENTIFIES`, `MEMBER_OF`, `PART_OF_ROUND`, `PART_OF_COHORT`, `HAS_LEARNING_EXPERIENCE`, `INSTANCE_OF`, `COMPLETED_TASK`, `PART_OF_PROJECT`, `HAS_ATTEMPT`, `SUBMITTED`, `SUBMITTED_IN`, `CONTAINS_ARTIFACT`, `HAS_RUBRIC`, `HAS_CRITERION`, `HAS_ANSWER`, `EVALUATED_BY`, `USED_RUBRIC`, `SCORED_CRITERION`, `TARGETS_SKILL`, `REQUIRES_SKILL`, `PARTICIPATED_IN`, `HELD_FOR_GROUP`, `OCCURRED_IN`, `EVIDENCE_FOR_LEARNER`, `DERIVED_FROM`, `SUPPORTED_BY_EVIDENCE`, `EVIDENCE_ABOUT_SKILL`, `HAS_SKILL_ASSERTION`, `ABOUT_SKILL`, `DECLARED_SKILL`, `EXPOSED_TO_SKILL`, `ASSESSED_ON_SKILL`, `DEMONSTRATED_SKILL`, `HAS_OBSERVATION`, `OBSERVED_IN`, `HAS_CAREER_GOAL`, `GOAL_TARGETS_SKILL`, `RECOMMENDED_FOR`, `RECOMMENDS_SCENARIO`, `ADDRESSES_GAP_IN`, `VALIDATES_SKILL`, `HAS_ACCESS_GRANT`, `GRANTS_ACCESS_TO`
 
 **`EvidenceStrength`** - Typical strength band from PRD 4.4.  Set per evidence item, not per type,
 

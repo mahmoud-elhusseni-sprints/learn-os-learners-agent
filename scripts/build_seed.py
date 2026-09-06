@@ -284,12 +284,17 @@ class SeedBuilder:
         url: str | None = None,
         method: M.ExtractionMethod = M.ExtractionMethod.DIRECT_MAPPING,
         evidence_type: M.EvidenceType | None = None,
+        dataset: str | None = None,
     ) -> M.Provenance:
         """Build a provenance record.
 
         Passing ``evidence_type`` returns an ``EvidenceProvenance``, the
         stricter type that Evidence nodes require - it makes the full
         (source_system, source_id, timestamp, evidence_type) tuple mandatory.
+
+        ``dataset`` names the extracted file this record came from, e.g.
+        'interaction_logs.jsonl'. Distinct from source_id (the record's own
+        key within that file).
         """
         fields: dict[str, Any] = dict(
             source_system=system,
@@ -297,6 +302,7 @@ class SeedBuilder:
             source_id=str(sid),
             source_locator=locator,
             source_url=url,
+            source_dataset=dataset,
             observed_at=observed,
             ingested_at=INGESTED_AT,
             extraction_method=method,
@@ -819,6 +825,14 @@ class SeedBuilder:
             if "submission" in e:
                 s = e["submission"]
                 text = redact(s.get("text"))
+                all_links = re.findall(r"https?://\S+", text or "")
+                repo_links = [ln for ln in all_links if "github" in ln.lower()]
+                other_links = [ln for ln in all_links if ln not in repo_links]
+                hours_before = None
+                if lx and lx.deadline_at:
+                    hours_before = round(
+                        (lx.deadline_at - occurred).total_seconds() / 3600, 2
+                    )
                 submission = self.add(
                     M.Submission(
                         id=deterministic_id("virtual_internship", "submission", sid),
@@ -829,6 +843,7 @@ class SeedBuilder:
                             sid,
                             occurred,
                             url=text if text and text.startswith("http") else None,
+                            dataset="interaction_logs.jsonl",
                         ),
                         kind=s.get("kind") or "unknown",
                         text=text,
@@ -841,7 +856,11 @@ class SeedBuilder:
                         submission_url=(
                             text if text and text.startswith("http") else None
                         ),
+                        code_repositories=repo_links,
+                        media_assets=other_links,
                         submitted_at=occurred,
+                        attempt_number=attempt_no[lx_key],
+                        hours_before_deadline=hours_before,
                         is_resubmission=attempt_no[lx_key] > 1,
                     )
                 )
@@ -1419,6 +1438,7 @@ class SeedBuilder:
                         card["card_id"],
                         observed,
                         locator=meta.get("source_locator"),
+                        dataset="meeting_memory_cards.jsonl",
                         method=M.ExtractionMethod.LLM_EXTRACTION,
                         evidence_type=card_evidence_type,
                     ),
@@ -1433,6 +1453,8 @@ class SeedBuilder:
                     content=content or (excerpt or "no content recorded"),
                     observed_at=observed,
                     access_scope=M.AccessScope.EMPLOYER_SHAREABLE,
+                    metric_key=metric,
+                    profile_hints=list(payload.get("profile_hints") or []),
                 )
             )
             self.link(M.EdgeType.EVIDENCE_FOR_LEARNER, ev, learner)
@@ -1522,6 +1544,37 @@ class SeedBuilder:
             "skills": ["python", "error-handling"],
             "tier": M.SkillEvidenceTier.ASSESSED,
             "observed": "2026-07-10T09:30:00+00:00",
+            "score": 86.0,
+            "max_score": 100.0,
+            "questions": [
+                {
+                    "question_id": "QA_01",
+                    "domain": "Python Core & Scripting",
+                    "metric_key": "python_async_io",
+                    "learner_answer": (
+                        "Comfortable with async/await for I/O-bound tasks; "
+                        "used asyncio in the video pipeline."
+                    ),
+                    "score": 86.0,
+                    "evaluation_notes": (
+                        "Solid working knowledge of async I/O patterns."
+                    ),
+                },
+                {
+                    "question_id": "QA_02",
+                    "domain": "Error Handling",
+                    "metric_key": "error_handling",
+                    "learner_answer": (
+                        "Uses try/except around external calls; less "
+                        "consistent on custom exception types."
+                    ),
+                    "score": 78.0,
+                    "evaluation_notes": (
+                        "Foundational error handling present but not "
+                        "systematic across modules."
+                    ),
+                },
+            ],
         },
         {
             "source_id": "lms:module:rest-api-design:completed",
@@ -1607,6 +1660,54 @@ class SeedBuilder:
                 skill = self.skill(spec)
                 self.link(M.EdgeType.EVIDENCE_ABOUT_SKILL, ev, skill)
                 self.record_skill_evidence(slug, rec["tier"], ev)
+
+            if rec.get("questions"):
+                assessment = self.add(
+                    M.Assessment(
+                        id=deterministic_id("lms", "lms_assessment", rec["source_id"]),
+                        created_at=INGESTED_AT,
+                        provenance=self.prov(
+                            M.SourceSystem.LMS,
+                            "lms.assessment",
+                            rec["source_id"],
+                            observed,
+                            method=M.ExtractionMethod.HUMAN_CURATED,
+                        ),
+                        assessment_kind=rec["kind"],
+                        score=rec.get("score"),
+                        max_score=rec.get("max_score"),
+                        evaluated_at=observed,
+                    )
+                )
+                self.link(
+                    M.EdgeType.DERIVED_FROM, ev, assessment, **self.evidence_tuple(ev)
+                )
+                for q in rec["questions"]:
+                    answer = self.add(
+                        M.AssessmentAnswer(
+                            id=deterministic_id(
+                                "lms",
+                                "lms_answer",
+                                f"{rec['source_id']}:{q['question_id']}",
+                            ),
+                            created_at=INGESTED_AT,
+                            provenance=self.prov(
+                                M.SourceSystem.LMS,
+                                "lms.assessment.answer",
+                                f"{rec['source_id']}:{q['question_id']}",
+                                observed,
+                                method=M.ExtractionMethod.HUMAN_CURATED,
+                            ),
+                            question_key=q["question_id"],
+                            domain=q.get("domain"),
+                            metric_key=q.get("metric_key"),
+                            learner_answer=q.get("learner_answer"),
+                            score=q.get("score"),
+                            max_score=rec.get("max_score"),
+                            evaluation_notes=q.get("evaluation_notes"),
+                        )
+                    )
+                    self.link(M.EdgeType.HAS_ANSWER, assessment, answer)
 
     # ---- derived skill assertions -----------------------------------------
 

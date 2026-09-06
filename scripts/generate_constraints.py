@@ -95,6 +95,11 @@ DDL_SPEC: dict[str, dict[str, list[str]]] = {
         ],
         "fulltext": ["summary", "mentor_reply"],
     },
+    "AssessmentAnswer": {
+        "business_key": ["source_system", "source_id"],
+        "indexes": ["question_key", "domain", "metric_key", "score"],
+        "fulltext": ["learner_answer", "evaluation_notes"],
+    },
     "Meeting": {
         "business_key": ["meeting_key"],
         "indexes": [
