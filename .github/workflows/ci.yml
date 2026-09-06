@@ -9,8 +9,10 @@ on:
 jobs:
   quality:
     runs-on: ubuntu-latest
+
     env:
       NEO4J_PASSWORD: ${{ secrets.NEO4J_PASSWORD }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
