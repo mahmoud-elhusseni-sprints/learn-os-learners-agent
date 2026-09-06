@@ -19,21 +19,21 @@ jobs:
 
       - name: Build Docker services
         run: |
-          docker compose build
+          docker compose build api
 
       - name: Run Ruff
         run: |
-          docker compose run --rm api ruff check .
+          docker compose run --rm --no-deps api ruff check .
 
       - name: Check Black formatting
         run: |
-          docker compose run --rm api black --check .
+          docker compose run --rm --no-deps api black --check .
 
       - name: Run MyPy
         run: |
-          docker compose run --rm api mypy src
+          docker compose run --rm --no-deps api mypy src
 
       - name: Run Pytest
         run: |
-          docker compose run --rm api pytest
+          docker compose run --rm --no-deps api pytest
 
