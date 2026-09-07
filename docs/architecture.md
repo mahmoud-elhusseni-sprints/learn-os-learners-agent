@@ -260,45 +260,42 @@ Responsible for creating and managing the Neo4j driver/connection.
 
 Defines the expected graph structure, including nodes and relationships.
 
-Examples:
+The current model has 3 node types:
 
 ```text
-Learner
-Skill
-Assessment
-Evidence
-Task
-Project
+LearnerProfile
+DataSource
+MemoryCard
 ```
 
-Relationships may include:
+`DataSource.payload` is an embedded, typed object (`ReviewPayload` /
+`AssessmentPayload` / a stub) discriminated by `datasource_name` - it is
+not a separate node. See the module docstring in `schema.py` for the full
+rationale.
+
+Relationships:
 
 ```text
-Learner --HAS_SKILL--> Skill
-Learner --HAS_EVIDENCE--> Evidence
-Learner --TOOK--> Assessment
-Evidence --SUPPORTS--> Skill
+LearnerProfile --PRODUCED--> DataSource
+DataSource --EXTRACTED_INTO--> MemoryCard
+LearnerProfile --HAS_MEMORY_CARD--> MemoryCard
 ```
 
 The final graph model should be agreed upon by the relevant team members before major changes are made.
 
 ### `queries.py`
 
-Contains reusable Cypher queries for retrieving and modifying graph data.
-
-Examples:
-
-```text
-get learner
-get learner skills
-get learner evidence
-search candidates
-get assessment
-```
+Contains reusable, parameterized Cypher for writing graph data (`UNWIND` +
+`MERGE`, one function per node/edge batch). Node labels and relationship
+types are the one thing Cypher has no parameter syntax for; every label/type
+used here always comes from the closed set in `schema.py`, never from raw
+input.
 
 ### `constraints.py`
 
-Contains Neo4j constraints and indexes required to maintain data integrity and improve query performance.
+Contains the Neo4j constraints and indexes required to maintain data
+integrity, plus `initialize_schema(driver)` to apply them. Generated from
+`schema.py` by `scripts/generate_constraints.py` - do not hand-edit it.
 
 ---
 
