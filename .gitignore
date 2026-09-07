@@ -1,4 +1,4 @@
-# nvironment
+# Environment
 .env
 
 # Python
@@ -21,13 +21,20 @@ venv/
 # OS
 .DS_Store
 
-#data 
+#data
 data/processed/*
 !data/processed/.gitkeep
-<<<<<<< HEAD
+
+# Block other/generated jsonl exports from docs/data by default, but keep
+# the small real anonymized fixtures the Talent Intelligence Agent tests
+# and scripts/build_seed.py both read from - without these, CI has no data
+# and every test that depends on them fails unconditionally.
 docs/data/*.jsonl
-=======
+!docs/data/learners.jsonl
+!docs/data/meetings.jsonl
+!docs/data/meeting_memory_cards.jsonl
+!docs/data/interaction_logs.jsonl
+
 # Generated from tests/fixtures/sample_learner_seed.json
 # Regenerate: python3 scripts/validate_seed.py
 docs/data/sample_learner_seed.cql
->>>>>>> shady/feature/graph-schema
