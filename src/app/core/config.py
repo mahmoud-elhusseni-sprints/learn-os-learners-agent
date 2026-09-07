@@ -40,9 +40,7 @@ DATASOURCE_OUTPUT_FILE = os.path.join(JSON_DIR, "graph_datasource_nodes.json")
 MEMORY_CARDS_OUTPUT_FILE = os.path.join(JSON_DIR, "graph_memory_cards.json")
 
 RUBRICS_OUTPUT_FILE = os.path.join(JSON_DIR, "extracted_mentor_rubrics.json")
-LMS_ASSESSMENTS_OUTPUT_FILE = os.path.join(
-    JSON_DIR, "extracted_lms_assessments.json"
-)
+LMS_ASSESSMENTS_OUTPUT_FILE = os.path.join(JSON_DIR, "extracted_lms_assessments.json")
 
 LITE_LLM_KEY = os.getenv("LITE_LLM")
 LITELLM_BASE_URL = os.getenv(

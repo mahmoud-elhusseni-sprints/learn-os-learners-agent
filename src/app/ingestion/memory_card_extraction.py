@@ -40,9 +40,7 @@ def extract_memory_cards_from_assessments(
 
                 card_obj = MemoryCard(
                     card_id=card_id,
-                    metric_key=raw_card.get(
-                        "metric_key", "general_competency"
-                    ),
+                    metric_key=raw_card.get("metric_key", "general_competency"),
                     content=raw_card.get("content", ""),
                     rationale=raw_card.get("rationale"),
                     tags=list(set(tags)),
@@ -53,9 +51,7 @@ def extract_memory_cards_from_assessments(
                     exclude={"profile_hints", "meeting_id"}
                 )
             else:
-                existing_learners = cards_by_id[card_id][
-                    "associated_learner_ids"
-                ]
+                existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                 if learner_id and learner_id not in existing_learners:
                     existing_learners.append(learner_id)
 

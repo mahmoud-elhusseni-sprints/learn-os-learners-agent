@@ -26,8 +26,7 @@ def build_attempt_map(turns_filepath: str) -> Dict[str, int]:
                 record = json.loads(line_str)
                 if not isinstance(record, dict):
                     logger.warning(
-                        f"Line {line_idx} in {turns_filepath} is not a "
-                        f"JSON object"
+                        f"Line {line_idx} in {turns_filepath} is not a " f"JSON object"
                     )
                     continue
             except json.JSONDecodeError as err:
@@ -119,39 +118,23 @@ def extract_rubric_taxonomies(configs_filepath: str) -> Dict[str, Dict[str, Any]
 
             lx_id = record.get("lx_id")
             config_json = record.get("config_json", {})
-            task = (
-                config_json.get("task", {})
-                if isinstance(config_json, dict)
-                else {}
-            )
+            task = config_json.get("task", {}) if isinstance(config_json, dict) else {}
 
             if lx_id and task:
                 headline = task.get("headline", "")
                 description = task.get("description", "")
-                rubric = (
-                    task.get("rubric", {})
-                    if isinstance(task, dict)
-                    else {}
-                )
+                rubric = task.get("rubric", {}) if isinstance(task, dict) else {}
 
-                scopes = (
-                    rubric.get("scopes", [])
-                    if isinstance(rubric, dict)
-                    else []
-                )
+                scopes = rubric.get("scopes", []) if isinstance(rubric, dict) else []
                 quality_criteria = (
-                    task.get("quality_criteria", [])
-                    if isinstance(task, dict)
-                    else []
+                    task.get("quality_criteria", []) if isinstance(task, dict) else []
                 )
 
                 tax_record = {
                     "lx_id": lx_id,
                     "task_headline": headline,
                     "task_description": description,
-                    "functional_requirements": task.get(
-                        "functional_requirements", []
-                    ),
+                    "functional_requirements": task.get("functional_requirements", []),
                     "rubric_scopes": scopes,
                     "quality_criteria": quality_criteria,
                 }
@@ -305,9 +288,7 @@ def extract_mentor_evaluations(
                     else "reviewed"
                 )
                 summary = (
-                    feedback.get("summary", "")
-                    if isinstance(feedback, dict)
-                    else ""
+                    feedback.get("summary", "") if isinstance(feedback, dict) else ""
                 )
                 mentor_reply = (
                     feedback.get("mentor_reply", "")
@@ -315,11 +296,7 @@ def extract_mentor_evaluations(
                     else ""
                 )
 
-                raw_text = (
-                    feedback.get("raw", "")
-                    if isinstance(feedback, dict)
-                    else ""
-                )
+                raw_text = feedback.get("raw", "") if isinstance(feedback, dict) else ""
                 scope_results, quality_results = parse_feedback_raw(raw_text)
 
                 detailed_point_scores = []
@@ -331,17 +308,17 @@ def extract_mentor_evaluations(
                     for p in s.get("points", []):
                         if not isinstance(p, dict):
                             continue
-                        detailed_point_scores.append({
-                            "rubric_id": p.get("rubric_id"),
-                            "category": category,
-                            "requirement": requirement,
-                            "status": p.get("status"),
-                            "evaluation_criteria": p.get(
-                                "evaluation_criteria"
-                            ),
-                            "reason": p.get("reason"),
-                            "confidence_score": p.get("confidence_score"),
-                        })
+                        detailed_point_scores.append(
+                            {
+                                "rubric_id": p.get("rubric_id"),
+                                "category": category,
+                                "requirement": requirement,
+                                "status": p.get("status"),
+                                "evaluation_criteria": p.get("evaluation_criteria"),
+                                "reason": p.get("reason"),
+                                "confidence_score": p.get("confidence_score"),
+                            }
+                        )
 
                 sub_info = submissions_by_attempt.get(
                     (learner_id, lx_id, attempt_number), {}

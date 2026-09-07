@@ -149,11 +149,7 @@ class LMSMemoryCardAgent:
                         f"{learner_id}:{item.get('metric_key')}:{idx}",
                     )
                 )
-                lx_id = (
-                    tasks[idx % len(tasks)]["lx_id"]
-                    if tasks
-                    else str(uuid.uuid4())
-                )
+                lx_id = tasks[idx % len(tasks)]["lx_id"] if tasks else str(uuid.uuid4())
 
                 card = {
                     "card_id": card_uuid,

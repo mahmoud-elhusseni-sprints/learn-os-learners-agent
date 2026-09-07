@@ -135,16 +135,12 @@ class MemoryCard(BaseModel):
     created_at: Optional[str] = Field(None, description="Creation timestamp")
     associated_learner_ids: List[str] = Field(
         default_factory=list,
-        description=(
-            "List of LearnerProfile UUIDs linked to this card (Many-to-Many)"
-        ),
+        description=("List of LearnerProfile UUIDs linked to this card (Many-to-Many)"),
     )
     profile_hints: Optional[List[str]] = Field(
         None, description="Legacy alias for tags"
     )
-    meeting_id: Optional[str] = Field(
-        None, description="Legacy session identifier"
-    )
+    meeting_id: Optional[str] = Field(None, description="Legacy session identifier")
 
     @model_validator(mode="after")
     def sync_tags_and_hints(self) -> "MemoryCard":

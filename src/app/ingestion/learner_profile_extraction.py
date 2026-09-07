@@ -36,9 +36,7 @@ def extract_learner_profiles(filepath_list: List[str]) -> List[Dict[str, Any]]:
                         )
                         continue
                 except json.JSONDecodeError as err:
-                    logger.error(
-                        f"Malformed JSON line {line_idx} in {filepath}: {err}"
-                    )
+                    logger.error(f"Malformed JSON line {line_idx} in {filepath}: {err}")
                     continue
 
                 learner_id = record.get("learner_id")

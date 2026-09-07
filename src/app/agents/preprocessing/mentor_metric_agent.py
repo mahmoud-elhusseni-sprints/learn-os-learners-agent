@@ -70,9 +70,9 @@ class MentorMetricAgent:
                     if submission:
                         sub_text = submission.get("text", "")
                         if sub_text:
-                            learner_eval_data[learner_id][
-                                "submissions"
-                            ].append(sub_text[:300])
+                            learner_eval_data[learner_id]["submissions"].append(
+                                sub_text[:300]
+                            )
                     for msg in actor_messages:
                         text = msg.get("text", "")
                         if text:

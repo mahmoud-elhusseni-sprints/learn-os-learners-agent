@@ -54,9 +54,7 @@ def run_pipeline(run_llm_agents: bool = False) -> Dict[str, Any]:
         dead_map = build_deadline_map(grp["configs"])
         taxonomies = extract_rubric_taxonomies(grp["configs"])
         metrics_map = (
-            mentor_agent.evaluate_mentor_metrics_map(
-                grp["configs"], grp["logs"]
-            )
+            mentor_agent.evaluate_mentor_metrics_map(grp["configs"], grp["logs"])
             if mentor_agent
             else {}
         )

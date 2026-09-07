@@ -134,9 +134,7 @@ def _quote(s: str) -> str:
 def _prop_map(props: dict[str, Any], indent: str = "  ") -> str:
     if not props:
         return "{}"
-    items = [
-        f"{indent}  {k}: {cypher_literal(v, k)}" for k, v in sorted(props.items())
-    ]
+    items = [f"{indent}  {k}: {cypher_literal(v, k)}" for k, v in sorted(props.items())]
     return "{\n" + ",\n".join(items) + f"\n{indent}}}"
 
 

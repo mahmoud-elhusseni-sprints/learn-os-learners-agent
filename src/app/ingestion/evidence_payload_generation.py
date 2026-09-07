@@ -20,7 +20,8 @@ from src.app.models.deliverables import (
 def generate_datasource_nodes(
     rubrics_file: str = RUBRICS_OUTPUT_FILE,
     lms_file: str = LMS_ASSESSMENTS_OUTPUT_FILE,
-    output_file: str = DATASOURCE_OUTPUT_FILE,) -> List[Dict[str, Any]]:
+    output_file: str = DATASOURCE_OUTPUT_FILE,
+) -> List[Dict[str, Any]]:
 
     datasource_nodes: List[Dict[str, Any]] = []
 
