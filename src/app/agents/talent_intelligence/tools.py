@@ -34,6 +34,12 @@ def _load_jsonl(filename: str) -> tuple[dict[str, Any], ...]:
     """Load a JSONL file once per process; invalid rows are skipped safely."""
     path = DATA_DIR / filename
     if not path.exists():
+        fallback_paths = [
+            Path(__file__).resolve().parents[4] / "data" / "group-a-ai-engineer" / filename,
+            Path(__file__).resolve().parents[4] / "data" / filename,
+        ]
+        path = next((p for p in fallback_paths if p.exists()), path)
+    if not path.exists():
         return ()
     rows: list[dict[str, Any]] = []
     with path.open(encoding="utf-8") as source:

@@ -1,9 +1,9 @@
 import unittest
 
-from app.agents.talent_intelligence.agent import TalentIntelligenceAgent
-from app.agents.talent_intelligence.config import litellm_settings
-from app.agents.talent_intelligence.prompts import SYSTEM_PROMPT
-from app.agents.talent_intelligence.tools import (
+from src.app.agents.talent_intelligence.agent import TalentIntelligenceAgent
+from src.app.agents.talent_intelligence.config import litellm_settings
+from src.app.agents.talent_intelligence.prompts import SYSTEM_PROMPT
+from src.app.agents.talent_intelligence.tools import (
     get_behavioral_context,
     get_learner_profile,
     get_milestone_history,
