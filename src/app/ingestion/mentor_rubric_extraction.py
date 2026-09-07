@@ -26,7 +26,9 @@ def build_attempt_map(turns_filepath: str) -> Dict[str, int]:
                     logger.warning(f"Line {line_idx} in {turns_filepath} is not a JSON object")
                     continue
             except json.JSONDecodeError as err:
-                logger.error(f"Malformed JSON on line {line_idx} in {turns_filepath}: {err}")
+                logger.error(
+                    f"Malformed JSON on line {line_idx} in {turns_filepath}: {err}"
+                )
                 continue
 
             lx_id = record.get("lx_id")
@@ -67,7 +69,9 @@ def build_deadline_map(configs_filepath: str) -> Dict[str, str]:
     return deadline_map
 
 
-def compute_timeliness(sub_ts_str: Optional[str], deadline_ts_str: Optional[str]) -> Optional[float]:
+def compute_timeliness(
+    sub_ts_str: Optional[str], deadline_ts_str: Optional[str]
+) -> Optional[float]:
     if not sub_ts_str or not deadline_ts_str:
         return None
     try:
@@ -76,7 +80,10 @@ def compute_timeliness(sub_ts_str: Optional[str], deadline_ts_str: Optional[str]
         diff_seconds = (dead_dt - sub_dt).total_seconds()
         return round(diff_seconds / 3600.0, 2)
     except Exception as err:
-        logger.error(f"Error computing timeliness for sub={sub_ts_str}, dead={deadline_ts_str}: {err}")
+        logger.error(
+            f"Error computing timeliness for sub={sub_ts_str}, "
+            f"dead={deadline_ts_str}: {err}"
+        )
         return None
 
 
@@ -97,7 +104,9 @@ def extract_rubric_taxonomies(configs_filepath: str) -> Dict[str, Dict[str, Any]
                     logger.warning(f"Line {line_idx} in {configs_filepath} is not a JSON object")
                     continue
             except json.JSONDecodeError as err:
-                logger.error(f"Malformed JSON on line {line_idx} in {configs_filepath}: {err}")
+                logger.error(
+                    f"Malformed JSON on line {line_idx} in {configs_filepath}: {err}"
+                )
                 continue
 
             lx_id = record.get("lx_id")

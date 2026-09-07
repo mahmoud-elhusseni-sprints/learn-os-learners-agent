@@ -23,26 +23,46 @@ class DataSourceType(str, Enum):
 
 class RubricPointEvaluation(BaseModel):
     rubric_id: Optional[int] = Field(None, description="Rubric item ID")
-    category: str = Field(default="digital_ai_skills", description="Competency taxonomy category")
+    category: str = Field(
+        default="digital_ai_skills", description="Competency taxonomy category"
+    )
     requirement: str = Field(default="", description="Task requirement string")
     status: str = Field(..., description="Pass status: Yes, No, Partial")
-    evaluation_criteria: Optional[str] = Field(None, description="Evaluation criterion description")
-    reason: Optional[str] = Field(None, description="Qualitative explanation why point passed/failed")
-    confidence_score: Optional[float] = Field(None, description="Grader confidence score")
+    evaluation_criteria: Optional[str] = Field(
+        None, description="Evaluation criterion description"
+    )
+    reason: Optional[str] = Field(
+        None, description="Qualitative explanation why point passed/failed"
+    )
+    confidence_score: Optional[float] = Field(
+        None, description="Grader confidence score"
+    )
 
 
 class ReviewPayload(BaseModel):
     lx_id: str = Field(..., description="Task Learning Experience UUID")
     task_headline: Optional[str] = Field(None, description="Task headline title")
-    attempt_number: int = Field(default=1, description="Submission review attempt number")
-    hours_before_deadline: Optional[float] = Field(None, description="Hours before deadline")
-    submission_text: Optional[str] = Field(default="", description="Learner submission text")
-    assets: List[str] = Field(default_factory=list, description="Combined code repositories and media assets")
+    attempt_number: int = Field(
+        default=1, description="Submission review attempt number"
+    )
+    hours_before_deadline: Optional[float] = Field(
+        None, description="Hours before deadline"
+    )
+    submission_text: Optional[str] = Field(
+        default="", description="Learner submission text"
+    )
+    assets: List[str] = Field(
+        default_factory=list,
+        description="Combined code repositories and media assets",
+    )
     verdict: str = Field(..., description="Overall verdict: passed, failed, retry")
-    feedback_summary: Optional[str] = Field(default="", description="Mentor review summary")
+    feedback_summary: Optional[str] = Field(
+        default="", description="Mentor review summary"
+    )
     mentor_reply: Optional[str] = Field(None, description="Direct mentor reply text")
     detailed_rubric_evaluations: List[RubricPointEvaluation] = Field(
-        default_factory=list, description="Evaluations for each rubric point of this task"
+        default_factory=list,
+        description="Evaluations for each rubric point of this task",
     )
 
 

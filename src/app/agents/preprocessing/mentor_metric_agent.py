@@ -91,14 +91,23 @@ class MentorMetricAgent:
                 logs=logs,
             )
 
-            print(f"[Agent 2 - Mentor Metric] Evaluating metrics for learner {learner_name} ({learner_id})...")
+            print(
+                f"[Agent 2 - Mentor Metric] Evaluating metrics for learner "
+                f"{learner_name} ({learner_id})..."
+            )
             llm_result = safe_llm_generate_json(prompt)
 
             if llm_result and isinstance(llm_result, dict):
-                print(f"[Agent 2 - Mentor Metric] Successfully evaluated metrics for {learner_name}.")
+                print(
+                    f"[Agent 2 - Mentor Metric] Successfully evaluated metrics "
+                    f"for {learner_name}."
+                )
                 metrics_map[learner_id] = llm_result
             else:
-                print(f"[Agent 2 - Mentor Metric] LLM returned invalid format or failed for {learner_name}.")
+                print(
+                    f"[Agent 2 - Mentor Metric] LLM returned invalid format or "
+                    f"failed for {learner_name}."
+                )
                 metrics_map[learner_id] = {}
 
         return metrics_map

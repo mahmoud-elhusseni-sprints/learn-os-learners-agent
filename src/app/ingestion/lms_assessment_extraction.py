@@ -59,18 +59,27 @@ def _load_lx_configs(
                     try:
                         parsed = json.loads(line_str)
                         if not isinstance(parsed, dict):
-                            logger.warning(f"Line {line_idx} in {configs_input} is not a JSON object: {line_str[:50]}")
+                            logger.warning(
+                                f"Line {line_idx} in {configs_input} is not a "
+                                f"JSON object: {line_str[:50]}"
+                            )
                             continue
                         raw_records.append(parsed)
                     except json.JSONDecodeError as err:
-                        logger.error(f"Malformed JSON on line {line_idx} in {configs_input}: {err}")
+                        logger.error(
+                            f"Malformed JSON on line {line_idx} in "
+                            f"{configs_input}: {err}"
+                        )
                         continue
         else:
             logger.warning(f"Config path does not exist: {configs_input}")
     elif isinstance(configs_input, list):
         for idx, item in enumerate(configs_input):
             if not isinstance(item, dict):
-                logger.warning(f"Record at index {idx} in configs_input is malformed (not dict): {item}")
+                logger.warning(
+                    f"Record at index {idx} in configs_input is malformed "
+                    f"(not dict): {item}"
+                )
                 continue
             raw_records.append(item)
     elif isinstance(configs_input, dict):

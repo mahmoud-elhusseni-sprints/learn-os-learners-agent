@@ -123,23 +123,41 @@ class LMSMemoryCardAgent:
                 cards_per_learner=cards_per_learner,
             )
 
-            print(f"[Agent 1 - LMS Card] Generating cards for learner {learner_name} ({learner_id})...")
+            print(
+                f"[Agent 1 - LMS Card] Generating cards for learner "
+                f"{learner_name} ({learner_id})..."
+            )
             llm_result = safe_llm_generate_json(prompt)
             learner_cards = []
 
             if not llm_result or not isinstance(llm_result, list):
-                print(f"[Agent 1 - LMS Card] LLM generation failed or returned invalid format for {learner_name}.")
+                print(
+                    f"[Agent 1 - LMS Card] LLM generation failed or returned "
+                    f"invalid format for {learner_name}."
+                )
                 cards_map[learner_id] = []
                 continue
 
             for idx, item in enumerate(llm_result):
-                card_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{learner_id}:{item.get('metric_key')}:{idx}"))
-                lx_id = tasks[idx % len(tasks)]["lx_id"] if tasks else str(uuid.uuid4())
+                card_uuid = str(
+                    uuid.uuid5(
+                        uuid.NAMESPACE_DNS,
+                        f"{learner_id}:{item.get('metric_key')}:{idx}",
+                    )
+                )
+                lx_id = (
+                    tasks[idx % len(tasks)]["lx_id"]
+                    if tasks
+                    else str(uuid.uuid4())
+                )
 
                 card = {
                     "card_id": card_uuid,
                     "meeting_id": lx_id,
-                    "metric_key": item.get("metric_key", self.questions[idx % len(self.questions)]["metric_key"]),
+                    "metric_key": item.get(
+                        "metric_key",
+                        self.questions[idx % len(self.questions)]["metric_key"],
+                    ),
                     "content": item.get("content", ""),
                     "rationale": item.get("rationale", ""),
                     "profile_hints": item.get("profile_hints", []),
@@ -147,7 +165,10 @@ class LMSMemoryCardAgent:
                 }
                 learner_cards.append(card)
 
-            print(f"[Agent 1 - LMS Card] Successfully generated {len(learner_cards)} cards for {learner_name}.")
+            print(
+                f"[Agent 1 - LMS Card] Successfully generated "
+                f"{len(learner_cards)} cards for {learner_name}."
+            )
             cards_map[learner_id] = learner_cards
 
         return cards_map
