@@ -1,18 +1,29 @@
 """
-Verify the DDL specification against a live Neo4j instance.
+Verify the DDL specification against a live Neo4j instance
+(v2, minimal schema: LearnerProfile / DataSource / MemoryCard).
 
 Run inside the API container, which already has the neo4j driver and the
 NEO4J_* environment variables from docker-compose:
 
-    docker compose run --rm api python scripts/verify_neo4j.py
+    docker compose run --rm api python scripts/verify_neo4j.py --reset
 
-Proves four things the schema claims:
+By default this script REFUSES to run against a non-empty database and
+does not touch existing data. Pass ``--reset`` only when you mean to wipe
+the target database first (a dedicated test/dev Neo4j instance) - it runs
+an unconditional ``MATCH (n) DETACH DELETE n`` before verifying, so never
+pass it against a shared or production database.
+
+Proves three things the schema claims:
 
 1. every statement in the DDL spec applies to our neo4j:5-community image;
 2. applying the spec twice is a no-op (every statement is IF NOT EXISTS);
 3. the seed fixture loads, and loading it a SECOND time does not duplicate
-   anything - the deterministic-UUIDv5 + MERGE idempotency guarantee;
-4. the Evidence-First invariants hold in the database, not just in Python.
+   anything - the deterministic-UUIDv5 + MERGE idempotency guarantee.
+
+There is no "Evidence-First" invariant check here, unlike v1: that
+invariant protected a graph of Evidence/SkillAssertion nodes which do not
+exist in this design. See src/app/graph/schema.py's module docstring for
+why this is a deliberate, flagged change rather than an oversight.
 
 Loading uses UNWIND batching over ``flatten_node`` output, which is the same
 path the ingestion loader will take.
@@ -20,6 +31,7 @@ path the ingestion loader will take.
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -87,7 +99,6 @@ def load_graph(session: Any, graph: M.LearnerGraph) -> None:
             {
                 "src": str(edge.source_id),
                 "dst": str(edge.target_id),
-                "props": edge.properties,
             }
         )
     for (src_label, rel, dst_label), rows in by_rel.items():
@@ -95,41 +106,60 @@ def load_graph(session: Any, graph: M.LearnerGraph) -> None:
             f"UNWIND $rows AS row "
             f"MATCH (a:{src_label} {{id: row.src}}) "
             f"MATCH (b:{dst_label} {{id: row.dst}}) "
-            f"MERGE (a)-[r:{rel}]->(b) "
-            f"SET r += row.props",
+            f"MERGE (a)-[r:{rel}]->(b)",
             rows=rows,
         )
 
 
 INVARIANTS = [
     (
-        "no skill claim without supporting evidence",
-        "MATCH (a:SkillAssertion) WHERE a.status <> 'no_evidence' "
-        "AND NOT (a)-[:SUPPORTED_BY_EVIDENCE]->(:Evidence) RETURN count(a) AS c",
+        "every DataSource's persisted payload_json matches its own "
+        "datasource_name's expected shape",
+        # Neo4j Community has no JSON-parsing function without APOC, so this
+        # checks the persisted payload_json for the field names each shape
+        # must carry (ReviewPayload/AssessmentPayload) rather than parsing
+        # it structurally - weaker than the Pydantic validation that ran
+        # before insert, but it verifies the shape actually landed in the
+        # database instead of only checking payload_json is non-null (which
+        # is true for every DataSource, including empty-payload stubs, and
+        # would never catch a swapped or truncated payload).
+        "MATCH (d:DataSource) WHERE "
+        "(d.datasource_name = 'review' AND NOT ("
+        "d.payload_json CONTAINS '\"verdict\"' AND "
+        "d.payload_json CONTAINS '\"submission_text\"')) OR "
+        "(d.datasource_name = 'assesments' AND NOT ("
+        "d.payload_json CONTAINS '\"score\"' AND "
+        "d.payload_json CONTAINS '\"max_score\"')) OR "
+        "(d.datasource_name IN ['chat', 'meetings'] AND "
+        "d.payload_json <> '{}') "
+        "RETURN count(d) AS c",
     ),
     (
-        "no evidence without a traceable source",
-        "MATCH (e:Evidence) WHERE NOT (e)-[:DERIVED_FROM]->() RETURN count(e) AS c",
+        "no MemoryCard detached from a learner (HAS_MEMORY_CARD)",
+        "MATCH (m:MemoryCard) WHERE NOT (:LearnerProfile)-[:HAS_MEMORY_CARD]->(m) "
+        "RETURN count(m) AS c",
     ),
     (
-        "no evidence detached from a learner",
-        "MATCH (e:Evidence) WHERE NOT (e)-[:EVIDENCE_FOR_LEARNER]->(:Learner) "
-        "RETURN count(e) AS c",
-    ),
-    (
-        "no observation without evidence",
-        "MATCH (o:Observation) WHERE NOT (o)-[:SUPPORTED_BY_EVIDENCE]->(:Evidence) "
-        "RETURN count(o) AS c",
-    ),
-    (
-        "provenance coverage is 100%",
-        "MATCH (e:Evidence) WHERE e.source_system IS NULL OR e.source_id IS NULL "
-        "OR e.source_observed_at IS NULL RETURN count(e) AS c",
+        "no DataSource detached from a learner (PRODUCED)",
+        "MATCH (d:DataSource) WHERE NOT (:LearnerProfile)-[:PRODUCED]->(d) "
+        "RETURN count(d) AS c",
     ),
 ]
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "--reset",
+        action="store_true",
+        help=(
+            "Wipe the target database (MATCH (n) DETACH DELETE n) before "
+            "verifying. Only pass this against a dedicated test/dev "
+            "instance - never a shared or production database."
+        ),
+    )
+    args = ap.parse_args()
+
     uri = os.environ.get("NEO4J_URI", "bolt://neo4j:7687")
     user = os.environ.get("NEO4J_USERNAME", "neo4j")
     password = os.environ.get("NEO4J_PASSWORD")
@@ -150,9 +180,23 @@ def main() -> int:
         driver.verify_connectivity()
         with driver.session() as session:
             print("\n0. Clean slate")
-            session.run("MATCH (n) DETACH DELETE n")
-            n0, r0 = counts(session)
-            check("database emptied", n0 == 0 and r0 == 0, f"{n0} nodes, {r0} rels")
+            n_existing, r_existing = counts(session)
+            if args.reset:
+                session.run("MATCH (n) DETACH DELETE n")
+                n0, r0 = counts(session)
+                check("database emptied", n0 == 0 and r0 == 0, f"{n0} nodes, {r0} rels")
+            elif n_existing or r_existing:
+                print(
+                    f"  [ABORT] target database is not empty "
+                    f"({n_existing} nodes, {r_existing} rels) and --reset "
+                    f"was not passed. Refusing to write into a database "
+                    f"that might hold real or someone else's data. Re-run "
+                    f"with --reset only against a dedicated test/dev "
+                    f"instance."
+                )
+                return 2
+            else:
+                check("database already empty (no reset needed)", True)
 
             print("\n1. DDL applies to neo4j:5-community")
             failures: list[str] = []
@@ -199,47 +243,44 @@ def main() -> int:
                 f"{n1}/{r1} -> {n2}/{r2}",
             )
 
-            print("\n4. Evidence-First invariants (each must return zero)")
+            print("\n4. Invariants (each must return zero)")
             for name, query in INVARIANTS:
                 got = session.run(query).single()["c"]
                 check(name, got == 0, f"{got} violations")
 
             print("\n5. Uniqueness constraint actually bites")
-            session.run("MATCH (n:Learner {id:'dup-test'}) DETACH DELETE n")
-            session.run("CREATE (:Learner {id:'dup-test'})")
+            session.run("MATCH (n:LearnerProfile {id:'dup-test'}) DETACH DELETE n")
+            session.run("CREATE (:LearnerProfile {id:'dup-test'})")
             try:
-                session.run("CREATE (:Learner {id:'dup-test'})")
-                check("duplicate Learner.id rejected", False, "duplicate accepted")
+                session.run("CREATE (:LearnerProfile {id:'dup-test'})")
+                check(
+                    "duplicate LearnerProfile.id rejected", False, "duplicate accepted"
+                )
             except Exception:
-                check("duplicate Learner.id rejected", True, "constraint enforced")
-            session.run("MATCH (n:Learner {id:'dup-test'}) DETACH DELETE n")
+                check(
+                    "duplicate LearnerProfile.id rejected", True, "constraint enforced"
+                )
+            session.run("MATCH (n:LearnerProfile {id:'dup-test'}) DETACH DELETE n")
 
             print("\n6. The demo traversal")
             rows = session.run(
-                "MATCH (l:Learner)-[:HAS_SKILL_ASSERTION]->(a:SkillAssertion)"
-                "-[:ABOUT_SKILL]->(s:Skill) "
-                "MATCH (a)-[:SUPPORTED_BY_EVIDENCE]->(e:Evidence) "
-                "RETURN s.canonical_name AS skill, a.tier AS tier, "
-                "a.status AS strength, count(e) AS evidence, "
-                "count(DISTINCT e.source_system) AS sources "
-                "ORDER BY evidence DESC LIMIT 6"
+                "MATCH (l:LearnerProfile)-[:PRODUCED]->(d:DataSource) "
+                "OPTIONAL MATCH (d)-[:EXTRACTED_INTO]->(m:MemoryCard) "
+                "RETURN l.name AS learner, d.datasource_name AS datasource, "
+                "count(DISTINCT d) AS records, count(m) AS memory_cards "
+                "ORDER BY records DESC LIMIT 6"
             ).data()
             for row in rows:
                 print(
-                    f"    {row['skill']:24} {row['tier']:13} {row['strength']:9} "
-                    f"{row['evidence']:3} evidence from {row['sources']} source(s)"
+                    f"    {row['learner']:16} {row['datasource']:12} "
+                    f"{row['records']:3} record(s) -> "
+                    f"{row['memory_cards']:3} memory card(s)"
                 )
-            check("evidence traversal returns results", bool(rows), f"{len(rows)} rows")
-
-            gaps = session.run(
-                "MATCH (a:SkillAssertion)-[:ABOUT_SKILL]->(s:Skill) "
-                "WHERE a.status = 'no_evidence' "
-                "RETURN s.canonical_name AS skill, a.tier AS tier"
-            ).data()
-            print("\n   evidence gaps (what Epic 3 turns into a scenario):")
-            for gap in gaps:
-                print(f"    {gap['skill']} ({gap['tier']}) - no evidence found")
-            check("evidence gap is queryable", bool(gaps), f"{len(gaps)} gap(s)")
+            check(
+                "learner -> source -> memory card traversal returns results",
+                bool(rows),
+                f"{len(rows)} rows",
+            )
     finally:
         driver.close()
 

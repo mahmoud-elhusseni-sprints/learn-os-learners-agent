@@ -1,95 +1,36 @@
 """
-Generate ``docs/ONTOLOGY.md`` - the entity/relationship reference - directly
-from the models, so the documentation cannot drift from the code.
+Generate ``docs/data/ONTOLOGY.md`` - the entity/relationship reference -
+directly from the models, so the documentation cannot drift from the code.
 
-Run:  python3 generate_docs.py
+Rewritten alongside the schema redesign: 3 node types instead of 26, so the
+group/kind machinery the old generator needed is gone. Nothing here is
+hand-maintained content; every fact is pulled from ``src/app/graph/schema.py``.
+
+Run:  python3 scripts/generate_docs.py
 """
 
 from __future__ import annotations
 
+import enum
 import inspect
+import types as _types
 import typing
+from datetime import datetime as _dt
 from pathlib import Path
 
 import src.app.graph.schema as M
 
 OUT = Path(__file__).resolve().parent.parent / "docs" / "data" / "ONTOLOGY.md"
 
-GROUPS: list[tuple[str, list[str], str]] = [
-    (
-        "Organisational scope",
-        ["Cohort", "Round", "Group"],
-        "The containers employer authorisation is scoped against (FR-05).",
-    ),
-    (
-        "Identity",
-        ["Learner", "LearnerIdentity"],
-        "One canonical person, plus every source identity that resolves to them.",
-    ),
-    (
-        "Skills",
-        ["Skill"],
-        "The canonical skill registry; aliases collapse surface forms onto one node.",
-    ),
-    (
-        "Work and learning",
-        [
-            "Project",
-            "Task",
-            "LearningExperience",
-            "Attempt",
-            "Submission",
-            "Artifact",
-        ],
-        "What was assigned, what was handed in, and the files inside it.",
-    ),
-    (
-        "Assessment",
-        ["Rubric", "RubricCriterion", "Assessment"],
-        "How work was graded, down to the individual rubric point.",
-    ),
-    (
-        "Meetings and interactions",
-        ["Meeting", "Interaction"],
-        "Where behavioural signal comes from.",
-    ),
-    (
-        "Evidence",
-        ["Evidence"],
-        "The centre of the ontology: atomic, citable, provenance-carrying proof.",
-    ),
-    (
-        "Derived state",
-        ["SkillAssertion", "Observation"],
-        "Computed opinions. Versioned, recomputable, never overwriting source truth.",
-    ),
-    (
-        "Career goal and closed loop",
-        ["CareerGoal", "Scenario", "Recommendation"],
-        "Sprint 4 surface. CareerGoal is P0 now; Scenario/Recommendation are stubs.",
-    ),
-    (
-        "Employer access",
-        ["Employer", "AccessGrant"],
-        "Deny-by-default authorisation. Enforced in Sprint 2; fields exist now.",
-    ),
-]
-
 
 def type_name(annotation: object) -> str:
     """Render a field annotation as short, readable Markdown."""
-    import enum
-    import types as _types
-    from datetime import datetime as _dt
 
     def render(a: object) -> str:
         if a is type(None):
             return "None"
-        # Every datetime in this ontology is a UtcDatetime; Pydantic flattens the
-        # Annotated wrapper away on required fields, so label the bare type too.
         if a is _dt:
             return "datetime (UTC)"
-        # Annotated[...] - unwrap, but name our two semantic aliases.
         if hasattr(a, "__metadata__"):
             base = a.__origin__  # type: ignore[attr-defined]
             if base is _dt:
@@ -110,45 +51,47 @@ def type_name(annotation: object) -> str:
             k, v = typing.get_args(a)
             return f"dict[{render(k)}, {render(v)}]"
         if isinstance(a, type):
-            if issubclass(a, enum.Enum):
-                return a.__name__
             return a.__name__
-        text = str(a).replace("typing.", "").replace("learner_graph_models.", "")
-        return text[:44]
+        return str(a).replace("typing.", "")[:44]
 
     out = render(annotation)
     if len(out) > 48:
         out = out[:45] + "..."
-    # Escape pipes so unions do not break the Markdown table.
     return "`" + out.replace("|", "\\|") + "`"
 
 
-def node_kind(cls: type) -> str:
-    if issubclass(cls, M.DerivedNode):
-        return "derived"
-    if issubclass(cls, M.SourceNode):
-        return "source"
-    return "registry"
-
-
-def node_table(label: str) -> list[str]:
-    cls = M.NODE_CLASSES[label]
-    lines = [f"#### `{label}`  ({node_kind(cls)})", ""]
-    doc = inspect.getdoc(cls)
-    if doc:
-        lines += [doc.strip(), ""]
-    lines += ["| property | type | required | notes |", "|---|---|---|---|"]
+def model_table(cls: type, *, skip: tuple[str, ...] = ()) -> list[str]:
+    lines = ["| property | type | required | notes |", "|---|---|---|---|"]
     for name, field in cls.model_fields.items():
-        if name == "label":
+        if name in skip:
             continue
         note = (field.description or "").replace("\n", " ").strip()
-        if len(note) > 90:
-            note = note[:87] + "..."
+        if len(note) > 100:
+            note = note[:97] + "..."
         lines.append(
             f"| `{name}` | {type_name(field.annotation)} | "
             f"{'yes' if field.is_required() else 'no'} | {note} |"
         )
     lines.append("")
+    return lines
+
+
+def node_section(label: str) -> list[str]:
+    cls = M.NODE_CLASSES[label]
+    lines = [f"### `{label}`", ""]
+    doc = inspect.getdoc(cls)
+    if doc:
+        lines += [doc.strip(), ""]
+    lines += model_table(cls, skip=("label",))
+    return lines
+
+
+def payload_section(name: str, model: type) -> list[str]:
+    lines = [f"#### `{name}`", ""]
+    doc = inspect.getdoc(model)
+    if doc:
+        lines += [doc.strip(), ""]
+    lines += model_table(model)
     return lines
 
 
@@ -158,22 +101,21 @@ def build() -> str:
         "",
         f"- ontology version: `{M.ONTOLOGY_VERSION}`",
         f"- schema version: `{M.SCHEMA_VERSION}`",
-        f"- node labels: **{len(M.NODE_CLASSES)}**",
+        f"- node labels: **{len(M.NODE_CLASSES)}** "
+        f"({', '.join(sorted(M.NODE_CLASSES))})",
         f"- relationship types: **{len(list(M.EdgeType))}** "
         f"across **{len(M.EDGE_SPECS)}** legal endpoint pairs",
         "",
-        "> **Generated file.** Produced by `generate_docs.py` from",
-        "> `learner_graph_models.py`. Edit the models and regenerate.",
+        "> **Generated file.** Produced by `scripts/generate_docs.py` from",
+        "> `src/app/graph/schema.py`. Edit the models and regenerate; do not",
+        "> hand-edit this file.",
         "",
-        "Node kinds:",
-        "",
-        "| kind | meaning | carries |",
-        "|---|---|---|",
-        "| `source` | mirrors a record that exists in a source system | `provenance` "
-        "(required) |",
-        "| `derived` | a computed opinion the platform produced | `computed_at`, "
-        "`computed_by` |",
-        "| `registry` | a taxonomy entry owned by the platform | neither |",
+        "This is the v2, minimal ontology: 3 node types "
+        "(`LearnerProfile`, `DataSource`, `MemoryCard`), rewritten from a "
+        "26-node design per the mentor's rejection of the previous schema "
+        "and the architecture specified in the mentor-authored MD file. "
+        "See the module docstring in `src/app/graph/schema.py` for the full "
+        "before/after rationale, including what was removed and why.",
         "",
         "---",
         "",
@@ -181,21 +123,35 @@ def build() -> str:
         "",
     ]
 
-    for title, labels, blurb in GROUPS:
-        L += [f"### {title}", "", blurb, ""]
-        for label in labels:
-            L += node_table(label)
+    for label in sorted(M.NODE_CLASSES):
+        L += node_section(label)
         L.append("---")
         L.append("")
 
-    # ---- relationships ----
     L += [
-        "## 2. Relationships",
+        "## 2. Embedded payload shapes",
         "",
-        "Every relationship below is registered in `EDGE_SPECS`. An edge whose",
-        "`(type, source, target)` triple is not in this table is **rejected at",
-        "validation time** - this is what stops the ingestion, identity and API",
-        "workstreams from inventing divergent edges.",
+        "`DataSource.payload` is a discriminated union, chosen by "
+        "`datasource_name` - never a separate node.",
+        "",
+    ]
+    for name, model in [
+        ("ReviewPayload", M.ReviewPayload),
+        ("RubricPointEvaluation", M.RubricPointEvaluation),
+        ("AssessmentPayload", M.AssessmentPayload),
+        ("AssessmentAnswerItem", M.AssessmentAnswerItem),
+        ("StubPayload", M.StubPayload),
+    ]:
+        L += payload_section(name, model)
+
+    L += [
+        "---",
+        "",
+        "## 3. Relationships",
+        "",
+        "Every relationship below is registered in `EDGE_SPECS`. An edge "
+        "whose `(type, source, target)` triple is not in this table is "
+        "**rejected at validation time**.",
         "",
         "Cardinality is read left-to-right:",
         "",
@@ -206,39 +162,23 @@ def build() -> str:
         "| `N:1` | many sources, one target; each source has one target |",
         "| `N:M` | unconstrained both ways |",
         "",
-        "| relationship | cardinality | properties | meaning |",
-        "|---|---|---|---|",
+        "| relationship | cardinality | meaning |",
+        "|---|---|---|",
     ]
     for spec in sorted(M.EDGE_SPECS, key=lambda s: (s.type.value, s.source_label)):
-        props = f"`{spec.property_model}`" if spec.property_model else "-"
         L.append(
             f"| `(:{spec.source_label})-[:{spec.type.value}]->(:{spec.target_label})` "
-            f"| "
-            f"`{spec.cardinality.value}` | {props} | {spec.description} |"
+            f"| `{spec.cardinality.value}` | {spec.description} |"
         )
 
-    # ---- edge property payloads ----
-    L += ["", "### Relationship property payloads", ""]
-    for name, model in sorted(M._PROPERTY_MODELS.items()):
-        L += [f"#### `{name}`", ""]
-        doc = inspect.getdoc(model)
-        if doc and not doc.startswith("!!"):
-            L += [doc.strip(), ""]
-        L += ["| property | type | required |", "|---|---|---|"]
-        for fname, field in model.model_fields.items():
-            L.append(
-                f"| `{fname}` | {type_name(field.annotation)} | "
-                f"{'yes' if field.is_required() else 'no'} |"
-            )
-        L.append("")
-
-    # ---- vocabularies ----
     L += [
+        "",
         "---",
         "",
-        "## 3. Controlled vocabularies",
+        "## 4. Controlled vocabularies",
         "",
-        "Values follow the source export wherever one already exists, so ingestion",
+        "Values follow the source export wherever one already exists "
+        "(including its misspellings, e.g. `assesments`), so ingestion "
         "never has to translate between two vocabularies.",
         "",
     ]
@@ -246,7 +186,7 @@ def build() -> str:
         (n, o)
         for n, o in vars(M).items()
         if isinstance(o, type)
-        and issubclass(o, __import__("enum").Enum)
+        and issubclass(o, enum.Enum)
         and o.__module__ == M.__name__
     ]
     for name, enum_cls in sorted(enums):
@@ -257,31 +197,8 @@ def build() -> str:
         L.append("  " + ", ".join(f"`{m.value}`" for m in enum_cls))
         L.append("")
 
-    # ---- cardinality rules narrative ----
     L += [
         "---",
-        "",
-        "## 4. Cardinality rules that carry product meaning",
-        "",
-        "Most cardinalities are bookkeeping. These five are product decisions:",
-        "",
-        "| rule | why |",
-        "|---|---|",
-        "| `(:Evidence)-[:EVIDENCE_FOR_LEARNER]->(:Learner)` is `N:1` | "
-        "An evidence item is about exactly one person. Shared evidence would make "
-        "per-learner access scoping unenforceable. |",
-        "| `(:SkillAssertion)-[:SUPPORTED_BY_EVIDENCE]->(:Evidence)` is `N:M` | "
-        "One claim is backed by many evidence items, and one evidence item supports "
-        "many claims. This is why Evidence is a node, not an edge property. |",
-        "| `(:SkillAssertion)-[:ABOUT_SKILL]->(:Skill)` is `N:1` | "
-        "An assertion concerns exactly one skill at one tier, so recomputation can "
-        "target it precisely. |",
-        "| `(:Learner)-[:HAS_CAREER_GOAL]->(:CareerGoal)` is `1:1` | "
-        "FR-11: exactly one current goal or one explicit unknown state. Two goals "
-        "would make the gap engine ambiguous. |",
-        "| `(:Evidence)-[:DERIVED_FROM]->(:Artifact)` is `N:M` | "
-        "One graded rubric point routinely cites several artifact chunks "
-        "(`chunks_ids_met` in the real grader payload). |",
         "",
         "## 5. Invariants enforced in code",
         "",
@@ -291,15 +208,20 @@ def build() -> str:
         "2. every edge endpoint exists and its declared label matches the node;",
         "3. every edge is a registered `(type, source, target)` triple;",
         "4. declared cardinality holds;",
-        "5. **Evidence-First** -",
-        "   every `SkillAssertion` with a status other than `no_evidence` has at least",
-        "   one `SUPPORTED_BY_EVIDENCE` edge; every `Observation` has one; every",
-        "   `Evidence` has a `DERIVED_FROM` source record and an "
-        "`EVIDENCE_FOR_LEARNER` owner.",
+        "5. `DataSource.payload`'s concrete type matches its `datasource_name` "
+        "(`_payload_matches_datasource_name`);",
+        "6. an `assesments` payload's `score` never exceeds its `max_score` "
+        "(`_score_within_max`).",
         "",
-        "The same five are expressed as Cypher in section 6 of",
-        "`schema_constraints.cql` and asserted against a live database by",
-        "`verify_neo4j.sh`.",
+        'There is **no** "Evidence-First" invariant in this version - the '
+        "previous design's Evidence/SkillAssertion nodes do not exist here, "
+        "so there is nothing analogous to enforce. A `DataSource`'s payload "
+        "is trusted as delivered. See the schema module docstring for why "
+        "this is a deliberate, flagged loss of guarantee rather than an "
+        "oversight.",
+        "",
+        "The same rules are expressed as Cypher constraints/indexes in "
+        "`docs/data/schema_constraints.cql`.",
         "",
     ]
     return "\n".join(L) + "\n"
@@ -307,5 +229,7 @@ def build() -> str:
 
 if __name__ == "__main__":
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(build(), encoding="utf-8")
-    print(f"wrote {OUT.name}: {len(build().splitlines())} lines")
+    text = build()
+    OUT.write_text(text, encoding="utf-8")
+    rel = OUT.relative_to(OUT.parent.parent.parent)
+    print(f"wrote {rel}: {len(text.splitlines())} lines")
