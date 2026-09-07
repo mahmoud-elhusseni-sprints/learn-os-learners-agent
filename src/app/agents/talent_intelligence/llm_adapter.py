@@ -7,7 +7,7 @@ separate so a model/provider issue cannot change retrieval tool contracts.
 from __future__ import annotations
 
 import json
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 from .config import litellm_settings
 from .prompts import SYSTEM_PROMPT
@@ -72,6 +72,7 @@ class LiteLLMGeminiAdapter:
         """Let Gemini choose a tool while Python retains retrieval control."""
         try:
             from openai import OpenAI
+            from openai.types.chat import ChatCompletionMessageFunctionToolCall
         except ImportError as error:
             raise RuntimeError(
                 "Install optional dependencies with: pip install -r requirements.txt"
@@ -130,8 +131,8 @@ class LiteLLMGeminiAdapter:
             completion = client.chat.completions.create(
                 model=self._settings["AI_MODEL"],
                 temperature=0,
-                messages=messages,
-                tools=tools,  # type: ignore[call-overload]
+                messages=cast(Any, messages),
+                tools=cast(Any, tools),
                 tool_choice="auto",
             )
             message = completion.choices[0].message
@@ -140,6 +141,8 @@ class LiteLLMGeminiAdapter:
             if not tool_calls:
                 return message.content or "Insufficient evidence"  # noqa: E501
             for call in tool_calls:
+                if not isinstance(call, ChatCompletionMessageFunctionToolCall):
+                    continue
                 try:
                     arguments = json.loads(
                         call.function.arguments or "{}"
