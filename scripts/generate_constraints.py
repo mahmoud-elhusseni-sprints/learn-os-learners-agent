@@ -234,6 +234,9 @@ Every statement uses ``IF NOT EXISTS``, so applying these repeatedly is safe.
 ontology version : {M.ONTOLOGY_VERSION}
 """
 
+from __future__ import annotations
+
+from neo4j import Driver
 '''
     parts = [
         header,
@@ -245,6 +248,15 @@ ontology version : {M.ONTOLOGY_VERSION}
         "",
         "#: Every statement, in order. All of it is safe on Neo4j 5 Community.",
         "ALL_STATEMENTS: list[str] = CONSTRAINTS + INDEXES + FULLTEXT_INDEXES",
+        "",
+        "",
+        "def initialize_schema(driver: Driver) -> None:",
+        '    """Apply every constraint and index. Safe to call more than once -',
+        "    every statement is ``IF NOT EXISTS``, so a second call is a no-op",
+        '    rather than an error."""',
+        "    with driver.session() as session:",
+        "        for statement in ALL_STATEMENTS:",
+        "            session.run(statement)",
         "",
     ]
     return "\n".join(parts)
