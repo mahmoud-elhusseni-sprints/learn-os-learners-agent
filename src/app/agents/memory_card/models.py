@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -27,9 +28,7 @@ class RawExtractedItem(BaseModel):
     source_locator: str = Field(
         "turn:0", description="Turn identifier, timestamp, or line reference"
     )
-    tags: List[str] = Field(
-        default_factory=list, description="List of competency tags"
-    )
+    tags: List[str] = Field(default_factory=list, description="List of competency tags")
     confidence: float = Field(
         0.95, description="Confidence score for the extraction (0.0 to 1.0)"
     )

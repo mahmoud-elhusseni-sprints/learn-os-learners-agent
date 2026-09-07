@@ -1,4 +1,6 @@
-"""Memory Card Agent for extracting structured learner cards from transcripts and conversations."""
+"""Memory Card Agent for extracting structured learner cards from
+transcripts and conversations.
+"""
 
 from __future__ import annotations
 
@@ -17,7 +19,7 @@ from .prompts import (
 
 
 class MemoryCardAgent:
-    """Agent orchestrating LLM extraction and schema normalization of Memory Cards."""
+    """Orchestrate LLM extraction and schema normalization for memory cards."""
 
     system_prompt = SYSTEM_PROMPT
 
@@ -82,7 +84,7 @@ class MemoryCardAgent:
         lx_meta: Optional[Dict[str, Any]] = None,
         created_at_utc: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Construct a normalized memory card dictionary identical to meeting_memory_cards.jsonl."""
+        """Construct a normalized memory-card dict matching the schema."""
         learner_id = learner.get("learner_id", "")
         metric_key = self.normalize_metric(item.get("metric_key", ""))
         source_locator = str(item.get("source_locator", "turn:0"))
@@ -112,9 +114,12 @@ class MemoryCardAgent:
                     "meeting_type": meeting_meta.get("kind", "meeting"),
                     "meeting_topic": meeting_meta.get("topic", group_name),
                     "zoom_meeting_id": meeting_meta.get("zoom_meeting_id"),
-                    "zoom_meeting_uuid": meeting_meta.get("zoom_meeting_uuid") or source_id,
+                    "zoom_meeting_uuid": meeting_meta.get("zoom_meeting_uuid")
+                    or source_id,
                     "scheduled_meeting_id": meeting_meta.get("meeting_id"),
-                    "scheduled_starts_at_utc": meeting_meta.get("starts_at_utc", timestamp),
+                    "scheduled_starts_at_utc": meeting_meta.get(
+                        "starts_at_utc", timestamp
+                    ),
                 }
             )
         elif lx_meta:

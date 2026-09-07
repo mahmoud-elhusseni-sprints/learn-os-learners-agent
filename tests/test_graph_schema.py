@@ -562,11 +562,14 @@ def test_structural_nodes_have_no_evidence_type():
 
 
 def test_derived_from_edge_carries_a_locator():
-    ev, sub = _evidence(), M.Submission(
-        id=deterministic_id("vi", "submission", "p"),
-        created_at=NOW,
-        provenance=_prov(),
-        kind="link",
+    ev, sub = (
+        _evidence(),
+        M.Submission(
+            id=deterministic_id("vi", "submission", "p"),
+            created_at=NOW,
+            provenance=_prov(),
+            kind="link",
+        ),
     )
     edge = _edge(
         M.EdgeType.DERIVED_FROM,
@@ -584,11 +587,14 @@ def test_derived_from_edge_carries_a_locator():
 
 
 def test_edge_property_ranges_are_enforced():
-    ev, sub = _evidence(), M.Submission(
-        id=deterministic_id("vi", "submission", "q"),
-        created_at=NOW,
-        provenance=_prov(),
-        kind="link",
+    ev, sub = (
+        _evidence(),
+        M.Submission(
+            id=deterministic_id("vi", "submission", "q"),
+            created_at=NOW,
+            provenance=_prov(),
+            kind="link",
+        ),
     )
     try:
         _edge(
@@ -648,7 +654,9 @@ def test_fixture_populates_the_core_entity_properties():
     sub = g.by_label("Submission")[0]
     assert sub.submitted_at and sub.kind
     assess = next(
-        a for a in g.by_label("Assessment") if a.criteria_total  # type: ignore[attr-defined]
+        a
+        for a in g.by_label("Assessment")
+        if a.criteria_total  # type: ignore[attr-defined]
     )
     assert assess.criteria_total == (
         assess.criteria_met + assess.criteria_partial + assess.criteria_unmet
@@ -708,9 +716,9 @@ def test_every_specified_entity_has_typed_relationship_endpoints():
             sp for sp in M.EDGE_SPECS if label in (sp.source_label, sp.target_label)
         ]
         assert specs, f"{label} has no registered relationship endpoints"
-        assert any(
-            sp.property_model for sp in specs
-        ), f"{label} has no edge carrying typed properties"
+        assert any(sp.property_model for sp in specs), (
+            f"{label} has no edge carrying typed properties"
+        )
 
 
 def test_task_and_learning_experience_are_distinct():

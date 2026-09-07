@@ -141,9 +141,7 @@ class LiteLLMGeminiAdapter:
                 return message.content or "Insufficient evidence"  # noqa: E501
             for call in tool_calls:
                 try:
-                    arguments = json.loads(
-                        call.function.arguments or "{}"
-                    )  # noqa: E501
+                    arguments = json.loads(call.function.arguments or "{}")  # noqa: E501
                 except json.JSONDecodeError:
                     arguments = {}
                 handler = tool_handlers.get(call.function.name)

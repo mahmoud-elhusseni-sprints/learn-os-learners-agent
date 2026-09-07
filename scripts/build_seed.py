@@ -531,8 +531,7 @@ class SeedBuilder:
                 project_key="ai-video-generation-app",
                 name="AI Video Generation App",
                 description=(
-                    "Team project: HTML/script generation pipeline rendered to "
-                    "video."
+                    "Team project: HTML/script generation pipeline rendered to video."
                 ),
                 repository_url=redact(
                     "https://github.com/MoHatemTC/ai-video-generation-app"
@@ -1055,7 +1054,7 @@ class SeedBuilder:
                 )
                 self.link(M.EdgeType.EVIDENCE_FOR_LEARNER, ev, learner)
                 locator = (
-                    f"scope:{scope.get('id')}/rubric_point:" f"{point.get('rubric_id')}"
+                    f"scope:{scope.get('id')}/rubric_point:{point.get('rubric_id')}"
                 )
                 self.link(
                     M.EdgeType.DERIVED_FROM,

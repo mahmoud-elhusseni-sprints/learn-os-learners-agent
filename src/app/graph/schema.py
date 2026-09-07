@@ -312,8 +312,7 @@ class Provenance(GraphModel):
     source_locator: str | None = Field(
         default=None,
         description=(
-            "Sub-record pointer, e.g. 'turn:545', 'rubric_point:101', "
-            "'entry_index:12'"
+            "Sub-record pointer, e.g. 'turn:545', 'rubric_point:101', 'entry_index:12'"
         ),
     )
     source_url: str | None = None
@@ -876,7 +875,7 @@ class Evidence(SourceNode):
     content: str = Field(
         min_length=1,
         description=(
-            "The quotable substance - grader reason, feedback line, meeting " "excerpt."
+            "The quotable substance - grader reason, feedback line, meeting excerpt."
         ),
     )
     observed_at: UtcDatetime = Field(

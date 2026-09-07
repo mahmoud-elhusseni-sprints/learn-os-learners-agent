@@ -9,22 +9,18 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-# Ensure project root is in sys.path for direct CLI execution
+# Ensure project root is in sys.path for direct CLI execution.
 project_root = Path(__file__).resolve().parents[3]
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.app.agents.memory_card import (
+from src.app.agents.memory_card import (  # noqa: E402
     MemoryCardAgent,
     MemoryCardAgentConfig,
-    SYSTEM_PROMPT,
-    VALID_METRICS,
-    VALID_TAGS,
 )
 
 
@@ -51,19 +47,19 @@ class GroupContext:
                     line = line.strip()
                     if not line:
                         continue
-                    l = json.loads(line)
-                    lid = l.get("learner_id")
-                    name = l.get("name", "")
-                    email = l.get("email", "")
-                    self.group_id = l.get("group_id", self.group_id)
-                    self.group_name = l.get("group_name", self.group_name)
-                    self.round_name = l.get("round_name", self.round_name)
-                    if lid:
-                        self.learners_by_id[lid] = l
+                    learner_record = json.loads(line)
+                    learner_id = learner_record.get("learner_id")
+                    name = learner_record.get("name", "")
+                    email = learner_record.get("email", "")
+                    self.group_id = learner_record.get("group_id", self.group_id)
+                    self.group_name = learner_record.get("group_name", self.group_name)
+                    self.round_name = learner_record.get("round_name", self.round_name)
+                    if learner_id:
+                        self.learners_by_id[learner_id] = learner_record
                     if name:
-                        self.learners_by_name[name.lower()] = l
+                        self.learners_by_name[name.lower()] = learner_record
                     if email:
-                        self.learners_by_email[email.lower()] = l
+                        self.learners_by_email[email.lower()] = learner_record
 
         meetings_file = self.group_dir / "meetings.jsonl"
         if meetings_file.exists():
@@ -96,9 +92,9 @@ class GroupContext:
             return self.learners_by_name[ident_clean]
         if ident_clean in self.learners_by_email:
             return self.learners_by_email[ident_clean]
-        for name, l in self.learners_by_name.items():
+        for name, learner_record in self.learners_by_name.items():
             if ident_clean in name or name in ident_clean:
-                return l
+                return learner_record
         return None
 
     def find_meeting_by_transcript(
@@ -128,7 +124,11 @@ def get_gemini_client() -> tuple[str, Any]:
     return _default_agent.llm_adapter.initialize_client()
 
 
-def call_gemini_llm(client_type: str, client: Any, prompt: str) -> List[Dict[str, Any]]:
+def call_gemini_llm(
+    client_type: str,
+    client: Any,
+    prompt: str,
+) -> List[Dict[str, Any]]:
     """Call LLM via the default agent's adapter."""
     return _default_agent.llm_adapter.generate(prompt)
 
@@ -146,7 +146,7 @@ def build_card(
     created_at_utc: Optional[str] = None,
     agent: Optional[MemoryCardAgent] = None,
 ) -> Dict[str, Any]:
-    """Constructs a normalized memory card dictionary identical to meeting_memory_cards.jsonl schema."""
+    """Construct a normalized memory-card dict matching the schema."""
     active_agent = agent or _default_agent
     return active_agent.build_card(
         item=item,
@@ -166,9 +166,10 @@ def build_card(
 
 
 def format_as_memory_card_code(
-    cards: List[Dict[str, Any]], agent: Optional[MemoryCardAgent] = None
+    cards: List[Dict[str, Any]],
+    agent: Optional[MemoryCardAgent] = None,
 ) -> str:
-    """Render a list of card dicts as MemoryCard blocks matching the schema.md format."""
+    """Render a list of card dicts as MemoryCard blocks."""
     active_agent = agent or _default_agent
     return active_agent.format_as_code(cards)
 
@@ -198,8 +199,8 @@ def process_transcript_file(
 
     roster_summary = ", ".join(
         [
-            f"{l.get('name')} ({l.get('learner_id')})"
-            for l in ctx.learners_by_id.values()
+            f"{learner.get('name')} ({learner.get('learner_id')})"
+            for learner in ctx.learners_by_id.values()
         ]
     )
 
@@ -208,9 +209,7 @@ def process_transcript_file(
         if meeting_meta
         else "Internship Meeting"
     )
-    meeting_kind = (
-        meeting_meta.get("kind", "standup") if meeting_meta else "transcript"
-    )
+    meeting_kind = meeting_meta.get("kind", "standup") if meeting_meta else "transcript"
 
     active_agent = agent or _default_agent
 
@@ -223,7 +222,8 @@ def process_transcript_file(
     )
     if dry_run:
         print(
-            f"  [Dry Run] Prepared prompt ({len(prompt)} chars). Associated meeting: {meeting_topic}"
+            "  [Dry Run] Prepared prompt "
+            f"({len(prompt)} chars). Associated meeting: {meeting_topic}"
         )
         return []
 
@@ -233,11 +233,11 @@ def process_transcript_file(
         learner_ident = item.get("learner_name_or_id")
         learner = ctx.find_learner(learner_ident)
         if not learner:
-            for l in ctx.learners_by_id.values():
-                if l.get("name") in str(item.get("content")) or l.get("name") in str(
-                    item.get("response_excerpt")
-                ):
-                    learner = l
+            for learner_record in ctx.learners_by_id.values():
+                if learner_record.get("name") in str(
+                    item.get("content")
+                ) or learner_record.get("name") in str(item.get("response_excerpt")):
+                    learner = learner_record
                     break
         if not learner:
             print(f"  [Skip] Could not resolve learner for item: {learner_ident}")
@@ -278,13 +278,13 @@ def process_conversation_file(
 
     learner = None
     first_lines = "\n".join(content.splitlines()[:10])
-    for l in ctx.learners_by_id.values():
+    for learner_record in ctx.learners_by_id.values():
         if (
-            l.get("email") in first_lines
-            or l.get("learner_id") in first_lines
-            or l.get("name") in first_lines
+            learner_record.get("email") in first_lines
+            or learner_record.get("learner_id") in first_lines
+            or learner_record.get("name") in first_lines
         ):
-            learner = l
+            learner = learner_record
             break
     if not learner:
         stem = (
@@ -296,7 +296,8 @@ def process_conversation_file(
 
     if not learner:
         print(
-            f"  [Warning] Could not match learner for conversation file {file_path.name}"
+            "  [Warning] Could not match learner for conversation file "
+            f"{file_path.name}"
         )
         return []
 
@@ -311,7 +312,8 @@ def process_conversation_file(
     )
     if dry_run:
         print(
-            f"  [Dry Run] Prepared prompt ({len(prompt)} chars) for {learner.get('name')}"
+            "  [Dry Run] Prepared prompt "
+            f"({len(prompt)} chars) for {learner.get('name')}"
         )
         return []
 
@@ -340,7 +342,10 @@ def process_conversation_file(
 
 def main(argv: Optional[List[str]] = None) -> None:
     parser = argparse.ArgumentParser(
-        description="Generate Memory Cards for Transcripts and Conversations using MemoryCardAgent"
+        description=(
+            "Generate Memory Cards for Transcripts and Conversations using "
+            "MemoryCardAgent"
+        )
     )
     parser.add_argument(
         "--group-dir",
@@ -390,13 +395,12 @@ def main(argv: Optional[List[str]] = None) -> None:
     if not args.dry_run:
         try:
             agent.llm_adapter.initialize_client()
-            print(
-                f"Initialized MemoryCardAgent using model: {config.model_name}"
-            )
+            print(f"Initialized MemoryCardAgent using model: {config.model_name}")
         except Exception as e:
             print(f"Error initializing MemoryCardAgent: {e}")
             print(
-                "To inspect prompts and verify data structure without an API key, run with --dry-run"
+                "To inspect prompts and verify data structure without an API "
+                "key, run with --dry-run"
             )
             sys.exit(1)
 
@@ -437,7 +441,8 @@ def main(argv: Optional[List[str]] = None) -> None:
         print("==========================================")
         ctx = GroupContext(g_dir)
         print(
-            f"Loaded {len(ctx.learners_by_id)} learners and {len(ctx.meetings)} meetings."
+            "Loaded "
+            f"{len(ctx.learners_by_id)} learners and {len(ctx.meetings)} meetings."
         )
 
         files_to_process = []

@@ -12,11 +12,11 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from src.app.agents.memory_card import (
+    VALID_METRICS,
+    VALID_TAGS,
     MemoryCardAgent,
     MemoryCardAgentConfig,
     MemoryCardLLMAdapter,
-    VALID_METRICS,
-    VALID_TAGS,
 )
 from src.app.agents.memory_card.models import RawExtractedItem
 from src.app.ingestion.generate_memory_cards import (
@@ -30,7 +30,7 @@ from src.app.ingestion.generate_memory_cards import (
 
 @pytest.fixture
 def mock_group_context(tmp_path: Path) -> GroupContext:
-    """Creates a temporary GroupContext with learners, meetings, and existing memory cards."""
+    """Create a temporary GroupContext with learners and meeting data."""
     # Create learners.jsonl
     learners_file = tmp_path / "learners.jsonl"
     learner_data = [
@@ -52,7 +52,7 @@ def mock_group_context(tmp_path: Path) -> GroupContext:
         },
     ]
     learners_file.write_text(
-        "\n".join(json.dumps(l) for l in learner_data) + "\n",
+        "\n".join(json.dumps(learner) for learner in learner_data) + "\n",
         encoding="utf-8",
     )
 
@@ -95,7 +95,7 @@ def mock_group_context(tmp_path: Path) -> GroupContext:
 
 
 def test_agent_config_shared_api_key(monkeypatch):
-    """Verify MemoryCardAgentConfig uses the same AI_API_KEY and settings as other agents."""
+    """Verify shared AI config is reused across agent settings."""
     monkeypatch.setenv("AI_API_KEY", "shared-ai-key-456")
     monkeypatch.setenv("AI_AGENT_URL", "https://api.openai.com/v1")
     monkeypatch.setenv("AI_MODEL", "gpt-4o-mini")
@@ -123,8 +123,13 @@ def test_agent_tag_normalization():
 
 def test_agent_metric_normalization():
     agent = MemoryCardAgent()
-    assert agent.normalize_metric("internship_context.tech_stack") == "internship_context.tech_stack"
-    assert agent.normalize_metric("custom.tech_stack") == "internship_context.tech_stack"
+    assert (
+        agent.normalize_metric("internship_context.tech_stack")
+        == "internship_context.tech_stack"
+    )
+    assert (
+        agent.normalize_metric("custom.tech_stack") == "internship_context.tech_stack"
+    )
     assert agent.normalize_metric("unknown_metric") == "learning_goals.learner_tasks"
 
 
@@ -152,7 +157,7 @@ def test_agent_prompt_builders():
 
 def test_llm_adapter_json_parsing():
     adapter = MemoryCardLLMAdapter(MemoryCardAgentConfig(api_key="test"))
-    raw_markdown = "```json\n[{\"content\": \"test1\"}]\n```"
+    raw_markdown = '```json\n[{"content": "test1"}]\n```'
     assert adapter.parse_json_response(raw_markdown) == [{"content": "test1"}]
 
     raw_wrapped = '{"memory_cards": [{"content": "wrapped_test"}]}'
@@ -228,8 +233,10 @@ def test_build_card_valid_structure(mock_group_context: GroupContext):
         "learner_name_or_id": "Learner A1",
         "metric_key": "learning_goals.learner_tasks",
         "content": "Learner A1 implemented the FastAPI backend authentication service.",
-        "rationale": "Learner A1 reported completing the auth task during sprint planning.",
-        "response_excerpt": "I finished setting up JWT authentication on FastAPI.",
+        "rationale": (
+            "Learner A1 reported completing the auth task during sprint planning."
+        ),
+        "response_excerpt": ("I finished setting up JWT authentication on FastAPI."),
         "source_locator": "turn:42",
         "tags": ["technical_skills", "problem_solving"],
         "confidence": 0.95,
@@ -246,7 +253,10 @@ def test_build_card_valid_structure(mock_group_context: GroupContext):
         meeting_meta=mock_group_context.meetings[0],
     )
 
-    expected_id = "zoom-uuid-1:127c834c-f7ce-4cc7-9a73-c8f93c8648aa:turn:42:learning_goals.learner_tasks"
+    expected_id = (
+        "zoom-uuid-1:127c834c-f7ce-4cc7-9a73-c8f93c8648aa:turn:42:"
+        "learning_goals.learner_tasks"
+    )
     assert card["card_id"] == expected_id
     assert card["learner_id"] == "127c834c-f7ce-4cc7-9a73-c8f93c8648aa"
     assert card["meeting_id"] == "meeting-uuid-1"
@@ -274,7 +284,12 @@ def test_build_card_tags_enum_validation(mock_group_context: GroupContext):
     item = {
         "metric_key": "internship_context.tech_stack",
         "content": "Learner is working with Docker and Python.",
-        "tags": ["technical_skills", "technical-skills", "invalid_custom_tag", "time-task-management"],
+        "tags": [
+            "technical_skills",
+            "technical-skills",
+            "invalid_custom_tag",
+            "time-task-management",
+        ],
     }
 
     card = build_card(
@@ -348,9 +363,17 @@ def test_format_as_memory_card_code(mock_group_context: GroupContext):
     assert f'card_id="{card["card_id"]}",' in formatted
     assert 'meeting_id="meeting-uuid-1",' in formatted
     assert 'metric_key="learning_goals.learner_tasks",' in formatted
-    assert 'content=(\n    "Learner A1 completed baseline task evaluation.",\n),' in formatted
-    assert 'rationale=(\n    "Learner A1 demonstrated task completion.",\n),' in formatted
-    assert 'tags=[\n    "technical_skills",\n    "leadership",\n], # predefined' in formatted
+    assert (
+        'content=(\n    "Learner A1 completed baseline task evaluation.",\n),'
+        in formatted
+    )
+    assert (
+        'rationale=(\n    "Learner A1 demonstrated task completion.",\n),' in formatted
+    )
+    assert (
+        'tags=[\n    "technical_skills",\n    "leadership",\n], # predefined'
+        in formatted
+    )
 
 
 # --------------------------------------------------------------------------
@@ -418,7 +441,11 @@ def test_process_transcript_with_mock_llm(
     ]
 
     vtt_file = tmp_path / "2026-07-26_sprint_planning_81057624277_transcript.vtt"
-    vtt_file.write_text("WEBVTT\n00:01:00.000 --> 00:01:05.000\nLearner A1: We are running PostgreSQL inside Docker.\n", encoding="utf-8")
+    vtt_file.write_text(
+        "WEBVTT\n00:01:00.000 --> 00:01:05.000\n"
+        "Learner A1: We are running PostgreSQL inside Docker.\n",
+        encoding="utf-8",
+    )
 
     cards = process_transcript_file(
         file_path=vtt_file,
@@ -431,7 +458,9 @@ def test_process_transcript_with_mock_llm(
     assert len(cards) == 1
     assert cards[0]["learner_id"] == "127c834c-f7ce-4cc7-9a73-c8f93c8648aa"
     assert cards[0]["metric_key"] == "internship_context.tech_stack"
-    assert cards[0]["normalized_payload"]["project_metadata"]["tags"] == ["technical_skills"]
+    assert cards[0]["normalized_payload"]["project_metadata"]["tags"] == [
+        "technical_skills"
+    ]
 
 
 @patch("src.app.ingestion.generate_memory_cards.call_gemini_llm")
@@ -444,7 +473,9 @@ def test_process_conversation_with_mock_llm(
             "metric_key": "behavioral_engagement.effort_signals",
             "content": "Learner A2 spent the weekend debugging the latency issue.",
             "rationale": "Shows dedication and problem solving effort.",
-            "response_excerpt": "I worked through the weekend to resolve the bottleneck.",
+            "response_excerpt": (
+                "I worked through the weekend to resolve the bottleneck."
+            ),
             "source_locator": "line:20",
             "tags": ["problem_solving", "professionalism"],
             "confidence": 0.98,
@@ -515,5 +546,11 @@ def test_deterministic_card_id_and_idempotency(mock_group_context: GroupContext)
     )
 
     assert card_1["card_id"] == card_2["card_id"]
-    assert card_1["card_id"] == "session-xyz:127c834c-f7ce-4cc7-9a73-c8f93c8648aa:turn:99:learning_goals.learner_tasks"
-    assert card_1["normalized_payload"]["created_at"] == card_2["normalized_payload"]["created_at"]
+    assert card_1["card_id"] == (
+        "session-xyz:127c834c-f7ce-4cc7-9a73-c8f93c8648aa:turn:99:"
+        "learning_goals.learner_tasks"
+    )
+    assert (
+        card_1["normalized_payload"]["created_at"]
+        == card_2["normalized_payload"]["created_at"]
+    )

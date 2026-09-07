@@ -58,10 +58,12 @@ class MemoryCardLLMAdapter:
     def _has_google_genai(self) -> bool:
         try:
             import google.genai  # noqa: F401
+
             return True
         except ImportError:
             try:
                 import google.generativeai  # noqa: F401
+
                 return True
             except ImportError:
                 return False
