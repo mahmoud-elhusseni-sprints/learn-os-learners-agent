@@ -72,6 +72,7 @@ class LiteLLMGeminiAdapter:
         """Let Gemini choose a tool while Python retains retrieval control."""
         try:
             from openai import OpenAI
+            from openai.types.chat import ChatCompletionMessageFunctionToolCall
         except ImportError as error:
             raise RuntimeError(
                 "Install optional dependencies with: pip install -r requirements.txt"
@@ -140,6 +141,8 @@ class LiteLLMGeminiAdapter:
             if not tool_calls:
                 return message.content or "Insufficient evidence"  # noqa: E501
             for call in tool_calls:
+                if not isinstance(call, ChatCompletionMessageFunctionToolCall):
+                    continue
                 try:
                     arguments = json.loads(
                         call.function.arguments or "{}"
