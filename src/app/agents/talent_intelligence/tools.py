@@ -7,6 +7,7 @@ replace these functions later while preserving their public interfaces.
 from __future__ import annotations
 
 import json
+import re
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -198,7 +199,19 @@ def get_strengths_and_gaps(learner_id: str) -> ToolResult:
     demonstrated = [
         item
         for item in evidence
-        if item["metric_key"] != "learning_goals.learner_tasks"
+        # A category/tag alone is not proof of a strength. Keep only explicit
+        # positive observations in the supported behavioral categories.
+        if item["metric_key"] in BEHAVIOR_METRICS
+        and re.search(
+            r"\b(?:demonstrated|successfully|helped|resolved|adapted)\b",
+            item["observation"],
+            re.IGNORECASE,
+        )
+        and not re.search(
+            r"\b(?:not|never|failed|unable|struggled|lack\w*)\b",
+            item["observation"],
+            re.IGNORECASE,
+        )
     ]
     strengths = [
         {
@@ -206,6 +219,7 @@ def get_strengths_and_gaps(learner_id: str) -> ToolResult:
             "evidence_ids": [item["evidence_id"]],
             "most_recent_date": item["date"],
             "observation": item["observation"],
+            "source_type": item["source_type"],
         }
         for item in demonstrated
     ]

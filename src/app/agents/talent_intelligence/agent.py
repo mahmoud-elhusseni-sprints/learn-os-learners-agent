@@ -10,6 +10,9 @@ from .models import ConversationState, ToolResult
 from .prompts import SYSTEM_PROMPT
 
 SKILL_TERMS = (
+    "machine learning",
+    "natural language processing",
+    "deep learning",
     "fastapi",
     "python",
     "api",
@@ -44,20 +47,39 @@ class TalentIntelligenceAgent:
     def respond(self, query: str, learner_name_or_id: str | None = None) -> str:
         self.state.last_tool_calls = []
         if learner_name_or_id:
+            self.state.active_learner_id = None
             profile = self._call(
                 "get_learner_profile",
                 tools.get_learner_profile,
                 learner_name_or_id,
             )
             if profile.status != "ok":
-                return self._remember(query, self._no_learner_answer())
+                return self._remember(
+                    query,
+                    (
+                        self._error_answer()
+                        if profile.status == "error"
+                        else self._no_learner_answer()
+                    ),
+                )
             self.state.active_learner_id = profile.data["learner_id"]
 
         if not self.state.active_learner_id:
             return self._remember(query, self._no_learner_answer())
 
         lower = query.lower()
-        if any(
+        skill = self._extract_skill(lower)
+        # A named skill narrows general requests such as "strongest Python
+        # contributions" to skill evidence, rather than an unfiltered overview.
+        if skill is not None:
+            result = self._call(
+                "get_skill_proofs",
+                tools.get_skill_proofs,
+                self.state.active_learner_id,
+                skill,
+            )
+            answer = self._evidence_answer(skill, result)
+        elif any(
             term in lower for term in ("history", "timeline", "milestone", "journey")
         ):
             result = self._call(
@@ -81,22 +103,12 @@ class TalentIntelligenceAgent:
             )
             answer = self._evidence_answer("behavioral context", result)
         else:
-            skill = self._extract_skill(lower)
-            if skill is None:
-                result = self._call(
-                    "get_learner_profile",
-                    tools.get_learner_profile,
-                    self.state.active_learner_id,
-                )
-                answer = self._profile_answer(result)
-            else:
-                result = self._call(
-                    "get_skill_proofs",
-                    tools.get_skill_proofs,
-                    self.state.active_learner_id,
-                    skill,
-                )
-                answer = self._evidence_answer(skill, result)
+            result = self._call(
+                "get_learner_profile",
+                tools.get_learner_profile,
+                self.state.active_learner_id,
+            )
+            answer = self._profile_answer(result)
         return self._remember(query, answer)
 
     def respond_with_gemini(
@@ -105,13 +117,21 @@ class TalentIntelligenceAgent:
         """Optional Gemini path. Python tools remain the only data source."""
         self.state.last_tool_calls = []
         if learner_name_or_id:
+            self.state.active_learner_id = None
             profile = self._call(
                 "get_learner_profile",
                 tools.get_learner_profile,
                 learner_name_or_id,
             )
             if profile.status != "ok":
-                return self._remember(query, self._no_learner_answer())
+                return self._remember(
+                    query,
+                    (
+                        self._error_answer()
+                        if profile.status == "error"
+                        else self._no_learner_answer()
+                    ),
+                )
             self.state.active_learner_id = profile.data["learner_id"]
         if not self.state.active_learner_id:
             return self._remember(query, self._no_learner_answer())
@@ -162,20 +182,40 @@ class TalentIntelligenceAgent:
 
     @staticmethod
     def _extract_skill(query: str) -> str | None:
-        known = next((term for term in SKILL_TERMS if term in query), None)
+        query = query.lower().strip()
+        known = next(
+            (
+                term
+                for term in SKILL_TERMS
+                if re.search(rf"(?<!\w){re.escape(term)}(?!\w)", query)
+            ),
+            None,
+        )
         if known:
             return known
         # A named capability should be looked up even when it is not in the
         # small MVP vocabulary; this enables the required insufficient-evidence
         # response for questions such as "Do they know Kubernetes?".
         match = re.search(
-            r"(?:know|with|using|experience in|experience with)\s+([a-z0-9+.#-]+)",
+            r"\b(?:know|with|using|experience in|experience with)\s+"
+            r"([a-z0-9+.#-]+(?:\s+[a-z0-9+.#-]+)*)",
             query,
         )
-        return match.group(1) if match else None
+        if not match:
+            return None
+        phrase = re.split(
+            r"\s+(?:and|or|in|for|during|on|at|based|so)\b", match.group(1)
+        )[0]
+        return phrase.rstrip(".") or None
 
     def _call(self, name: str, function: Any, *arguments: Any) -> ToolResult:
-        result = function(*arguments)
+        try:
+            result = function(*arguments)
+        except Exception:
+            # Do not expose exception text, local paths, or credentials.
+            result = ToolResult(
+                "error", None, "Evidence retrieval failed. Please retry."
+            )
         rows = result.data if isinstance(result.data, list) else []
         self.state.last_tool_calls.append(
             {
@@ -199,6 +239,8 @@ class TalentIntelligenceAgent:
         )
 
     def _evidence_answer(self, subject: str, result: ToolResult) -> str:
+        if result.status == "error":
+            return self._error_answer()
         items = result.data if isinstance(result.data, list) else []
         if not items:
             return self._insufficient_answer(subject)
@@ -214,6 +256,8 @@ class TalentIntelligenceAgent:
         )
 
     def _history_answer(self, result: ToolResult) -> str:
+        if result.status == "error":
+            return self._error_answer()
         items = result.data if isinstance(result.data, list) else []
         if not items:
             return self._insufficient_answer("milestone history")
@@ -233,6 +277,8 @@ class TalentIntelligenceAgent:
         )
 
     def _strengths_answer(self, result: ToolResult) -> str:
+        if result.status == "error":
+            return self._error_answer()
         data = (
             result.data
             if isinstance(result.data, dict)
@@ -243,7 +289,9 @@ class TalentIntelligenceAgent:
         if not strengths:
             return self._insufficient_answer("strengths and gaps")
         evidence = "\n".join(
-            f"- [{item['evidence_ids'][0]}] {item['area']}: {item['observation']}"
+            f"- [{item['evidence_ids'][0]}] {item['source_type']} "
+            f"— {item.get('most_recent_date') or 'unknown date'}: "
+            f"{item['area']}: {item['observation']}"
             for item in strengths
         )
         gap_lines = (
@@ -264,6 +312,8 @@ class TalentIntelligenceAgent:
 
     @staticmethod
     def _profile_answer(result: ToolResult) -> str:
+        if result.status == "error":
+            return TalentIntelligenceAgent._error_answer()
         if result.status != "ok":
             return TalentIntelligenceAgent._no_learner_answer()
         profile = result.data
@@ -277,6 +327,13 @@ class TalentIntelligenceAgent:
             f"- Most recent relevant evidence: {coverage['most_recent_evidence_date'] or 'unknown'}.\n"  # noqa: E501
             f"- Evidence coverage: {coverage['evidence_count']} record(s).\n\n"
             "Uncertainty / gaps\n- Insufficient evidence for skills not specifically retrieved."  # noqa: E501
+        )
+
+    @staticmethod
+    def _error_answer() -> str:
+        return (
+            "Unable to complete the investigation because evidence retrieval failed. "
+            "Please retry. This does not mean that evidence is missing."
         )
 
     @staticmethod

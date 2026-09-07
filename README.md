@@ -1,3 +1,22 @@
+## Task 6 review regressions
+
+The deterministic Talent Intelligence Agent prioritizes a named skill over a
+general overview/strength/history intent. Multi-word skills are preserved; this
+is a small vocabulary and phrase parser, not a full natural-language classifier.
+Unexpected retrieval failures are recorded with `status="error"` and are not
+reported as missing evidence. Exhausting the optional LLM tool loop is also an
+execution failure, not an evidence judgment.
+
+The mock strengths tool conservatively includes explicit positive behavioral
+observations, not assignments, identity records, or blocker categories. Its
+word-based filter is intentionally limited and does not provide a complete skill
+assessment. Gaps describe missing category coverage, not learner weaknesses.
+
+Run the offline regression suite with `pytest tests/test_review_regressions.py`.
+It mocks model calls, requires no API key, and includes a check against the
+repository's sample evidence. With Docker available, run
+`docker compose run --rm --no-deps api pytest` for the full suite.
+
 ## Quick Start
 
 1. Clone the repository.
