@@ -177,9 +177,13 @@ class ReviewPayload(GraphModel):
     lx_id: str = Field(description="Task / Learning Experience id")
     task_headline: str
     attempt_number: int = Field(ge=1)
-    hours_before_deadline: float = Field(
+    hours_before_deadline: float | None = Field(
+        default=None,
         description="Hours between submission and the task deadline. "
-        "Negative means submitted late."
+        "Negative means submitted late. None means the deadline could not "
+        "be determined from the source record - deliberately distinct "
+        "from 0.0 (submitted exactly at the deadline), which is a real "
+        "value, not a stand-in for 'unknown'.",
     )
     submission_text: str
     assets: list[str] = Field(

@@ -80,7 +80,7 @@ Evaluation, combined into one embedded object per the MD file.
 | `lx_id` | `str` | yes | Task / Learning Experience id |
 | `task_headline` | `str` | yes |  |
 | `attempt_number` | `int` | yes |  |
-| `hours_before_deadline` | `float` | yes | Hours between submission and the task deadline. Negative means submitted late. |
+| `hours_before_deadline` | `float \| None` | no | Hours between submission and the task deadline. Negative means submitted late. None means the dea... |
 | `submission_text` | `str` | yes |  |
 | `assets` | `list[str]` | no | Combined code_repositories + media_assets per the MD file. |
 | `verdict` | `str` | yes |  |

@@ -5,7 +5,13 @@ Verify the DDL specification against a live Neo4j instance
 Run inside the API container, which already has the neo4j driver and the
 NEO4J_* environment variables from docker-compose:
 
-    docker compose run --rm api python scripts/verify_neo4j.py
+    docker compose run --rm api python scripts/verify_neo4j.py --reset
+
+By default this script REFUSES to run against a non-empty database and
+does not touch existing data. Pass ``--reset`` only when you mean to wipe
+the target database first (a dedicated test/dev Neo4j instance) - it runs
+an unconditional ``MATCH (n) DETACH DELETE n`` before verifying, so never
+pass it against a shared or production database.
 
 Proves three things the schema claims:
 
@@ -25,6 +31,7 @@ path the ingestion loader will take.
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -106,10 +113,25 @@ def load_graph(session: Any, graph: M.LearnerGraph) -> None:
 
 INVARIANTS = [
     (
-        "every DataSource's payload matches its own datasource_name",
+        "every DataSource's persisted payload_json matches its own "
+        "datasource_name's expected shape",
+        # Neo4j Community has no JSON-parsing function without APOC, so this
+        # checks the persisted payload_json for the field names each shape
+        # must carry (ReviewPayload/AssessmentPayload) rather than parsing
+        # it structurally - weaker than the Pydantic validation that ran
+        # before insert, but it verifies the shape actually landed in the
+        # database instead of only checking payload_json is non-null (which
+        # is true for every DataSource, including empty-payload stubs, and
+        # would never catch a swapped or truncated payload).
         "MATCH (d:DataSource) WHERE "
-        "(d.datasource_name = 'review' AND d.payload_json IS NULL) OR "
-        "(d.datasource_name = 'assesments' AND d.payload_json IS NULL) "
+        "(d.datasource_name = 'review' AND NOT ("
+        "d.payload_json CONTAINS '\"verdict\"' AND "
+        "d.payload_json CONTAINS '\"submission_text\"')) OR "
+        "(d.datasource_name = 'assesments' AND NOT ("
+        "d.payload_json CONTAINS '\"score\"' AND "
+        "d.payload_json CONTAINS '\"max_score\"')) OR "
+        "(d.datasource_name IN ['chat', 'meetings'] AND "
+        "d.payload_json <> '{}') "
         "RETURN count(d) AS c",
     ),
     (
@@ -126,6 +148,18 @@ INVARIANTS = [
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "--reset",
+        action="store_true",
+        help=(
+            "Wipe the target database (MATCH (n) DETACH DELETE n) before "
+            "verifying. Only pass this against a dedicated test/dev "
+            "instance - never a shared or production database."
+        ),
+    )
+    args = ap.parse_args()
+
     uri = os.environ.get("NEO4J_URI", "bolt://neo4j:7687")
     user = os.environ.get("NEO4J_USERNAME", "neo4j")
     password = os.environ.get("NEO4J_PASSWORD")
@@ -146,9 +180,23 @@ def main() -> int:
         driver.verify_connectivity()
         with driver.session() as session:
             print("\n0. Clean slate")
-            session.run("MATCH (n) DETACH DELETE n")
-            n0, r0 = counts(session)
-            check("database emptied", n0 == 0 and r0 == 0, f"{n0} nodes, {r0} rels")
+            n_existing, r_existing = counts(session)
+            if args.reset:
+                session.run("MATCH (n) DETACH DELETE n")
+                n0, r0 = counts(session)
+                check("database emptied", n0 == 0 and r0 == 0, f"{n0} nodes, {r0} rels")
+            elif n_existing or r_existing:
+                print(
+                    f"  [ABORT] target database is not empty "
+                    f"({n_existing} nodes, {r_existing} rels) and --reset "
+                    f"was not passed. Refusing to write into a database "
+                    f"that might hold real or someone else's data. Re-run "
+                    f"with --reset only against a dedicated test/dev "
+                    f"instance."
+                )
+                return 2
+            else:
+                check("database already empty (no reset needed)", True)
 
             print("\n1. DDL applies to neo4j:5-community")
             failures: list[str] = []

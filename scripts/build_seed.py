@@ -35,12 +35,16 @@ hours_before_deadline (ReviewPayload) - open semantics question
 The export has no structured deadline field; a deadline sometimes appears
 as free text inside the task-kickoff brief ("Deadline: Thursday, July 30,
 2026, at 11:59 PM Cairo time."). Where that text is present and parseable,
-this hours-before-deadline is computed from it (Cairo = UTC+2, fixed
-offset, close enough for a fixture). Where it is not present or not
-parseable, the value is 0.0 and the record is marked in
-``_DEADLINE_UNRESOLVED`` - this is the same open "hours_before_deadline
-semantics" question raised earlier and NOT to be treated as resolved by
-this script; it is a best-effort fixture value, not a confirmed answer.
+this hours-before-deadline is computed from it (converted via the real
+``Africa/Cairo`` IANA timezone, not a fixed UTC+2 offset, so it stays
+correct if Cairo's DST rules ever change). Where it is not present or not
+parseable, the field is left as ``None`` - deliberately NOT ``0.0``, which
+would be indistinguishable from a real "submitted exactly at the deadline"
+value. Unresolved records are logged (with learner/lx identifiers) and
+tallied in ``_DEADLINE_UNRESOLVED`` - this is the same open
+"hours_before_deadline semantics" question raised earlier and NOT to be
+treated as resolved by this script; it is a best-effort fixture value, not
+a confirmed answer.
 
 Usage
 -----
@@ -51,18 +55,23 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
+from zoneinfo import ZoneInfo
 
 import src.app.graph.schema as M
 from src.app.graph.ids import node_id
 
+logger = logging.getLogger(__name__)
+
 INGESTED_AT = datetime(2026, 8, 31, 12, 0, 0, tzinfo=timezone.utc)
-CAIRO_OFFSET = timezone(timedelta(hours=2))
+CAIRO_TZ = ZoneInfo("Africa/Cairo")
 
 _DEADLINE_UNRESOLVED: list[str] = []
+_RUBRIC_POINTS_SKIPPED: list[str] = []
 
 
 def ts(value: str | None) -> datetime | None:
@@ -112,7 +121,7 @@ def parse_deadline_cairo(text: str) -> datetime | None:
         )
     except ValueError:
         return None
-    return naive.replace(tzinfo=CAIRO_OFFSET).astimezone(timezone.utc)
+    return naive.replace(tzinfo=CAIRO_TZ).astimezone(timezone.utc)
 
 
 def kickoff_text_by_lx(logs: list[dict[str, Any]]) -> dict[str, str]:
@@ -154,20 +163,26 @@ def build_learner_profiles(logs_dir: Path) -> list[M.LearnerProfile]:
 # ===========================================================================
 
 
-def _rubric_points(feedback_raw: str) -> list[M.RubricPointEvaluation]:
+def _rubric_points(feedback_raw: str, review_id: str) -> list[M.RubricPointEvaluation]:
     """Best-effort extraction of the JSON rubric array embedded inside the
     free-text ``feedback.raw`` field. Several distinct rubric arrays can be
     concatenated back-to-back (scope + quality); each is parsed
     independently and any point that fails validation is dropped rather
     than aborting the whole record - a malformed one-off rubric point must
-    not take down an otherwise-good real submission record."""
+    not take down an otherwise-good real submission record. Every drop is
+    logged and counted against ``review_id`` so the loss is visible instead
+    of silently producing an apparently-complete graph."""
     points: list[M.RubricPointEvaluation] = []
     for m in re.finditer(
         r"\[\s*\{.*?\}\s*\](?=\s*(?:\n[A-Z][a-z]+ |\Z))", feedback_raw, re.S
     ):
         try:
             items = json.loads(m.group(0))
-        except ValueError:
+        except ValueError as exc:
+            logger.warning(
+                "Skipping unparseable rubric block for review %s: %s", review_id, exc
+            )
+            _RUBRIC_POINTS_SKIPPED.append(f"{review_id} (block-level JSON error)")
             continue
         if not isinstance(items, list):
             continue
@@ -185,8 +200,16 @@ def _rubric_points(feedback_raw: str) -> list[M.RubricPointEvaluation]:
                             confidence_score=point.get("confidence_score", 0.0),
                         )
                     )
-                except (KeyError, ValueError):
-                    continue
+                except (KeyError, ValueError) as exc:
+                    rubric_id = point.get("rubric_id", "?")
+                    logger.warning(
+                        "Skipping malformed rubric point rubric_id=%s for "
+                        "review %s: %s",
+                        rubric_id,
+                        review_id,
+                        exc,
+                    )
+                    _RUBRIC_POINTS_SKIPPED.append(f"{review_id}#rubric_id={rubric_id}")
     return points
 
 
@@ -217,14 +240,19 @@ def build_review_datasources(
         feedback = entry["feedback"]
         submission = entry.get("submission", {})
         submitted_at = ts(entry["ts"]) or INGESTED_AT
+        datasource_id = f"review:{learner_id}:{lx_id}:{attempt_number}"
 
         deadline = parse_deadline_cairo(kickoff_text.get(lx_id, ""))
         if deadline is not None:
-            hours_before_deadline = round(
+            hours_before_deadline: float | None = round(
                 (deadline - submitted_at).total_seconds() / 3600, 2
             )
         else:
-            hours_before_deadline = 0.0
+            hours_before_deadline = None
+            logger.info(
+                "No parseable deadline for %s - hours_before_deadline left None",
+                datasource_id,
+            )
             _DEADLINE_UNRESOLVED.append(f"{learner_id}/{lx_id}#{attempt_number}")
 
         assets = [
@@ -243,10 +271,11 @@ def build_review_datasources(
             verdict=feedback["verdict"],
             feedback_summary=feedback.get("summary", ""),
             mentor_reply=feedback.get("mentor_reply", ""),
-            detailed_rubric_evaluations=_rubric_points(feedback.get("raw", "")),
+            detailed_rubric_evaluations=_rubric_points(
+                feedback.get("raw", ""), datasource_id
+            ),
         )
 
-        datasource_id = f"review:{learner_id}:{lx_id}:{attempt_number}"
         node = M.DataSource(
             id=node_id("DataSource", datasource_id),
             created_at=INGESTED_AT,
@@ -450,6 +479,8 @@ def build_graph(logs_dir: Path) -> M.LearnerGraph:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--logs-dir", required=True, type=Path)
     ap.add_argument(
@@ -469,8 +500,16 @@ if __name__ == "__main__":
     print(f"wrote {args.out} ({graph.counts()})")
     if _DEADLINE_UNRESOLVED:
         print(
-            f"NOTE: hours_before_deadline defaulted to 0.0 for "
+            f"NOTE: hours_before_deadline left as None (not 0.0) for "
             f"{len(_DEADLINE_UNRESOLVED)} review record(s) - no parseable "
             f"deadline text found. This is the still-open "
             f"'hours_before_deadline semantics' question, not a bug."
         )
+    if _RUBRIC_POINTS_SKIPPED:
+        print(
+            f"NOTE: skipped {len(_RUBRIC_POINTS_SKIPPED)} malformed/unparseable "
+            f"rubric point(s) - see warnings above for which review records "
+            f"lost data:"
+        )
+        for entry in _RUBRIC_POINTS_SKIPPED:
+            print(f"  - {entry}")

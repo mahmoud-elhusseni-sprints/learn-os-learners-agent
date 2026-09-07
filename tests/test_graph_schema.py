@@ -293,6 +293,16 @@ def test_attempt_number_must_be_at_least_one():
         _review_payload(attempt_number=0)
 
 
+def test_hours_before_deadline_none_is_distinct_from_zero():
+    # None means "couldn't be determined from the source record"; 0.0 means
+    # "submitted exactly at the deadline" - a real, different value. Both
+    # must be constructible and must not collapse into each other.
+    unknown = _review_payload(hours_before_deadline=None)
+    on_time = _review_payload(hours_before_deadline=0.0)
+    assert unknown.hours_before_deadline is None
+    assert on_time.hours_before_deadline == 0.0
+
+
 # ===========================================================================
 # 5. Edge legality
 # ===========================================================================

@@ -93,7 +93,7 @@
         "lx_id": "144bd399-aa06-4661-b07b-ea8967462e0e",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 49.43,
+        "hours_before_deadline": 48.43,
         "submission_text": "https://github.com/MoHatemTC/ai-video-generation-app/pull/11",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/11"
@@ -296,7 +296,7 @@
         "lx_id": "144bd399-aa06-4661-b07b-ea8967462e0e",
         "task_headline": "single_submission",
         "attempt_number": 2,
-        "hours_before_deadline": 48.55,
+        "hours_before_deadline": 47.55,
         "submission_text": "1 attachment",
         "assets": [
           "https://app.circle.so/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCQzZBRWdzPSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--2cfe7de06b2d0a5ab7e487d642a6792bd327c4cf/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2Q25OaGRtVnlld1k2Q25OMGNtbHdWQT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--c94871ba5479e24de62982019557cdcc73e92248/image.png"
@@ -499,7 +499,6 @@
         "lx_id": "e24d699e-58c2-4ab1-aca2-a7fa94d32275",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "Hi! I addressed all the review comments.\n✅ Fixed the README location so it displays correctly on GitHub.\n✅ Added measured performance metrics (render/build time, output size, resolution, and FPS) to the comparison report.\n✅ Ignored and removed Manim build artifacts (media/) while keeping the final evidence files.\nHere is the updated repository:https://github.com/Learner A7MLearner A7/animation-engine-evaluation\nAnd the technical report:https://github.com/Learner A7MLearner A7/animation-engine-evaluation/blob/main/report/Technical_Comparative_Report.md\nI'd appreciate it if you could take another look. Thank you!",
         "assets": [
           "https://github.com/Learner A7MLearner A7/animation-engine-evaluation",
@@ -694,7 +693,6 @@
         "lx_id": "98140ed4-1f04-45cf-af85-fb7a90d54a5e",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "here is the the PR for sprint 2\nhttps://github.com/MoHatemTC/ai-video-generation-app/pull/8",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/8"
@@ -888,7 +886,6 @@
         "lx_id": "43c22053-e78e-48b2-b26c-3d55b7436745",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "this is all my files can you rate them and tell me if it's ok ?\nif yes then this is my submit and i can make other changes later",
         "assets": [
           "https://assets-v2.circle.so/p8yct1x84mlk7k0g6kigbxwwc3jf",
@@ -1094,7 +1091,6 @@
         "lx_id": "98140ed4-1f04-45cf-af85-fb7a90d54a5e",
         "task_headline": "single_submission",
         "attempt_number": 2,
-        "hours_before_deadline": 0.0,
         "submission_text": "https://github.com/MoHatemTC/ai-video-generation-app/pull/8",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/8"
@@ -1288,7 +1284,7 @@
         "lx_id": "03a6f9ab-fea8-4c0e-aa97-ac459f60b3c1",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 11.7,
+        "hours_before_deadline": 10.7,
         "submission_text": "Hi,\nI have completed the HTML-to-MP4 workflow.\nRepository:https://github.com/Learner A7MLearner A7/html-to-mp4-workflow\nThe project includes:\nRunnable Python workflow\nDocumentation\nREADME\nError logging report\nSample HTML input\nGenerated MP4 output",
         "assets": [
           "https://github.com/Learner A7MLearner A7/html-to-mp4-workflow"
@@ -1401,7 +1397,6 @@
         "lx_id": "4ee985b4-2620-424d-9bee-75ded07d1fe1",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "Hello Sarah,\nI hope you are doing well, sorry for not replying earlier I had an unknown issue and it was not inside the code, it was with my laptop.\nHere is the pull request:\nhttps://github.com/MoHatemTC/ai-video-generation-app/pull/14/changes/c9c3d1d1dfcd199825dd91dc3d5c6cd436f71e56:\nLet me know if there is anything needs  to be modified or fixed.",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/14/changes/c9c3d1d1dfcd199825dd91dc3d5c6cd436f71e56"
@@ -1505,7 +1500,6 @@
         "lx_id": "632421c1-2c0a-4186-b887-d8f34b1280d7",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "Here is the updated docs",
         "assets": [
           "https://assets-v2.circle.so/no84mskcorwhihuvlnv8lp578p4o"
@@ -1636,7 +1630,6 @@
         "lx_id": "4339e177-2442-4ca6-be1f-297af5264885",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "https://github.com/MoHatemTC/ai-video-generation-app/pull/16",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/16"
@@ -1740,7 +1733,6 @@
         "lx_id": "eab06458-8a0e-406e-a775-d228eba6628f",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "دي كل الملفات كدا",
         "assets": [
           "https://assets-v2.circle.so/c5pyg7ixupjlrrn9k97vkt3mkdhy",
@@ -1877,7 +1869,6 @@
         "lx_id": "eab06458-8a0e-406e-a775-d228eba6628f",
         "task_headline": "single_submission",
         "attempt_number": 2,
-        "hours_before_deadline": 0.0,
         "submission_text": "ضيفت كل التعديلات",
         "assets": [
           "https://assets-v2.circle.so/3nyxowhrkllldqe0hjpqwsami13e",
@@ -2014,7 +2005,6 @@
         "lx_id": "b2e21e99-6db4-4777-be02-b1c1e5eb733b",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "1 attachment",
         "assets": [
           "https://assets-v2.circle.so/f2r9sq5h55s9ptxjwssnfo84yrte"
@@ -2073,7 +2063,6 @@
         "lx_id": "ef329ce4-cf90-4f26-8518-30b107060766",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "https://github.com/MoHatemTC/ai-video-generation-app/tree/fix/copilot-review-regressions\nthats the latest updates i just made check the link",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/tree/fix/copilot-review-regressions"
@@ -2186,7 +2175,6 @@
         "lx_id": "4ee985b4-2620-424d-9bee-75ded07d1fe1",
         "task_headline": "single_submission",
         "attempt_number": 2,
-        "hours_before_deadline": 0.0,
         "submission_text": "Hello Sarah,\nI hope you are doing well, here is my last pull request for sprint 3:\nhttps://github.com/MoHatemTC/ai-video-generation-app/pull/14/changes/eadda1481a2d5a0f55229a731c4bd24727518609",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/14/changes/eadda1481a2d5a0f55229a731c4bd24727518609"
@@ -2290,7 +2278,6 @@
         "lx_id": "69084cd9-4c72-428c-be6e-b512269186a5",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "https://github.com/MoHatemTC/ai-video-generation-app/pull/17",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/17"
@@ -2367,7 +2354,7 @@
         "lx_id": "4f3a017b-27ab-4fd4-a11c-6a7f532d6cc9",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 36.3,
+        "hours_before_deadline": 35.3,
         "submission_text": "https://github.com/MoHatemTC/ai-video-generation-app/tree/Learner A6-html-final-assets\nthis is the link",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/tree/Learner A6-html-final-assets"
@@ -2444,7 +2431,7 @@
         "lx_id": "4f3a017b-27ab-4fd4-a11c-6a7f532d6cc9",
         "task_headline": "single_submission",
         "attempt_number": 2,
-        "hours_before_deadline": 35.9,
+        "hours_before_deadline": 34.9,
         "submission_text": "this is the files \nis it ok ?",
         "assets": [
           "https://assets-v2.circle.so/lgi9j3nk22ty3l09kwi227cz9hua",
@@ -2527,7 +2514,7 @@
         "lx_id": "d7def0e6-a4d9-4cff-851c-b425dace0fd5",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 8.89,
+        "hours_before_deadline": 7.89,
         "submission_text": "https://github.com/MoHatemTC/ai-video-generation-app/pull/16",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/16"
@@ -2604,7 +2591,6 @@
         "lx_id": "15533fd5-309a-4804-b96e-4a7272684749",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "you can check now\nhttps://github.com/MoHatemTC/ai-video-generation-app/pull/20\nand tell me if there is anything that need to be edited, if not you can submit my task",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/20"
@@ -2690,7 +2676,6 @@
         "lx_id": "6fac5231-0846-4f99-a0e2-d7dfb0cfe510",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "https://github.com/MoHatemTC/ai-video-generation-app/pull/19/changes/e6bdf7c56fa5e251ccd10bcbaa86ad3f139944e7",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/19/changes/e6bdf7c56fa5e251ccd10bcbaa86ad3f139944e7"
@@ -2767,7 +2752,7 @@
         "lx_id": "2b02e486-3cf5-406f-9983-f20e37d4d15d",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 5.35,
+        "hours_before_deadline": 4.35,
         "submission_text": "Thanks! The implementation has already been pushed to the repository. You can review it here:\nRepository: https://github.com/MoHatemTC/ai-video-generation-app\nIf you'd prefer, I can also share the specific pull request or branch containing the HTML-to-MP4 conversion work.",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app"
@@ -2853,7 +2838,6 @@
         "lx_id": "72bb4324-0ab1-4e1d-8ae8-2632d7cfb5f0",
         "task_headline": "single_submission",
         "attempt_number": 1,
-        "hours_before_deadline": 0.0,
         "submission_text": "1 attachment",
         "assets": [
           "https://assets-v2.circle.so/zv0tcftakb96fqn9m7wifol4tpux"
@@ -2912,7 +2896,6 @@
         "lx_id": "72bb4324-0ab1-4e1d-8ae8-2632d7cfb5f0",
         "task_headline": "single_submission",
         "attempt_number": 2,
-        "hours_before_deadline": 0.0,
         "submission_text": "That work is already in the zip I sent (`ai-video-generation-app-with-auth.zip`). Here's exactly where each piece lives:\nLogin/registration forms with Supabase Auth client + session persistence \n- `frontend/src/lib/supabaseClient.js`\n — the Supabase Auth client\n- `frontend/src/context/AuthContext.jsx` — wraps `supabase.auth.getSession()` on load and `supabase.auth.onAuthStateChange()` to keep session state persisted and in sync across tabs/reloads; exposes `signUp`, `signIn`, `signOut`\n- `frontend/src/components/auth/AuthScreen.jsx` — the actual login/registration UI (toggles between modes, email+password fields, full name on signup)\n- `App.jsx` shows `AuthScreen` until a session exists, and attaches the session's access token to every backend request\nMigration tying video ownership to users + RLS\n- `backend/migrations/002_add_authentication.sql` — creates `profiles` (linked to `auth.users`), re-points `videos.user_id` at `auth.users(id)`, enables RLS on both tables, and adds the select/insert/update/delete policies scoped to `auth.uid()`.\nSo if you are asking about those specific things, they are supposed to be there, or maybe I sent you the wrong file. So here is the updated one \"ai-video-generation-app-with-auth.zip\" \nIf there's something more specific that isn't covered, tell me exactly what's missing, and I'll add it.",
         "assets": [
           "https://assets-v2.circle.so/jvnccfdt2g1zgpgksh5ny533r6dm"
@@ -2971,7 +2954,7 @@
         "lx_id": "2b02e486-3cf5-406f-9983-f20e37d4d15d",
         "task_headline": "single_submission",
         "attempt_number": 2,
-        "hours_before_deadline": -34.92,
+        "hours_before_deadline": -35.92,
         "submission_text": "Hi, the HTML-to-MP4 conversion module is now implemented and pushed to the repository.\nThe pipeline has been verified end-to-end: generated HTML scenes are rendered with Playwright, SVG animations are captured, FFmpeg converts the recording to a playable MP4, and the API returns the generated MP4 URL successfully.\nPlease review the implementation, especially:\nbackend/app/pipeline/render/mp4_renderer.py\nbackend/app/pipeline/orchestrator.py\nThe changes are available on the fix/copilot-review-regressions branch in commit b980c4a.\nI’d appreciate a review of the implementation and the UI integration requirements.\nhttps://github.com/MoHatemTC/ai-video-generation-app?utm_source=chatgpt.com",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app?utm_source=chatgpt.com"
@@ -3057,7 +3040,6 @@
         "lx_id": "15533fd5-309a-4804-b96e-4a7272684749",
         "task_headline": "single_submission",
         "attempt_number": 2,
-        "hours_before_deadline": 0.0,
         "submission_text": "https://github.com/MoHatemTC/ai-video-generation-app/pull/20\nHi Sarah, I’ve updated PR #20! I added the step-by-step local setup guide (DOCKER_SETUP.md) and attached the knowledge share document (KNOWLEDGE_SHARE_DOCKER.md) detailing the Dockerization process, lessons learned, and solutions for the fallback systems. It's ready for your second review!",
         "assets": [
           "https://github.com/MoHatemTC/ai-video-generation-app/pull/20"
