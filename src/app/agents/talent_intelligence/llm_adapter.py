@@ -7,7 +7,7 @@ separate so a model/provider issue cannot change retrieval tool contracts.
 from __future__ import annotations
 
 import json
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 from .config import litellm_settings
 from .prompts import SYSTEM_PROMPT
@@ -130,8 +130,8 @@ class LiteLLMGeminiAdapter:
             completion = client.chat.completions.create(
                 model=self._settings["AI_MODEL"],
                 temperature=0,
-                messages=messages,
-                tools=tools,
+                messages=cast(Any, messages),
+                tools=cast(Any, tools),
                 tool_choice="auto",
             )
             message = completion.choices[0].message

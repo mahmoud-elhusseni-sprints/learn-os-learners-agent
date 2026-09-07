@@ -143,6 +143,7 @@ class GraphNode(GraphModel):
 
     id: str = Field(description="Deterministic id - see src/app/graph/ids.py")
     created_at: UtcDatetime
+    label: str
 
 
 # ===========================================================================
