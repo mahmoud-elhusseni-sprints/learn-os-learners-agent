@@ -26,7 +26,7 @@ def build_attempt_map(turns_filepath: str) -> Dict[str, int]:
                 record = json.loads(line_str)
                 if not isinstance(record, dict):
                     logger.warning(
-                        f"Line {line_idx} in {turns_filepath} is not a " f"JSON object"
+                        f"Line {line_idx} in {turns_filepath} is not a JSON object"
                     )
                     continue
             except json.JSONDecodeError as err:
@@ -106,8 +106,7 @@ def extract_rubric_taxonomies(configs_filepath: str) -> Dict[str, Dict[str, Any]
                 record = json.loads(line_str)
                 if not isinstance(record, dict):
                     logger.warning(
-                        f"Line {line_idx} in {configs_filepath} is not a "
-                        f"JSON object"
+                        f"Line {line_idx} in {configs_filepath} is not a JSON object"
                     )
                     continue
             except json.JSONDecodeError as err:

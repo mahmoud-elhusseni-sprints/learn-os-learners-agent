@@ -113,10 +113,7 @@ def run_pipeline(run_llm_agents: bool = False) -> Dict[str, Any]:
         output_file=MEMORY_CARDS_OUTPUT_FILE,
     )
 
-    print(
-        f"  -> Successfully generated {len(memory_cards)} "
-        f"MemoryCard nodes (Node 3)."
-    )
+    print(f"  -> Successfully generated {len(memory_cards)} MemoryCard nodes (Node 3).")
 
     return {
         "profiles": profiles,

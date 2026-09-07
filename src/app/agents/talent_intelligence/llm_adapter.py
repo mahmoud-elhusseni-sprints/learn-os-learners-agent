@@ -129,7 +129,7 @@ class LiteLLMGeminiAdapter:
         for _ in range(3):
             completion = client.chat.completions.create(
                 model=self._settings["AI_MODEL"],
-                temperature=0,
+                temperature=0,  
                 messages=messages,
                 tools=tools,  # type: ignore[call-overload]
                 tool_choice="auto",
@@ -141,9 +141,7 @@ class LiteLLMGeminiAdapter:
                 return message.content or "Insufficient evidence"  # noqa: E501
             for call in tool_calls:
                 try:
-                    arguments = json.loads(
-                        call.function.arguments or "{}"
-                    )  # noqa: E501
+                    arguments = json.loads(call.function.arguments or "{}")  # noqa: E501
                 except json.JSONDecodeError:
                     arguments = {}
                 handler = tool_handlers.get(call.function.name)

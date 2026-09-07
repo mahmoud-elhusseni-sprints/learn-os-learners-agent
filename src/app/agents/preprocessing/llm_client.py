@@ -50,13 +50,13 @@ def safe_llm_generate_json(
                 else:
                     print(
                         f"[LiteLLM Proxy] Model '{target_model}' "
-                        f"(attempt {attempt+1}) returned status {r.status_code}: "
+                        f"(attempt {attempt + 1}) returned status {r.status_code}: "
                         f"{r.text[:120]}"
                     )
             except Exception as e:
                 print(
                     f"[LiteLLM Proxy] Model '{target_model}' "
-                    f"(attempt {attempt+1}) exception: {str(e)}"
+                    f"(attempt {attempt + 1}) exception: {str(e)}"
                 )
             time.sleep(1.5)
 

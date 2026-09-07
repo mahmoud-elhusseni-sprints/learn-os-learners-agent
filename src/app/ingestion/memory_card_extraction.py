@@ -3,7 +3,7 @@ import logging
 import os
 import re
 import uuid
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Sequence
 
 from src.app.core.config import (
     LMS_ASSESSMENTS_OUTPUT_FILE,
@@ -17,6 +17,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# The 10 Allowed Canonical Taxonomy Tags
 ALLOWED_TAXONOMY_TAGS = [
     "technical_skills",
     "problem_solving",
@@ -32,45 +33,167 @@ ALLOWED_TAXONOMY_TAGS = [
 ALLOWED_TAXONOMY_SET = set(ALLOWED_TAXONOMY_TAGS)
 
 TAG_KEYWORD_RULES = [
-    ("technical_skills", [
-        "technical", "python", "api", "sql", "docker", "rag", "fastapi", "pipeline",
-        "backend", "frontend", "llm", "scripting", "engineering", "code", "architecture",
-        "data", "query", "database", "git", "digital_ai_skills", "vector", "html", "mp4"
-    ]),
-    ("problem_solving", [
-        "problem_solving", "debug", "troubleshoot", "mistake_patterns", "failure_modes",
-        "reason", "analysis", "analytical", "fix", "logic", "error", "root_cause", "solution"
-    ]),
-    ("communication", [
-        "communication", "written", "verbal", "explanation", "documentation", "readme",
-        "report", "summary", "reply", "mentor_reply", "feedback", "dialogue", "presentation"
-    ]),
-    ("teamwork_collaboration", [
-        "teamwork_collaboration", "teamwork", "collaboration", "cooperation", "peer",
-        "group", "coordination", "sharing", "partner"
-    ]),
-    ("leadership", [
-        "leadership", "initiative", "ownership", "guiding", "lead", "decision", "direction"
-    ]),
-    ("time_task_management", [
-        "time_task_management", "time", "deadline", "timeliness", "hours_before_deadline",
-        "schedule", "pacing", "attempt", "planning", "prioritization", "velocity"
-    ]),
-    ("adaptability_learning", [
-        "adaptability_learning", "adaptability", "learning", "growth", "feedback_response",
-        "retry", "flexibility", "baseline", "pre_course", "post_course", "knowledge_state",
-        "iteration", "incorporat"
-    ]),
-    ("professionalism", [
-        "professionalism", "cleanliness", "accountability", "execution", "reliability",
-        "quality", "code_quality", "standards", "compliance", "discipline"
-    ]),
-    ("creativity_innovation", [
-        "creativity_innovation", "creative", "novel", "innovation", "experimentation", "design"
-    ]),
-    ("career_role_alignment", [
-        "career_role_alignment", "career", "role", "ai_engineer", "product_manager", "alignment"
-    ]),
+    (
+        "technical_skills",
+        [
+            "technical",
+            "python",
+            "api",
+            "sql",
+            "docker",
+            "rag",
+            "fastapi",
+            "pipeline",
+            "backend",
+            "frontend",
+            "llm",
+            "scripting",
+            "engineering",
+            "code",
+            "architecture",
+            "data",
+            "query",
+            "database",
+            "git",
+            "digital_ai_skills",
+            "vector",
+            "html",
+            "mp4",
+        ],
+    ),
+    (
+        "problem_solving",
+        [
+            "problem_solving",
+            "debug",
+            "troubleshoot",
+            "mistake_patterns",
+            "failure_modes",
+            "reason",
+            "analysis",
+            "analytical",
+            "fix",
+            "logic",
+            "error",
+            "root_cause",
+            "solution",
+        ],
+    ),
+    (
+        "communication",
+        [
+            "communication",
+            "written",
+            "verbal",
+            "explanation",
+            "documentation",
+            "readme",
+            "report",
+            "summary",
+            "reply",
+            "mentor_reply",
+            "feedback",
+            "dialogue",
+            "presentation",
+        ],
+    ),
+    (
+        "teamwork_collaboration",
+        [
+            "teamwork_collaboration",
+            "teamwork",
+            "collaboration",
+            "cooperation",
+            "peer",
+            "group",
+            "coordination",
+            "sharing",
+            "partner",
+        ],
+    ),
+    (
+        "leadership",
+        [
+            "leadership",
+            "initiative",
+            "ownership",
+            "guiding",
+            "lead",
+            "decision",
+            "direction",
+        ],
+    ),
+    (
+        "time_task_management",
+        [
+            "time_task_management",
+            "time",
+            "deadline",
+            "timeliness",
+            "hours_before_deadline",
+            "schedule",
+            "pacing",
+            "attempt",
+            "planning",
+            "prioritization",
+            "velocity",
+        ],
+    ),
+    (
+        "adaptability_learning",
+        [
+            "adaptability_learning",
+            "adaptability",
+            "learning",
+            "growth",
+            "feedback_response",
+            "retry",
+            "flexibility",
+            "baseline",
+            "pre_course",
+            "post_course",
+            "knowledge_state",
+            "iteration",
+            "incorporat",
+        ],
+    ),
+    (
+        "professionalism",
+        [
+            "professionalism",
+            "cleanliness",
+            "accountability",
+            "execution",
+            "reliability",
+            "quality",
+            "code_quality",
+            "standards",
+            "compliance",
+            "discipline",
+        ],
+    ),
+    (
+        "creativity_innovation",
+        [
+            "creativity_innovation",
+            "creative",
+            "novel",
+            "innovation",
+            "experimentation",
+            "design",
+        ],
+    ),
+    (
+        "career_role_alignment",
+        [
+            "career_role_alignment",
+            "career",
+            "role",
+            "ai_engineer",
+            "product_manager",
+            "alignment",
+        ],
+    ),
 ]
 
 
@@ -124,8 +247,8 @@ def extract_memory_cards_from_assessments(
     assessments_data: List[Dict[str, Any]],
 ) -> List[Dict[str, Any]]:
     """
-    Extracts quantitative skill score and competency memory cards from LMS assessments,
-    strictly mapped to the 10 canonical taxonomy tags.
+    Extracts quantitative skill score and competency memory cards from LMS
+    assessments, strictly mapped to the 10 canonical taxonomy tags.
     """
     cards_by_id: Dict[str, Dict[str, Any]] = {}
 
@@ -179,7 +302,7 @@ def extract_memory_cards_from_assessments(
                     cards_by_id[card_id]["tags"] + canonical_tags
                 )
 
-        # 2. Extract quantitative domain/question assessment scores if mastery cards empty
+        # 2. Extract quantitative assessment scores if mastery cards empty
         if not mastery_cards and answers:
             for ans in answers:
                 if not isinstance(ans, dict):
@@ -201,7 +324,9 @@ def extract_memory_cards_from_assessments(
                     f"Quantitative Assessment [{metric_key}]: Score {score}/100. "
                     f"Response: {learner_answer[:160]}"
                 )
-                rationale_str = notes or f"Quantitative test score of {score}% in {metric_key}."
+                rationale_str = (
+                    notes or f"Quantitative test score of {score}% in {metric_key}."
+                )
                 canonical_tags = canonicalize_tags(
                     [domain, metric_key, notes, learner_answer],
                     default_fallback="technical_skills",
@@ -215,7 +340,9 @@ def extract_memory_cards_from_assessments(
                         content=content_str,
                         rationale=rationale_str,
                         tags=canonical_tags,
-                        created_at=record.get("terminated_at") or record.get("activated_at"),
+                        created_at=(
+                            record.get("terminated_at") or record.get("activated_at")
+                        ),
                         associated_learner_ids=associated_learners,
                     )
                     cards_by_id[card_id] = card_obj.model_dump(
@@ -233,8 +360,8 @@ def extract_memory_cards_from_reviews(
     reviews_data: List[Dict[str, Any]],
 ) -> List[Dict[str, Any]]:
     """
-    Extracts qualitative and behavioral context memory cards from mentor feedback and rubrics,
-    strictly mapped to the 10 canonical taxonomy tags.
+    Extracts qualitative and behavioral context memory cards from mentor
+    feedback and rubrics, strictly mapped to canonical taxonomy tags.
     """
     cards_by_id: Dict[str, Dict[str, Any]] = {}
 
@@ -253,11 +380,16 @@ def extract_memory_cards_from_reviews(
         # 1. Qualitative feedback summary card
         if feedback_summary or mentor_reply:
             card_id = _deterministic_card_id(
-                learner_id or "generic", lx_id, "mentor_qualitative_feedback", str(attempt_number)
+                learner_id or "generic",
+                lx_id,
+                "mentor_qualitative_feedback",
+                str(attempt_number),
             )
             feedback_text = feedback_summary or mentor_reply
             content_str = f"Mentor Review for {task_headline}: {feedback_text}"
-            rationale_str = f"Mentor evaluation verdict '{verdict}' (Attempt #{attempt_number})."
+            rationale_str = (
+                f"Mentor evaluation verdict '{verdict}' (Attempt #{attempt_number})."
+            )
             canonical_tags = canonicalize_tags(
                 ["communication", "adaptability_learning", feedback_text],
                 default_fallback="communication",
@@ -298,7 +430,9 @@ def extract_memory_cards_from_reviews(
                     learner_id or "generic", lx_id, "rubric_point", str(rubric_id)
                 )
                 content_str = f"[{status}] {requirement}: {criteria}".strip()
-                rationale_str = reason or f"Evaluated as '{status}' by mentor for requirement: {requirement}."
+                rationale_str = reason or (
+                    f"Evaluated as '{status}' by mentor for: {requirement}."
+                )
                 canonical_tags = canonicalize_tags(
                     [category, requirement, reason, criteria],
                     default_fallback="problem_solving",
@@ -367,8 +501,8 @@ def merge_memory_cards(
     review_cards: List[Dict[str, Any]],
 ) -> List[Dict[str, Any]]:
     """
-    Merges memory cards from both sources, resolving duplicates, combining associated learners,
-    and ensuring tags strictly conform to the 10 canonical taxonomy tags.
+    Merges memory cards from both sources, resolving duplicates, combining
+    associated learners, and ensuring canonical taxonomy tags.
     """
     merged_by_id: Dict[str, Dict[str, Any]] = {}
 
@@ -399,8 +533,8 @@ def generate_memory_card_nodes(
     output_file: str = MEMORY_CARDS_OUTPUT_FILE,
 ) -> List[Dict[str, Any]]:
     """
-    Extracts memory cards from both quantitative LMS assessments and qualitative mentor feedback,
-    canonicalizes tags against the 10 allowed taxonomy tags, and serializes the unified list to JSON.
+    Extracts memory cards from quantitative LMS assessments and qualitative
+    mentor feedback, canonicalizes tags, and serializes the unified list to JSON.
     """
     assessment_cards: List[Dict[str, Any]] = []
     review_cards: List[Dict[str, Any]] = []
@@ -409,7 +543,7 @@ def generate_memory_card_nodes(
         with open(assessments_file, "r", encoding="utf-8") as f:
             assessments_data = json.load(f)
         assessment_cards = extract_memory_cards_from_assessments(assessments_data)
-        logger.info(f"Extracted {len(assessment_cards)} quantitative cards from assessments.")
+        logger.info(f"Extracted {len(assessment_cards)} quantitative assessment cards.")
     else:
         logger.warning(f"Assessments file not found: {assessments_file}")
 
@@ -417,7 +551,7 @@ def generate_memory_card_nodes(
         with open(rubrics_file, "r", encoding="utf-8") as f:
             reviews_data = json.load(f)
         review_cards = extract_memory_cards_from_reviews(reviews_data)
-        logger.info(f"Extracted {len(review_cards)} qualitative cards from mentor reviews.")
+        logger.info(f"Extracted {len(review_cards)} qualitative mentor review cards.")
     else:
         logger.warning(f"Rubrics file not found: {rubrics_file}")
 
@@ -427,7 +561,7 @@ def generate_memory_card_nodes(
         json.dump(unified_cards, f, indent=2, ensure_ascii=False)
 
     logger.info(
-        f"[OK] Generated {len(unified_cards)} unified MemoryCard nodes (strictly canonical taxonomy tags) "
+        f"[OK] Generated {len(unified_cards)} unified MemoryCard nodes "
         f"and saved to '{output_file}'."
     )
     return unified_cards
