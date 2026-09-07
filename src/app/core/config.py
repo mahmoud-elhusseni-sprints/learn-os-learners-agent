@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     neo4j_password: str = ""
 
 
-settings = Settings()  # type: ignore[call-arg]
+settings = Settings()
 
 # Base Directories
 BASE_DIR = Path(__file__).resolve().parents[3]

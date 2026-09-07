@@ -31,7 +31,7 @@ def _group_nodes_by_label(
 ) -> dict[str, list[dict[str, Any]]]:
     by_label: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for node in nodes:
-        by_label[node.label].append(flatten_node(node))  # type: ignore[attr-defined]
+        by_label[node.label].append(flatten_node(node))
     return by_label
 
 
