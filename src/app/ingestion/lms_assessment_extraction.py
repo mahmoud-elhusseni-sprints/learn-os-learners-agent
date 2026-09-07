@@ -275,7 +275,7 @@ def extract_lms_assessments(
         processed_records = []
         seen = set()
 
-        for key, record in config_map.items():
+        for record in config_map.values():
             rec_id = id(record)
             if rec_id in seen:
                 continue

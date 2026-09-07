@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from .llm_client import safe_llm_generate_json
 from .lms_prompts import get_mentor_metric_prompt

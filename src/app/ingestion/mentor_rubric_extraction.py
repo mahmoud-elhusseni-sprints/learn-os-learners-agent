@@ -50,7 +50,7 @@ def build_deadline_map(configs_filepath: str) -> Dict[str, str]:
         return deadline_map
 
     with open(configs_filepath, "r", encoding="utf-8") as f:
-        for line_idx, line in enumerate(f, 1):
+        for line in f:
             line_str = line.strip()
             if not line_str:
                 continue
@@ -181,7 +181,7 @@ def extract_mentor_evaluations(
 
     submissions_by_attempt: Dict[Tuple[str, str, int], Dict[str, Any]] = {}
     with open(logs_filepath, "r", encoding="utf-8") as f:
-        for line_idx, line in enumerate(f, 1):
+        for line in f:
             line_str = line.strip()
             if not line_str:
                 continue
@@ -233,7 +233,7 @@ def extract_mentor_evaluations(
                         submissions_by_attempt[key]["submission_text"] = sub_text
 
     with open(logs_filepath, "r", encoding="utf-8") as f:
-        for line_idx, line in enumerate(f, 1):
+        for line in f:
             line_str = line.strip()
             if not line_str:
                 continue

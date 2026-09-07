@@ -1,12 +1,12 @@
 from .deliverables import (
-    LearnerProfile,
-    DataSourceType,
-    RubricPointEvaluation,
-    ReviewPayload,
     AssessmentAnswer,
     AssessmentPayload,
     DataSource,
+    DataSourceType,
+    LearnerProfile,
     MemoryCard,
+    ReviewPayload,
+    RubricPointEvaluation,
 )
 
 __all__ = [
