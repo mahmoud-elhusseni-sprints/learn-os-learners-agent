@@ -15,6 +15,10 @@ class MemoryCardLLMAdapter:
     def __init__(self, config: Optional[MemoryCardAgentConfig] = None) -> None:
         self.config = config or MemoryCardAgentConfig.from_env()
 
+    def initialize_client(self) -> Any:
+        """Compatibility method for code paths that expect a client initializer."""
+        return None
+
     def generate(self, prompt: str) -> List[Dict[str, Any]]:
         """Call LLM and return parsed JSON list of card dictionaries."""
         api_key = self.config.api_key

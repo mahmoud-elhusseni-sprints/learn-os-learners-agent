@@ -187,9 +187,9 @@ def process_transcript_file(
     content = file_path.read_text(encoding="utf-8", errors="replace")
 
     meeting_meta = ctx.find_meeting_by_transcript(file_path)
-    source_id = file_path.stem
+    source_id: str = file_path.stem
     if meeting_meta and meeting_meta.get("zoom_meeting_uuid"):
-        source_id = meeting_meta.get("zoom_meeting_uuid")
+        source_id = str(meeting_meta.get("zoom_meeting_uuid"))
     elif "_" in file_path.stem:
         parts = file_path.stem.split("_")
         for p in parts:
@@ -228,15 +228,18 @@ def process_transcript_file(
         return []
 
     extracted_items = call_gemini_llm(client_type or "genai", client, prompt)
-    cards = []
+    cards: List[Dict[str, Any]] = []
     for item in extracted_items:
         learner_ident = item.get("learner_name_or_id")
-        learner = ctx.find_learner(learner_ident)
+        learner: Optional[Dict[str, Any]] = None
+        if learner_ident is not None:
+            learner = ctx.find_learner(str(learner_ident))
         if not learner:
+            content_text = str(item.get("content") or "")
+            response_text = str(item.get("response_excerpt") or "")
             for learner_record in ctx.learners_by_id.values():
-                if learner_record.get("name") in str(
-                    item.get("content")
-                ) or learner_record.get("name") in str(item.get("response_excerpt")):
+                learner_name = str(learner_record.get("name") or "")
+                if learner_name in content_text or learner_name in response_text:
                     learner = learner_record
                     break
         if not learner:
@@ -276,13 +279,16 @@ def process_conversation_file(
     print(f"Processing conversation: {file_path.name}")
     content = file_path.read_text(encoding="utf-8", errors="replace")
 
-    learner = None
+    learner: Optional[Dict[str, Any]] = None
     first_lines = "\n".join(content.splitlines()[:10])
     for learner_record in ctx.learners_by_id.values():
+        learner_email = str(learner_record.get("email") or "")
+        learner_id = str(learner_record.get("learner_id") or "")
+        learner_name = str(learner_record.get("name") or "")
         if (
-            learner_record.get("email") in first_lines
-            or learner_record.get("learner_id") in first_lines
-            or learner_record.get("name") in first_lines
+            learner_email in first_lines
+            or learner_id in first_lines
+            or learner_name in first_lines
         ):
             learner = learner_record
             break

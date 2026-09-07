@@ -44,10 +44,11 @@ class MemoryCardAgentConfig:
             os.getenv("AI_API_KEY")
             or os.getenv("GEMINI_API_KEY")
             or os.getenv("GOOGLE_API_KEY")
-            or os.getenv("OPENAI_API_KEY", "")
+            or os.getenv("OPENAI_API_KEY")
+            or ""
         ).strip()
-        base_url = os.getenv("AI_AGENT_URL", "").strip() or None
+        base_url = (os.getenv("AI_AGENT_URL") or "").strip() or None
         model_name = (
-            os.getenv("AI_MODEL") or os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+            os.getenv("AI_MODEL") or os.getenv("GEMINI_MODEL") or "gemini-2.5-flash"
         ).strip()
         return cls(api_key=api_key, base_url=base_url, model_name=model_name)

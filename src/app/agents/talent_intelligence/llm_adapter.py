@@ -131,7 +131,7 @@ class LiteLLMGeminiAdapter:
                 model=self._settings["AI_MODEL"],
                 temperature=0,
                 messages=messages,
-                tools=tools,  # type: ignore[call-overload]
+                tools=tools,
                 tool_choice="auto",
             )
             message = completion.choices[0].message
