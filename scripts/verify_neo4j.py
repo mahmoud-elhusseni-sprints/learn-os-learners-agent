@@ -25,8 +25,9 @@ invariant protected a graph of Evidence/SkillAssertion nodes which do not
 exist in this design. See src/app/graph/schema.py's module docstring for
 why this is a deliberate, flagged change rather than an oversight.
 
-Loading uses UNWIND batching over ``flatten_node`` output, which is the same
-path the ingestion loader will take.
+Loading and schema init both go through the same production code paths
+this script verifies (``src.app.ingestion.loader`` and
+``src.app.graph.constraints``) - not a separate copy of the same logic.
 """
 
 from __future__ import annotations
@@ -35,7 +36,6 @@ import argparse
 import json
 import os
 import sys
-from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -48,8 +48,8 @@ if str(ROOT) not in sys.path:
 from neo4j import GraphDatabase  # noqa: E402
 
 import src.app.graph.schema as M  # noqa: E402
-from scripts import generate_constraints as GS  # noqa: E402
-from src.app.graph.serialization import flatten_node  # noqa: E402
+from src.app.graph.constraints import ALL_STATEMENTS, initialize_schema  # noqa: E402
+from src.app.ingestion.loader import load_graph  # noqa: E402
 
 SEED = ROOT / "tests" / "fixtures" / "sample_learner_seed.json"
 
@@ -68,47 +68,10 @@ def check(name: str, condition: bool, detail: str = "") -> None:
     print(f"  [{mark}] {name}" + (f"  -- {detail}" if detail else ""))
 
 
-def ddl_statements() -> list[str]:
-    """The Community-safe statements from the generated spec."""
-    ns: dict[str, Any] = {}
-    exec(GS.build_python(), ns)
-    return [" ".join(s.split()) for s in ns["ALL_STATEMENTS"]]
-
-
 def counts(session: Any) -> tuple[int, int]:
     nodes = session.run("MATCH (n) RETURN count(n) AS c").single()["c"]
     rels = session.run("MATCH ()-[r]->() RETURN count(r) AS c").single()["c"]
     return nodes, rels
-
-
-def load_graph(session: Any, graph: M.LearnerGraph) -> None:
-    """Load via UNWIND + MERGE - the same path the ingestion loader uses."""
-    by_label: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for node in graph.nodes:
-        by_label[node.label].append(flatten_node(node))
-    for label, rows in by_label.items():
-        session.run(
-            f"UNWIND $rows AS row MERGE (n:{label} {{id: row.id}}) SET n += row",
-            rows=rows,
-        )
-
-    by_rel: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
-    for edge in graph.edges:
-        key = (edge.source_label, edge.type.value, edge.target_label)
-        by_rel[key].append(
-            {
-                "src": str(edge.source_id),
-                "dst": str(edge.target_id),
-            }
-        )
-    for (src_label, rel, dst_label), rows in by_rel.items():
-        session.run(
-            f"UNWIND $rows AS row "
-            f"MATCH (a:{src_label} {{id: row.src}}) "
-            f"MATCH (b:{dst_label} {{id: row.dst}}) "
-            f"MERGE (a)-[r:{rel}]->(b)",
-            rows=rows,
-        )
 
 
 INVARIANTS = [
@@ -173,7 +136,6 @@ def main() -> int:
     print("=" * 74)
 
     graph = M.LearnerGraph.model_validate(json.loads(SEED.read_text(encoding="utf-8")))
-    statements = ddl_statements()
 
     driver = GraphDatabase.driver(uri, auth=(user, password))
     try:
@@ -198,18 +160,13 @@ def main() -> int:
             else:
                 check("database already empty (no reset needed)", True)
 
-            print("\n1. DDL applies to neo4j:5-community")
-            failures: list[str] = []
-            for stmt in statements:
-                try:
-                    session.run(stmt)
-                except Exception as exc:  # noqa: BLE001
-                    failures.append(f"{stmt[:60]}... -> {exc}")
-            check(
-                f"all {len(statements)} statements applied",
-                not failures,
-                failures[0] if failures else "no errors",
-            )
+            print("\n1. Schema initialization applies to neo4j:5-community")
+            try:
+                initialize_schema(driver)
+                init_ok, init_detail = True, f"{len(ALL_STATEMENTS)} statements applied"
+            except Exception as exc:  # noqa: BLE001
+                init_ok, init_detail = False, str(exc)
+            check("initialize_schema() applied", init_ok, init_detail)
             c1 = session.run(
                 "SHOW CONSTRAINTS YIELD name RETURN count(*) AS c"
             ).single()["c"]
@@ -218,16 +175,15 @@ def main() -> int:
             ]
             check("constraints created", c1 > 0, f"{c1} constraints, {i1} indexes")
 
-            print("\n2. Re-applying the DDL is a no-op")
-            for stmt in statements:
-                session.run(stmt)
+            print("\n2. Re-running initialize_schema() is a no-op")
+            initialize_schema(driver)
             c2 = session.run(
                 "SHOW CONSTRAINTS YIELD name RETURN count(*) AS c"
             ).single()["c"]
             check("constraint count unchanged", c1 == c2, f"{c1} -> {c2}")
 
             print("\n3. Seed loads, and re-loading does not duplicate")
-            load_graph(session, graph)
+            load_graph(driver, graph)
             n1, r1 = counts(session)
             check(
                 "first load matches the fixture",
@@ -235,7 +191,7 @@ def main() -> int:
                 f"{n1} nodes / {r1} rels (fixture: "
                 f"{len(graph.nodes)} / {len(graph.edges)})",
             )
-            load_graph(session, graph)
+            load_graph(driver, graph)
             n2, r2 = counts(session)
             check(
                 "IDEMPOTENT - second load changed nothing",
