@@ -12,9 +12,11 @@ class LearnerProfile(BaseModel):
     group_name: str = Field(..., description="Internship track name")
     round_name: str = Field(..., description="Internship round label")
     added_at: Optional[str] = Field(
-        None, description="ISO timestamp when learner joined"
+        default=None, description="ISO timestamp when learner joined"
     )
-    learner_status: Optional[str] = Field(None, description="Active status indicator")
+    learner_status: Optional[str] = Field(
+        default=None, description="Active status indicator"
+    )
 
 
 class DataSourceType(str, Enum):
@@ -25,31 +27,34 @@ class DataSourceType(str, Enum):
 
 
 class RubricPointEvaluation(BaseModel):
-    rubric_id: Optional[int] = Field(None, description="Rubric item ID")
+    rubric_id: Optional[int] = Field(default=None, description="Rubric item ID")
     category: str = Field(
         default="digital_ai_skills", description="Competency taxonomy category"
     )
     requirement: str = Field(default="", description="Task requirement string")
     status: str = Field(..., description="Pass status: Yes, No, Partial")
     evaluation_criteria: Optional[str] = Field(
-        None, description="Evaluation criterion description"
+        default=None, description="Evaluation criterion description"
     )
     reason: Optional[str] = Field(
-        None, description="Qualitative explanation why point passed/failed"
+        default=None,
+        description="Qualitative explanation why point passed/failed",
     )
     confidence_score: Optional[float] = Field(
-        None, description="Grader confidence score"
+        default=None, description="Grader confidence score"
     )
 
 
 class ReviewPayload(BaseModel):
     lx_id: str = Field(..., description="Task Learning Experience UUID")
-    task_headline: Optional[str] = Field(None, description="Task headline title")
+    task_headline: Optional[str] = Field(
+        default=None, description="Task headline title"
+    )
     attempt_number: int = Field(
         default=1, description="Submission review attempt number"
     )
     hours_before_deadline: Optional[float] = Field(
-        None, description="Hours before deadline"
+        default=None, description="Hours before deadline"
     )
     submission_text: Optional[str] = Field(
         default="", description="Learner submission text"
@@ -62,7 +67,9 @@ class ReviewPayload(BaseModel):
     feedback_summary: Optional[str] = Field(
         default="", description="Mentor review summary"
     )
-    mentor_reply: Optional[str] = Field(None, description="Direct mentor reply text")
+    mentor_reply: Optional[str] = Field(
+        default=None, description="Direct mentor reply text"
+    )
     detailed_rubric_evaluations: List[RubricPointEvaluation] = Field(
         default_factory=list,
         description="Evaluations for each rubric point of this task",
@@ -71,21 +78,23 @@ class ReviewPayload(BaseModel):
 
 class AssessmentAnswer(BaseModel):
     question_id: str = Field(..., description="Question identifier")
-    domain: Optional[str] = Field(None, description="Domain topic")
-    metric_key: Optional[str] = Field(None, description="Competency metric key")
+    domain: Optional[str] = Field(default=None, description="Domain topic")
+    metric_key: Optional[str] = Field(default=None, description="Competency metric key")
     learner_answer: str = Field(..., description="Learner's answer text")
-    score: Optional[float] = Field(None, description="Question score")
-    evaluation_notes: Optional[str] = Field(None, description="Grader notes")
+    score: Optional[float] = Field(default=None, description="Question score")
+    evaluation_notes: Optional[str] = Field(default=None, description="Grader notes")
 
 
 class AssessmentPayload(BaseModel):
-    lx_id: Optional[str] = Field(None, description="Task / Assessment UUID")
+    lx_id: Optional[str] = Field(default=None, description="Task / Assessment UUID")
     assessment_type: Optional[str] = Field(
         default="pre_course", description="pre_course / post_course"
     )
-    topic_id: Optional[str] = Field(None, description="Topic/Archetype identifier")
+    topic_id: Optional[str] = Field(
+        default=None, description="Topic/Archetype identifier"
+    )
     score: Optional[float] = Field(
-        None, description="Explicit assessment numerical score"
+        default=None, description="Explicit assessment numerical score"
     )
     max_score: Optional[float] = Field(
         default=100.0, description="Maximum possible assessment score"
@@ -104,7 +113,7 @@ class DataSource(BaseModel):
     )
     timestamp: str = Field(..., description="ISO 8601 UTC timestamp")
     learner_id: Optional[str] = Field(
-        None,
+        default=None,
         description="Learner UUID who produced/underwent this data source",
     )
     payload: Union[ReviewPayload, AssessmentPayload, Dict[str, Any]] = Field(
@@ -128,19 +137,21 @@ class MemoryCard(BaseModel):
     card_id: str = Field(..., description="Unique memory card UUID")
     metric_key: str = Field(..., description="Competency metric key")
     content: str = Field(..., description="Summary content")
-    rationale: Optional[str] = Field(None, description="Rationale explanation")
+    rationale: Optional[str] = Field(default=None, description="Rationale explanation")
     tags: List[str] = Field(
         default_factory=list, description="Predefined competency tags"
     )
-    created_at: Optional[str] = Field(None, description="Creation timestamp")
+    created_at: Optional[str] = Field(default=None, description="Creation timestamp")
     associated_learner_ids: List[str] = Field(
         default_factory=list,
         description=("List of LearnerProfile UUIDs linked to this card (Many-to-Many)"),
     )
     profile_hints: Optional[List[str]] = Field(
-        None, description="Legacy alias for tags"
+        default=None, description="Legacy alias for tags"
     )
-    meeting_id: Optional[str] = Field(None, description="Legacy session identifier")
+    meeting_id: Optional[str] = Field(
+        default=None, description="Legacy session identifier"
+    )
 
     @model_validator(mode="after")
     def sync_tags_and_hints(self) -> "MemoryCard":

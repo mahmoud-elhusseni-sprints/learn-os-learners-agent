@@ -28,7 +28,7 @@ def safe_llm_generate_json(
             "Authorization": f"Bearer {LITE_LLM_KEY.strip()}",
             "Content-Type": "application/json",
         }
-        payload = {
+        payload: Dict[str, Any] = {
             "model": target_model,
             "messages": [{"role": "user", "content": prompt}],
             "response_format": {"type": "json_object"},
