@@ -716,9 +716,9 @@ def test_every_specified_entity_has_typed_relationship_endpoints():
             sp for sp in M.EDGE_SPECS if label in (sp.source_label, sp.target_label)
         ]
         assert specs, f"{label} has no registered relationship endpoints"
-        assert any(sp.property_model for sp in specs), (
-            f"{label} has no edge carrying typed properties"
-        )
+        assert any(
+            sp.property_model for sp in specs
+        ), f"{label} has no edge carrying typed properties"
 
 
 def test_task_and_learning_experience_are_distinct():
