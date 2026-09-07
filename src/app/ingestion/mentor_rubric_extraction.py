@@ -5,7 +5,9 @@ import re
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -23,7 +25,10 @@ def build_attempt_map(turns_filepath: str) -> Dict[str, int]:
             try:
                 record = json.loads(line_str)
                 if not isinstance(record, dict):
-                    logger.warning(f"Line {line_idx} in {turns_filepath} is not a JSON object")
+                    logger.warning(
+                        f"Line {line_idx} in {turns_filepath} is not a "
+                        f"JSON object"
+                    )
                     continue
             except json.JSONDecodeError as err:
                 logger.error(
@@ -101,7 +106,10 @@ def extract_rubric_taxonomies(configs_filepath: str) -> Dict[str, Dict[str, Any]
             try:
                 record = json.loads(line_str)
                 if not isinstance(record, dict):
-                    logger.warning(f"Line {line_idx} in {configs_filepath} is not a JSON object")
+                    logger.warning(
+                        f"Line {line_idx} in {configs_filepath} is not a "
+                        f"JSON object"
+                    )
                     continue
             except json.JSONDecodeError as err:
                 logger.error(
@@ -111,33 +119,56 @@ def extract_rubric_taxonomies(configs_filepath: str) -> Dict[str, Dict[str, Any]
 
             lx_id = record.get("lx_id")
             config_json = record.get("config_json", {})
-            task = config_json.get("task", {}) if isinstance(config_json, dict) else {}
+            task = (
+                config_json.get("task", {})
+                if isinstance(config_json, dict)
+                else {}
+            )
 
             if lx_id and task:
                 headline = task.get("headline", "")
                 description = task.get("description", "")
-                rubric = task.get("rubric", {}) if isinstance(task, dict) else {}
+                rubric = (
+                    task.get("rubric", {})
+                    if isinstance(task, dict)
+                    else {}
+                )
 
-                scopes = rubric.get("scopes", []) if isinstance(rubric, dict) else []
-                quality_criteria = task.get("quality_criteria", []) if isinstance(task, dict) else []
+                scopes = (
+                    rubric.get("scopes", [])
+                    if isinstance(rubric, dict)
+                    else []
+                )
+                quality_criteria = (
+                    task.get("quality_criteria", [])
+                    if isinstance(task, dict)
+                    else []
+                )
 
                 tax_record = {
                     "lx_id": lx_id,
                     "task_headline": headline,
                     "task_description": description,
-                    "functional_requirements": task.get("functional_requirements", []),
+                    "functional_requirements": task.get(
+                        "functional_requirements", []
+                    ),
                     "rubric_scopes": scopes,
                     "quality_criteria": quality_criteria,
                 }
 
                 rubric_taxonomies[lx_id] = tax_record
             elif not lx_id:
-                logger.warning(f"Line {line_idx} in {configs_filepath} missing mandatory key 'lx_id'")
+                logger.warning(
+                    f"Line {line_idx} in {configs_filepath} missing "
+                    f"mandatory key 'lx_id'"
+                )
 
     return rubric_taxonomies
 
 
-def parse_feedback_raw(raw_text: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+def parse_feedback_raw(
+    raw_text: str,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     if not raw_text:
         return [], []
 
@@ -205,7 +236,11 @@ def extract_mentor_evaluations(
 
                 timestamp = entry.get("ts", "")
                 attempt_number = attempt_map.get(lx_id, 1)
-                sub_text = submission_data.get("text") or submission_data.get("submission_content", "") or ""
+                sub_text = (
+                    submission_data.get("text")
+                    or submission_data.get("submission_content", "")
+                    or ""
+                )
                 sub_attachments = submission_data.get("attachments", []) or []
 
                 file_urls = [
@@ -219,7 +254,11 @@ def extract_mentor_evaluations(
                 key = (learner_id, lx_id, attempt_number)
                 if key not in submissions_by_attempt:
                     deadline_at = deadline_map.get(lx_id)
-                    hours_before = compute_timeliness(timestamp, deadline_at) if timestamp and deadline_at else None
+                    hours_before = (
+                        compute_timeliness(timestamp, deadline_at)
+                        if timestamp and deadline_at
+                        else None
+                    )
                     submissions_by_attempt[key] = {
                         "submission_text": sub_text,
                         "assets": [u for u in file_urls if u],
@@ -260,11 +299,27 @@ def extract_mentor_evaluations(
                 attempt_number = attempt_map.get(lx_id, 1)
                 taxonomy = taxonomies.get(lx_id, {})
 
-                verdict = feedback.get("verdict", "reviewed") if isinstance(feedback, dict) else "reviewed"
-                summary = feedback.get("summary", "") if isinstance(feedback, dict) else ""
-                mentor_reply = feedback.get("mentor_reply", "") if isinstance(feedback, dict) else ""
+                verdict = (
+                    feedback.get("verdict", "reviewed")
+                    if isinstance(feedback, dict)
+                    else "reviewed"
+                )
+                summary = (
+                    feedback.get("summary", "")
+                    if isinstance(feedback, dict)
+                    else ""
+                )
+                mentor_reply = (
+                    feedback.get("mentor_reply", "")
+                    if isinstance(feedback, dict)
+                    else ""
+                )
 
-                raw_text = feedback.get("raw", "") if isinstance(feedback, dict) else ""
+                raw_text = (
+                    feedback.get("raw", "")
+                    if isinstance(feedback, dict)
+                    else ""
+                )
                 scope_results, quality_results = parse_feedback_raw(raw_text)
 
                 detailed_point_scores = []
@@ -281,12 +336,16 @@ def extract_mentor_evaluations(
                             "category": category,
                             "requirement": requirement,
                             "status": p.get("status"),
-                            "evaluation_criteria": p.get("evaluation_criteria"),
+                            "evaluation_criteria": p.get(
+                                "evaluation_criteria"
+                            ),
                             "reason": p.get("reason"),
                             "confidence_score": p.get("confidence_score"),
                         })
 
-                sub_info = submissions_by_attempt.get((learner_id, lx_id, attempt_number), {})
+                sub_info = submissions_by_attempt.get(
+                    (learner_id, lx_id, attempt_number), {}
+                )
 
                 eval_record = {
                     "learner_id": learner_id,

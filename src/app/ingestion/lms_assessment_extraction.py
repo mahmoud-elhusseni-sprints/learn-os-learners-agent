@@ -3,7 +3,9 @@ import logging
 import os
 from typing import Any, Dict, List, Optional, Set, Union
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -17,7 +19,11 @@ def _extract_score_and_topic(record: Dict[str, Any]) -> Dict[str, Any]:
         or record.get("task_archetype_id")
         or record.get("flow_id")
     )
-    topic_title = record.get("topic_title") or task.get("description") or task.get("headline", "")
+    topic_title = (
+        record.get("topic_title")
+        or task.get("description")
+        or task.get("headline", "")
+    )
 
     score = record.get("score")
     max_score = record.get("max_score", 100.0)
@@ -141,7 +147,10 @@ def extract_lms_assessments(
 
     if answers_filepath_or_records is not None:
         raw_answers = []
-        if isinstance(answers_filepath_or_records, str) and os.path.exists(answers_filepath_or_records):
+        if (
+            isinstance(answers_filepath_or_records, str)
+            and os.path.exists(answers_filepath_or_records)
+        ):
             with open(answers_filepath_or_records, "r", encoding="utf-8") as f:
                 raw_answers = json.load(f)
         elif isinstance(answers_filepath_or_records, list):
@@ -165,7 +174,10 @@ def extract_lms_assessments(
             if score_pct is None and score is not None and max_score:
                 score_pct = round((score / max_score) * 100.0, 2)
 
-            learner_cards = ans.get("mastery_memory_cards") or cards_map.get(learner_id, [])
+            learner_cards = (
+                ans.get("mastery_memory_cards")
+                or cards_map.get(learner_id, [])
+            )
 
             assessment_record = {
                 "learner_id": learner_id,
@@ -214,38 +226,79 @@ def extract_lms_assessments(
             learner_id = mock.get("learner_id")
 
             if not lx_id or not learner_id:
-                logger.warning(f"Malformed mock assessment record missing learner_id or lx_id: {mock}")
+                logger.warning(
+                    f"Malformed mock assessment missing ID: {mock}"
+                )
                 continue
 
             dedup_key = (learner_id, lx_id)
             if dedup_key in seen_unique_keys:
-                logger.info(f"Idempotent skip: Duplicate assessment record for key {dedup_key}")
+                logger.info(
+                    f"Idempotent skip: Duplicate mock key {dedup_key}"
+                )
                 continue
 
             if target_lx_set and lx_id not in target_lx_set:
                 continue
 
-            matched_config = config_map.get((lx_id, learner_id)) or config_map.get(lx_id, {})
+            matched_config = (
+                config_map.get((lx_id, learner_id))
+                or config_map.get(lx_id, {})
+            )
 
             config_json = matched_config.get("config_json", {})
-            task = config_json.get("task", {}) if isinstance(config_json, dict) else {}
+            task = (
+                config_json.get("task", {})
+                if isinstance(config_json, dict)
+                else {}
+            )
 
-            headline = mock.get("module_title") or task.get("headline", "") or matched_config.get("headline", "")
-            trial_count = mock.get("trial_count", matched_config.get("trial_count", 0))
-            extension_used = mock.get("extension_used", matched_config.get("extension_used", False))
-            outcome = mock.get("outcome", matched_config.get("outcome", "in_progress"))
+            headline = (
+                mock.get("module_title")
+                or task.get("headline", "")
+                or matched_config.get("headline", "")
+            )
+            trial_count = mock.get(
+                "trial_count", matched_config.get("trial_count", 0)
+            )
+            extension_used = mock.get(
+                "extension_used", matched_config.get("extension_used", False)
+            )
+            outcome = mock.get(
+                "outcome", matched_config.get("outcome", "in_progress")
+            )
             status = mock.get("status", matched_config.get("status", "active"))
-            activated_at = mock.get("activated_at", matched_config.get("activated_at"))
-            terminated_at = mock.get("terminated_at", matched_config.get("terminated_at"))
+            activated_at = mock.get(
+                "activated_at", matched_config.get("activated_at")
+            )
+            terminated_at = mock.get(
+                "terminated_at", matched_config.get("terminated_at")
+            )
 
             score_topic_data = _extract_score_and_topic(matched_config)
-            learner_cards = cards_map.get(learner_id, mock.get("mastery_memory_cards", []))
+            learner_cards = cards_map.get(
+                learner_id, mock.get("mastery_memory_cards", [])
+            )
 
-            final_score = mock.get("score") if mock.get("score") is not None else score_topic_data["score"]
-            final_max_score = mock.get("max_score") or score_topic_data["max_score"] or 100.0
+            final_score = (
+                mock.get("score")
+                if mock.get("score") is not None
+                else score_topic_data["score"]
+            )
+            final_max_score = (
+                mock.get("max_score")
+                or score_topic_data["max_score"]
+                or 100.0
+            )
             final_score_pct = mock.get("score_percentage")
-            if final_score_pct is None and final_score is not None and final_max_score:
-                final_score_pct = round((final_score / final_max_score) * 100.0, 2)
+            if (
+                final_score_pct is None
+                and final_score is not None
+                and final_max_score
+            ):
+                final_score_pct = round(
+                    (final_score / final_max_score) * 100.0, 2
+                )
 
             assessment_record = {
                 "learner_id": learner_id,
@@ -254,7 +307,9 @@ def extract_lms_assessments(
                 "phase": mock.get("phase"),
                 "module_title": headline,
                 "topic_id": mock.get("topic_id") or score_topic_data["topic_id"],
-                "topic_title": mock.get("topic_title") or score_topic_data["topic_title"],
+                "topic_title": (
+                    mock.get("topic_title") or score_topic_data["topic_title"]
+                ),
                 "status": status,
                 "outcome": outcome,
                 "score": final_score,
@@ -287,12 +342,16 @@ def extract_lms_assessments(
             learner_id = record.get("learner_id")
 
             if not lx_id or not learner_id:
-                logger.warning(f"Skipping malformed lx_config record missing learner_id or lx_id: {record}")
+                logger.warning(
+                    f"Skipping malformed config record missing ID: {record}"
+                )
                 continue
 
             dedup_key = (learner_id, lx_id)
             if dedup_key in seen_unique_keys:
-                logger.info(f"Idempotent skip: Duplicate config assessment record for key {dedup_key}")
+                logger.info(
+                    f"Idempotent skip: Duplicate config key {dedup_key}"
+                )
                 continue
 
             config_json = record.get("config_json", {})

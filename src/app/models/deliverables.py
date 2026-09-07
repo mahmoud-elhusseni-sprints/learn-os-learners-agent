@@ -11,7 +11,9 @@ class LearnerProfile(BaseModel):
     role: str = Field(default="member", description="Team role (lead/member)")
     group_name: str = Field(..., description="Internship track name")
     round_name: str = Field(..., description="Internship round label")
-    added_at: Optional[str] = Field(None, description="ISO timestamp when learner joined")
+    added_at: Optional[str] = Field(
+        None, description="ISO timestamp when learner joined"
+    )
     learner_status: Optional[str] = Field(None, description="Active status indicator")
 
 
@@ -78,25 +80,45 @@ class AssessmentAnswer(BaseModel):
 
 class AssessmentPayload(BaseModel):
     lx_id: Optional[str] = Field(None, description="Task / Assessment UUID")
-    assessment_type: Optional[str] = Field(default="pre_course", description="pre_course / post_course")
+    assessment_type: Optional[str] = Field(
+        default="pre_course", description="pre_course / post_course"
+    )
     topic_id: Optional[str] = Field(None, description="Topic/Archetype identifier")
-    score: Optional[float] = Field(None, description="Explicit assessment numerical score")
-    max_score: Optional[float] = Field(default=100.0, description="Maximum possible assessment score")
-    answers: List[AssessmentAnswer] = Field(default_factory=list, description="Question evaluations")
+    score: Optional[float] = Field(
+        None, description="Explicit assessment numerical score"
+    )
+    max_score: Optional[float] = Field(
+        default=100.0, description="Maximum possible assessment score"
+    )
+    answers: List[AssessmentAnswer] = Field(
+        default_factory=list, description="Question evaluations"
+    )
 
 
 class DataSource(BaseModel):
-    datasource_id: str = Field(..., description="Unique UUID for this data source event")
-    datasource_name: Union[DataSourceType, str] = Field(..., description="'review', 'assesments', 'chat', 'meetings'")
+    datasource_id: str = Field(
+        ..., description="Unique UUID for this data source event"
+    )
+    datasource_name: Union[DataSourceType, str] = Field(
+        ..., description="'review', 'assesments', 'chat', 'meetings'"
+    )
     timestamp: str = Field(..., description="ISO 8601 UTC timestamp")
-    learner_id: Optional[str] = Field(None, description="Learner UUID who produced/underwent this data source")
+    learner_id: Optional[str] = Field(
+        None,
+        description="Learner UUID who produced/underwent this data source",
+    )
     payload: Union[ReviewPayload, AssessmentPayload, Dict[str, Any]] = Field(
         ..., description="Polymorphic payload depending on datasource_name"
     )
 
     @classmethod
     def generate_deterministic_id(
-        cls, learner_id: str, lx_id: str, timestamp: str, source_type: str, attempt: int = 1
+        cls,
+        learner_id: str,
+        lx_id: str,
+        timestamp: str,
+        source_type: str,
+        attempt: int = 1,
     ) -> str:
         raw_key = f"{learner_id}:{lx_id}:{timestamp}:{source_type}:{attempt}"
         return "ds_" + hashlib.sha256(raw_key.encode("utf-8")).hexdigest()[:24]
@@ -107,13 +129,22 @@ class MemoryCard(BaseModel):
     metric_key: str = Field(..., description="Competency metric key")
     content: str = Field(..., description="Summary content")
     rationale: Optional[str] = Field(None, description="Rationale explanation")
-    tags: List[str] = Field(default_factory=list, description="Predefined competency tags")
+    tags: List[str] = Field(
+        default_factory=list, description="Predefined competency tags"
+    )
     created_at: Optional[str] = Field(None, description="Creation timestamp")
     associated_learner_ids: List[str] = Field(
-        default_factory=list, description="List of LearnerProfile UUIDs linked to this card (Many-to-Many)"
+        default_factory=list,
+        description=(
+            "List of LearnerProfile UUIDs linked to this card (Many-to-Many)"
+        ),
     )
-    profile_hints: Optional[List[str]] = Field(None, description="Legacy alias for tags")
-    meeting_id: Optional[str] = Field(None, description="Legacy session identifier")
+    profile_hints: Optional[List[str]] = Field(
+        None, description="Legacy alias for tags"
+    )
+    meeting_id: Optional[str] = Field(
+        None, description="Legacy session identifier"
+    )
 
     @model_validator(mode="after")
     def sync_tags_and_hints(self) -> "MemoryCard":

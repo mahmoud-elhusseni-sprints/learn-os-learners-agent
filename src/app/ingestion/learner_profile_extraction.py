@@ -3,7 +3,9 @@ import logging
 import os
 from typing import Any, Dict, List
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -28,15 +30,23 @@ def extract_learner_profiles(filepath_list: List[str]) -> List[Dict[str, Any]]:
                 try:
                     record = json.loads(line_str)
                     if not isinstance(record, dict):
-                        logger.warning(f"Line {line_idx} in {filepath} is not a JSON object: {line_str[:50]}")
+                        logger.warning(
+                            f"Line {line_idx} in {filepath} is not a "
+                            f"JSON object: {line_str[:50]}"
+                        )
                         continue
                 except json.JSONDecodeError as err:
-                    logger.error(f"Malformed JSON line {line_idx} in {filepath}: {err}")
+                    logger.error(
+                        f"Malformed JSON line {line_idx} in {filepath}: {err}"
+                    )
                     continue
 
                 learner_id = record.get("learner_id")
                 if not learner_id:
-                    logger.warning(f"Line {line_idx} in {filepath} missing mandatory key 'learner_id'")
+                    logger.warning(
+                        f"Line {line_idx} in {filepath} missing "
+                        f"mandatory key 'learner_id'"
+                    )
                     continue
 
                 if learner_id not in seen_ids:

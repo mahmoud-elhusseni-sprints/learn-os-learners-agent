@@ -54,7 +54,9 @@ def run_pipeline(run_llm_agents: bool = False) -> Dict[str, Any]:
         dead_map = build_deadline_map(grp["configs"])
         taxonomies = extract_rubric_taxonomies(grp["configs"])
         metrics_map = (
-            mentor_agent.evaluate_mentor_metrics_map(grp["configs"], grp["logs"])
+            mentor_agent.evaluate_mentor_metrics_map(
+                grp["configs"], grp["logs"]
+            )
             if mentor_agent
             else {}
         )
@@ -83,7 +85,9 @@ def run_pipeline(run_llm_agents: bool = False) -> Dict[str, Any]:
         answers_file = grp.get("answers")
         if answers_file and os.path.exists(answers_file):
             lms_list = extract_lms_assessments(
-                grp["configs"], cards_map, answers_filepath_or_records=answers_file
+                grp["configs"],
+                cards_map,
+                answers_filepath_or_records=answers_file,
             )
         else:
             lms_list = extract_lms_assessments(grp["configs"], cards_map)
@@ -98,7 +102,10 @@ def run_pipeline(run_llm_agents: bool = False) -> Dict[str, Any]:
         lms_file=LMS_ASSESSMENTS_OUTPUT_FILE,
         output_file=DATASOURCE_OUTPUT_FILE,
     )
-    print(f"  -> Successfully generated {len(datasource_nodes)} DataSource nodes (Node 2).")
+    print(
+        f"  -> Successfully generated {len(datasource_nodes)} "
+        f"DataSource nodes (Node 2)."
+    )
 
     print("\n[Step 3/3] Extracting MemoryCard Graph Nodes (Node 3)...")
 
@@ -107,7 +114,10 @@ def run_pipeline(run_llm_agents: bool = False) -> Dict[str, Any]:
         output_file=MEMORY_CARDS_OUTPUT_FILE,
     )
 
-    print(f"  -> Successfully generated {len(memory_cards)} MemoryCard nodes (Node 3).")
+    print(
+        f"  -> Successfully generated {len(memory_cards)} "
+        f"MemoryCard nodes (Node 3)."
+    )
 
     return {
         "profiles": profiles,

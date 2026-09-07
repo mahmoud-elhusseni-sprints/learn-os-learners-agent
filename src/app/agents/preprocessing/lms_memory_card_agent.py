@@ -89,7 +89,9 @@ class LMSMemoryCardAgent:
                     if submission:
                         sub_text = submission.get("text", "")
                         if sub_text:
-                            learner_data[learner_id]["submissions"].append(sub_text[:300])
+                            learner_data[learner_id]["submissions"].append(
+                                sub_text[:300]
+                            )
 
                     for msg in actor_messages:
                         text = msg.get("text", "")
@@ -101,7 +103,9 @@ class LMSMemoryCardAgent:
     def generate_memory_cards_map(
         self, configs_filepath: str, logs_filepath: str, cards_per_learner: int = 15
     ) -> Dict[str, List[Dict[str, Any]]]:
-        learner_evidence = self._extract_learner_evidence(configs_filepath, logs_filepath)
+        learner_evidence = self._extract_learner_evidence(
+            configs_filepath, logs_filepath
+        )
         cards_map: Dict[str, List[Dict[str, Any]]] = {}
 
         if not self.questions:

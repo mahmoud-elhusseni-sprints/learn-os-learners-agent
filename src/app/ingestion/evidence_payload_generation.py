@@ -35,7 +35,8 @@ def generate_datasource_nodes(
             timestamp = r.get("timestamp", "2026-08-01T00:00:00Z")
 
             detailed_rubrics = [
-                RubricPointEvaluation(**rp) for rp in r.get("detailed_rubric_evaluations", [])
+                RubricPointEvaluation(**rp)
+                for rp in r.get("detailed_rubric_evaluations", [])
             ]
 
             review_payload = ReviewPayload(
@@ -75,7 +76,11 @@ def generate_datasource_nodes(
         for lms in lms_list:
             learner_id = lms.get("learner_id")
             lx_id = lms.get("lx_id", "lms_assessment")
-            timestamp = lms.get("terminated_at") or lms.get("activated_at") or "2026-08-01T00:00:00Z"
+            timestamp = (
+                lms.get("terminated_at")
+                or lms.get("activated_at")
+                or "2026-08-01T00:00:00Z"
+            )
 
             answers = [
                 AssessmentAnswer(
@@ -118,7 +123,10 @@ def generate_datasource_nodes(
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(datasource_nodes, f, indent=2, ensure_ascii=False)
 
-    print(f"[OK] Generated {len(datasource_nodes)} DataSource nodes and saved to '{output_file}'.")
+    print(
+        f"[OK] Generated {len(datasource_nodes)} DataSource nodes and saved to "
+        f"'{output_file}'."
+    )
     return datasource_nodes
 
 

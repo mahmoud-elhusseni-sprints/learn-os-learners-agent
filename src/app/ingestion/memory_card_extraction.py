@@ -6,11 +6,15 @@ from typing import Any, Dict, List
 from src.app.core.config import LMS_ASSESSMENTS_OUTPUT_FILE, MEMORY_CARDS_OUTPUT_FILE
 from src.app.models.deliverables import MemoryCard
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
-def extract_memory_cards_from_assessments(assessments_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def extract_memory_cards_from_assessments(
+    assessments_data: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
     cards_by_id: Dict[str, Dict[str, Any]] = {}
 
     for record in assessments_data:
@@ -36,17 +40,24 @@ def extract_memory_cards_from_assessments(assessments_data: List[Dict[str, Any]]
 
                 card_obj = MemoryCard(
                     card_id=card_id,
-                    metric_key=raw_card.get("metric_key", "general_competency"),
+                    metric_key=raw_card.get(
+                        "metric_key", "general_competency"
+                    ),
                     content=raw_card.get("content", ""),
                     rationale=raw_card.get("rationale"),
                     tags=list(set(tags)),
                     created_at=raw_card.get("created_at"),
                     associated_learner_ids=associated_learners,
                 )
-                cards_by_id[card_id] = card_obj.model_dump(exclude={"profile_hints", "meeting_id"})
+                cards_by_id[card_id] = card_obj.model_dump(
+                    exclude={"profile_hints", "meeting_id"}
+                )
             else:
-                if learner_id and learner_id not in cards_by_id[card_id]["associated_learner_ids"]:
-                    cards_by_id[card_id]["associated_learner_ids"].append(learner_id)
+                existing_learners = cards_by_id[card_id][
+                    "associated_learner_ids"
+                ]
+                if learner_id and learner_id not in existing_learners:
+                    existing_learners.append(learner_id)
 
     return list(cards_by_id.values())
 
@@ -67,7 +78,10 @@ def generate_memory_card_nodes(
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(cards, f, indent=2, ensure_ascii=False)
 
-    logger.info(f"[OK] Extracted {len(cards)} MemoryCard nodes and saved to '{output_file}'.")
+    logger.info(
+        f"[OK] Extracted {len(cards)} MemoryCard nodes and saved to "
+        f"'{output_file}'."
+    )
     return cards
 
 

@@ -3,19 +3,20 @@ from typing import Any, Dict, List
 
 LMS_MEMORY_CARD_PROMPT_TEMPLATE = """
 You are Agent 1 (LMS Memory Card Generator Agent).
-Evaluate learner '{learner_name}' (ID: {learner_id}) based on their work logs and task submissions.
+Evaluate learner '{learner_name}' (ID: {learner_id}) based on their work logs
+and task submissions.
 
 ALLOWED TAXONOMY TAGS FOR profile_hints:
-- "technical_skills": Technical knowledge, tools, Python, APIs, SQL, Docker, RAG, etc.
-- "problem_solving": Debugging, troubleshooting, analytical thinking, root cause analysis.
-- "communication": Written/verbal communication, explanations, documentation quality.
-- "teamwork_collaboration": Cooperation, coordination, sharing knowledge with peers.
+- "technical_skills": Technical knowledge, tools, Python, APIs, SQL, Docker, RAG.
+- "problem_solving": Debugging, troubleshooting, analytical thinking.
+- "communication": Written/verbal communication, explanations, documentation.
+- "teamwork_collaboration": Cooperation, coordination, sharing knowledge.
 - "leadership": Initiative, ownership, guiding approach, key decisions.
 - "time_task_management": Managing workload, planning, deadlines, prioritization.
-- "adaptability_learning": Learning new tools, flexibility, responding to feedback.
-- "professionalism": Reliability, accountability, execution quality, code cleanliness.
-- "creativity_innovation": Creative solutions, experimentation, novel approaches.
-- "career_role_alignment": Target role alignment (e.g. AI Engineer, Product Manager).
+- "adaptability_learning": Learning new tools, flexibility, feedback response.
+- "professionalism": Reliability, accountability, execution, code cleanliness.
+- "creativity_innovation": Creative solutions, experimentation, novel ideas.
+- "career_role_alignment": Target role alignment (AI Engineer, Product Manager).
 
 BENCHMARK QUESTIONS (First 15 domain benchmarks):
 {questions_json}
@@ -25,15 +26,17 @@ Tasks: {task_headlines}
 Submission Excerpts: {subs}
 Interaction Logs: {logs}
 
-TASK: Evaluate the learner against each benchmark question. Generate JSON output as an array of exactly {cards_per_learner} memory card objects.
-For each memory card, choose 1 to 3 relevant tags for 'profile_hints' STRICTLY from the ALLOWED TAXONOMY TAGS list above.
+TASK: Evaluate the learner against each benchmark question.
+Generate JSON output as an array of exactly {cards_per_learner} memory cards.
+For each memory card, choose 1 to 3 relevant tags for 'profile_hints'
+STRICLY from the ALLOWED TAXONOMY TAGS list above.
 
 Return ONLY a valid JSON array with format:
 [
   {{
     "metric_key": "<benchmark metric_key>",
-    "content": "<Detailed evaluation content of how learner met or missed benchmark criteria>",
-    "rationale": "<Reasoning based on learner code submissions and interaction logs>",
+    "content": "<Evaluation content of how learner met/missed criteria>",
+    "rationale": "<Reasoning based on learner code submissions and logs>",
     "profile_hints": ["technical_skills", "problem_solving"]
   }}
 ]
@@ -41,7 +44,7 @@ Return ONLY a valid JSON array with format:
 
 MENTOR_METRIC_PROMPT_TEMPLATE = """
 You are Agent 2 (Mentor Metric Evaluator Agent).
-Evaluate learner '{learner_name}' (ID: {learner_id}) across mentor engagement metrics:
+Evaluate learner '{learner_name}' (ID: {learner_id}) across mentor metrics:
 1. behavioral_engagement.engagement
 2. behavioral_engagement.effort_signals
 3. behavioral_engagement.adaptability
@@ -52,12 +55,24 @@ Tasks: {tasks}
 Submission Excerpts: {subs}
 Interaction Logs: {logs}
 
-TASK: Return a JSON object with qualitative assessments and ratings (1-5 scale) for each metric:
+TASK: Return a JSON object with qualitative assessments (1-5 scale) per metric:
 {{
-  "behavioral_engagement.engagement": {{ "score": 4.5, "notes": "Active participant in sprints." }},
-  "behavioral_engagement.effort_signals": {{ "score": 4.0, "notes": "Submitted tasks ahead of deadline." }},
-  "behavioral_engagement.adaptability": {{ "score": 4.2, "notes": "Incorporated mentor feedback quickly." }},
-  "technical_execution.code_quality": {{ "score": 4.0, "notes": "Clean modular code structure." }}
+  "behavioral_engagement.engagement": {{
+    "score": 4.5,
+    "notes": "Active participant in sprints."
+  }},
+  "behavioral_engagement.effort_signals": {{
+    "score": 4.0,
+    "notes": "Submitted tasks ahead of deadline."
+  }},
+  "behavioral_engagement.adaptability": {{
+    "score": 4.2,
+    "notes": "Incorporated mentor feedback quickly."
+  }},
+  "technical_execution.code_quality": {{
+    "score": 4.0,
+    "notes": "Clean modular code structure."
+  }}
 }}
 """
 
