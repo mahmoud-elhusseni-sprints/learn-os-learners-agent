@@ -21,9 +21,10 @@ venv/
 # OS
 .DS_Store
 
-#data
-data/processed/*
-!data/processed/.gitkeep
+# Local data & pipeline output
+data/
+json/
+
 
 # Block other/generated jsonl exports from docs/data by default, but keep
 # the small real anonymized fixtures the Talent Intelligence Agent tests
