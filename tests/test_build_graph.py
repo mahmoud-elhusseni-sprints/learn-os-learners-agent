@@ -268,6 +268,67 @@ def test_empty_input_produces_an_empty_but_valid_graph() -> None:
 
 
 # ===========================================================================
+# Elgazzar's meeting/chat memory cards - a different shape from Atia's
+# ===========================================================================
+#
+# Elgazzar's generator (src/app/ingestion/generate_memory_cards.py) is not
+# merged into main yet, so its MemoryCardRecord model can't be imported
+# here. This fixture is instead hand-matched to that model's field names
+# (card_id, meeting_id, learner_id, metric_key, normalized_payload,
+# delivery_status, created_at, round_name) - the same shape the raw
+# meeting_memory_cards.jsonl export itself uses. If his model's shape
+# changes, this test needs updating by hand since it can't fail
+# automatically the way the Atia-sourced contract tests do.
+
+
+def _nested_memory_card(card_id: str, learner_id: str, meeting_id: str) -> dict:
+    return {
+        "card_id": card_id,
+        "meeting_id": meeting_id,
+        "learner_id": learner_id,
+        "metric_key": "learning_goals.learner_tasks",
+        "normalized_payload": {
+            "content": "Learner described their assigned task in standup.",
+            "rationale": "Stated directly by the learner.",
+            "profile_hints": ["task_assignment"],
+        },
+        "delivery_status": "pending",
+        "created_at": "2026-07-27T20:30:11.396259+00:00",
+        "round_name": "round2",
+    }
+
+
+def test_nested_meeting_card_shape_is_understood() -> None:
+    result = build_graph_from_pipeline_output(
+        profiles=[_profile(LEARNER_A, "Learner A1")],
+        datasources=[],
+        memory_cards=[_nested_memory_card("mcard-1", LEARNER_A, "meeting-1")],
+        ingested_at=NOW,
+    )
+    assert result.skipped == []
+    card = result.graph.by_label("MemoryCard")[0]
+    assert card.content == "Learner described their assigned task in standup."  # type: ignore[attr-defined]
+    assert card.tags == ["task_assignment"]  # type: ignore[attr-defined]
+    assert len(result.graph.edges_of(EdgeType.HAS_MEMORY_CARD)) == 1
+
+
+def test_both_card_shapes_can_be_combined_in_one_call() -> None:
+    """This is the actual situation once both pipelines exist: Atia's flat
+    cards and Elgazzar's nested cards arrive in the same list."""
+    flat = _memory_card("flat-card", [LEARNER_A])
+    nested = _nested_memory_card("nested-card", LEARNER_A, "meeting-1")
+
+    result = build_graph_from_pipeline_output(
+        profiles=[_profile(LEARNER_A, "Learner A1")],
+        datasources=[],
+        memory_cards=[flat, nested],
+        ingested_at=NOW,
+    )
+    assert len(result.graph.by_label("MemoryCard")) == 2
+    assert result.skipped == []
+
+
+# ===========================================================================
 # The real end of the seam: does it actually load?
 # ===========================================================================
 

@@ -87,17 +87,28 @@ def load_pipeline_output(
     datasource_file: Path,
     memory_cards_file: Path,
     *,
+    extra_memory_cards_file: Path | None = None,
     batch_size: int | None = None,
 ) -> BuildResult:
-    """Load the preprocessing pipeline's three JSON files into Neo4j.
+    """Load the preprocessing pipeline's output into Neo4j.
 
-    This is the seam between extraction (``src/app/ingestion/pipeline.py``)
-    and the graph: it converts the pipeline's records into graph models,
-    validates the whole batch, then loads it. Records that could not be
-    converted are reported in the returned ``BuildResult.skipped`` rather
-    than silently dropped.
+    This is the seam between extraction and the graph: it converts records
+    into graph models, validates the whole batch, then loads it. Records
+    that could not be converted are reported in the returned
+    ``BuildResult.skipped`` rather than silently dropped.
+
+    ``extra_memory_cards_file`` is optional: Elgazzar's meeting/chat memory
+    card generator (``src/app/ingestion/generate_memory_cards.py``) isn't
+    part of ``pipeline.py`` yet, so its output (run with ``--format json``
+    or ``jsonl``) is merged in here rather than assumed to already be in
+    ``memory_cards_file``.
     """
-    result = build_graph_from_files(profiles_file, datasource_file, memory_cards_file)
+    result = build_graph_from_files(
+        profiles_file,
+        datasource_file,
+        memory_cards_file,
+        extra_memory_cards_file=extra_memory_cards_file,
+    )
 
     driver = get_driver()
     verify_connection(driver)
@@ -130,6 +141,17 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
     ap.add_argument(
+        "--extra-memory-cards",
+        type=Path,
+        default=None,
+        help=(
+            "Optional: output from Elgazzar's standalone "
+            "generate_memory_cards.py (--format json or jsonl), merged in "
+            "alongside --pipeline-dir's own memory cards. Not needed with "
+            "--seed."
+        ),
+    )
+    ap.add_argument(
         "--batch-size",
         type=int,
         default=settings.graph_loader_batch_size,
@@ -146,6 +168,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.pipeline_dir / "extracted_learner_profiles.json",
                 args.pipeline_dir / "graph_datasource_nodes.json",
                 args.pipeline_dir / "graph_memory_cards.json",
+                extra_memory_cards_file=args.extra_memory_cards,
                 batch_size=args.batch_size,
             )
             print(f"loaded {result.summary()}")

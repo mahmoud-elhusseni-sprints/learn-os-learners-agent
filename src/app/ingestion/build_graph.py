@@ -11,6 +11,16 @@ output never reached Neo4j.
 This module is that join. It reads the pipeline's dicts and returns a
 ``LearnerGraph`` ready for ``load_graph()``.
 
+Memory cards specifically can arrive in two shapes, both real: Atia's
+pipeline emits them flat (``content``/``rationale``/``tags`` on the row);
+Elgazzar's separate meeting/chat card generator
+(``src/app/ingestion/generate_memory_cards.py``, ``--format json`` or
+``jsonl``) emits the raw-export shape instead, with those fields nested
+inside ``normalized_payload``. Both are accepted - see
+``_normalize_memory_card_row``. Elgazzar's script is not part of the
+pipeline yet, so its output is passed in as an extra list rather than read
+from the standard three files; see ``build_graph_from_files``.
+
 Why an adapter instead of changing either side
 -----------------------------------------------
 The two model sets describe the same three entities with the same field
@@ -138,6 +148,34 @@ def _review_payload(raw: dict[str, Any]) -> ReviewPayload:
     )
 
 
+def _normalize_memory_card_row(row: dict[str, Any]) -> dict[str, Any]:
+    """Memory cards reach us in two different shapes, both real:
+
+    - Atia's pipeline (``memory_card_extraction.py``) emits the flat shape:
+      ``content``/``rationale``/``tags`` sit directly on the row.
+    - Elgazzar's meeting/chat card generator (``generate_memory_cards.py``,
+      ``--format json``/``jsonl``) emits the *raw export* shape instead - the
+      same one ``meeting_memory_cards.jsonl`` itself uses - where those
+      fields are nested one level down inside ``normalized_payload``, and
+      the learner is a single ``learner_id`` rather than a list.
+
+    Detect the nested shape and flatten it here, once, so the rest of this
+    module only has to handle one row format.
+    """
+    if "normalized_payload" not in row:
+        return row  # already flat (Atia's shape)
+
+    payload = row.get("normalized_payload") or {}
+    flat = dict(row)
+    flat.setdefault("content", payload.get("content"))
+    flat.setdefault("rationale", payload.get("rationale"))
+    flat.setdefault("tags", payload.get("profile_hints") or payload.get("tags"))
+    learner_id = row.get("learner_id")
+    if learner_id and "associated_learner_ids" not in flat:
+        flat["associated_learner_ids"] = [learner_id]
+    return flat
+
+
 def _assessment_payload(raw: dict[str, Any]) -> AssessmentPayload:
     score = float(raw.get("score") or 0.0)
     max_score = float(raw.get("max_score") or 0.0)
@@ -190,7 +228,11 @@ def build_graph_from_pipeline_output(
 
     ``profiles``     - rows from ``extract_learner_profiles``
     ``datasources``  - ``DataSource.model_dump()`` rows from the pipeline
-    ``memory_cards`` - ``MemoryCard.model_dump()`` rows from the pipeline
+    ``memory_cards`` - card rows from EITHER source: Atia's pipeline (flat
+                       shape) or Elgazzar's meeting/chat generator (nested
+                       ``normalized_payload`` shape) - pass one list, both,
+                       or their concatenation; each row is normalized on
+                       its own, so mixing sources in one call is fine
 
     Returns a ``BuildResult`` holding the graph and the list of skipped
     records. Raises only if the *converted* data is itself inconsistent -
@@ -284,7 +326,8 @@ def build_graph_from_pipeline_output(
     card_owners: dict[str, list[str]] = {}
     card_meeting: dict[str, str] = {}
 
-    for row in memory_cards:
+    for raw_row in memory_cards:
+        row = _normalize_memory_card_row(raw_row)
         card_id = row.get("card_id")
         if not card_id:
             skipped.append("memory card with no card_id")
@@ -375,10 +418,15 @@ def build_graph_from_pipeline_output(
 
 
 def _read_json_list(path: Path) -> list[dict[str, Any]]:
+    """Read either a JSON array (``.json``) or one-object-per-line
+    (``.jsonl``, what Elgazzar's ``--format jsonl`` writes)."""
     if not path.exists():
         logger.warning("%s does not exist - treating as empty", path)
         return []
-    data = json.loads(path.read_text(encoding="utf-8"))
+    text = path.read_text(encoding="utf-8")
+    if path.suffix == ".jsonl":
+        return [json.loads(line) for line in text.splitlines() if line.strip()]
+    data = json.loads(text)
     return data if isinstance(data, list) else []
 
 
@@ -387,14 +435,27 @@ def build_graph_from_files(
     datasource_file: Path,
     memory_cards_file: Path,
     *,
+    extra_memory_cards_file: Path | None = None,
     ingested_at: datetime | None = None,
 ) -> BuildResult:
-    """Same as ``build_graph_from_pipeline_output``, reading the three JSON
-    files the pipeline writes. A missing file is treated as empty so a
-    partial pipeline run still produces a loadable graph."""
+    """Same as ``build_graph_from_pipeline_output``, reading JSON files.
+
+    ``extra_memory_cards_file`` is optional and separate from the pipeline's
+    own ``memory_cards_file``: it is not produced by ``pipeline.py`` at all,
+    but by Elgazzar's standalone ``generate_memory_cards.py --format json``
+    (or ``jsonl`` - both are read the same way here). Pass it whenever that
+    script has been run; omit it and this behaves exactly as before.
+
+    A missing file is treated as empty so a partial pipeline run still
+    produces a loadable graph.
+    """
+    cards = _read_json_list(memory_cards_file)
+    if extra_memory_cards_file is not None:
+        cards = cards + _read_json_list(extra_memory_cards_file)
+
     return build_graph_from_pipeline_output(
         _read_json_list(profiles_file),
         _read_json_list(datasource_file),
-        _read_json_list(memory_cards_file),
+        cards,
         ingested_at=ingested_at,
     )
