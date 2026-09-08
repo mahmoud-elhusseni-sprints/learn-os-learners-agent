@@ -1,0 +1,29 @@
+{
+  "previous_profile": {
+    "learner_id": "synthetic-example",
+    "name": "Example Learner",
+    "metrics": {
+      "python_async_io": {
+        "summary": "The prior summary reports difficulty with asynchronous error handling; the original records and dates are unavailable.",
+        "confidence": 0.4,
+        "evidence_ids": ["prior-example-card"]
+      },
+      "communication": {
+        "summary": "Explained a design choice during one recorded review.",
+        "confidence": 0.5,
+        "evidence_ids": ["prior-communication-card"]
+      }
+    }
+  },
+  "memory_cards": [
+    {
+      "card_id": "example-async-review",
+      "meeting_id": null,
+      "metric_key": "python_async_io",
+      "content": "In a code review, the learner handled asyncio task exceptions correctly in the reviewed example; the accompanying error-handling tests passed.",
+      "rationale": "The observation supports correct error handling in this specific example, not general mastery.",
+      "tags": ["technical_skills", "python"],
+      "created_at": "2026-09-07T12:00:00Z"
+    }
+  ]
+}

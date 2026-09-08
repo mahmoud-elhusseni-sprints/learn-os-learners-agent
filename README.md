@@ -17,6 +17,12 @@ It mocks model calls, requires no API key, and includes a check against the
 repository's sample evidence. With Docker available, run
 `docker compose run --rm --no-deps api pytest` for the full suite.
 
+## Task 10: Learner Profile Update Agent
+
+Creates or selectively updates profile metrics from tagged memory cards, with
+Pydantic validation, evidence-first prompts and no database operations.
+See [contracts, architecture, examples and tests](docs/learner_profile_update.md).
+
 ## Quick Start
 
 1. Clone the repository.
