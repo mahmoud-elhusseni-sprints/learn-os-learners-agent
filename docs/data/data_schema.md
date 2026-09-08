@@ -24,6 +24,7 @@ row = {"learner_id": x, "skill": y, "conf": 1.4}
 
 # yes — raises immediately, naming the field
 from src.app.graph.schema import Evidence, Provenance
+
 ev = Evidence(...)
 ```
 
@@ -78,9 +79,9 @@ A random UUID4 would create a new node on every run.
 ```python
 Provenance(
     source_system=SourceSystem.ASSESSMENT_ENGINE,
-    source_id="lx-144bd399:12",              # primary key in the source
+    source_id="lx-144bd399:12",  # primary key in the source
     source_type="interaction_log.feedback",  # record type
-    source_locator="rubric_point:102",       # optional pointer inside it
+    source_locator="rubric_point:102",  # optional pointer inside it
     observed_at=entry_ts,
     ingested_at=now,
     extraction_method=ExtractionMethod.RULE_BASED,

@@ -1,9 +1,15 @@
 import json
 import logging
 import os
-from typing import Any, Dict, List
+import re
+import uuid
+from typing import Any, Dict, List, Sequence
 
-from src.app.core.config import LMS_ASSESSMENTS_OUTPUT_FILE, MEMORY_CARDS_OUTPUT_FILE
+from src.app.core.config import (
+    LMS_ASSESSMENTS_OUTPUT_FILE,
+    MEMORY_CARDS_OUTPUT_FILE,
+    RUBRICS_OUTPUT_FILE,
+)
 from src.app.models.deliverables import MemoryCard
 
 logging.basicConfig(
@@ -11,16 +17,248 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# The 10 Allowed Canonical Taxonomy Tags
+ALLOWED_TAXONOMY_TAGS = [
+    "technical_skills",
+    "problem_solving",
+    "communication",
+    "teamwork_collaboration",
+    "leadership",
+    "time_task_management",
+    "adaptability_learning",
+    "professionalism",
+    "creativity_innovation",
+    "career_role_alignment",
+]
+ALLOWED_TAXONOMY_SET = set(ALLOWED_TAXONOMY_TAGS)
+
+TAG_KEYWORD_RULES = [
+    (
+        "technical_skills",
+        [
+            "technical",
+            "python",
+            "api",
+            "sql",
+            "docker",
+            "rag",
+            "fastapi",
+            "pipeline",
+            "backend",
+            "frontend",
+            "llm",
+            "scripting",
+            "engineering",
+            "code",
+            "architecture",
+            "data",
+            "query",
+            "database",
+            "git",
+            "digital_ai_skills",
+            "vector",
+            "html",
+            "mp4",
+        ],
+    ),
+    (
+        "problem_solving",
+        [
+            "problem_solving",
+            "debug",
+            "troubleshoot",
+            "mistake_patterns",
+            "failure_modes",
+            "reason",
+            "analysis",
+            "analytical",
+            "fix",
+            "logic",
+            "error",
+            "root_cause",
+            "solution",
+        ],
+    ),
+    (
+        "communication",
+        [
+            "communication",
+            "written",
+            "verbal",
+            "explanation",
+            "documentation",
+            "readme",
+            "report",
+            "summary",
+            "reply",
+            "mentor_reply",
+            "feedback",
+            "dialogue",
+            "presentation",
+        ],
+    ),
+    (
+        "teamwork_collaboration",
+        [
+            "teamwork_collaboration",
+            "teamwork",
+            "collaboration",
+            "cooperation",
+            "peer",
+            "group",
+            "coordination",
+            "sharing",
+            "partner",
+        ],
+    ),
+    (
+        "leadership",
+        [
+            "leadership",
+            "initiative",
+            "ownership",
+            "guiding",
+            "lead",
+            "decision",
+            "direction",
+        ],
+    ),
+    (
+        "time_task_management",
+        [
+            "time_task_management",
+            "time",
+            "deadline",
+            "timeliness",
+            "hours_before_deadline",
+            "schedule",
+            "pacing",
+            "attempt",
+            "planning",
+            "prioritization",
+            "velocity",
+        ],
+    ),
+    (
+        "adaptability_learning",
+        [
+            "adaptability_learning",
+            "adaptability",
+            "learning",
+            "growth",
+            "feedback_response",
+            "retry",
+            "flexibility",
+            "baseline",
+            "pre_course",
+            "post_course",
+            "knowledge_state",
+            "iteration",
+            "incorporat",
+        ],
+    ),
+    (
+        "professionalism",
+        [
+            "professionalism",
+            "cleanliness",
+            "accountability",
+            "execution",
+            "reliability",
+            "quality",
+            "code_quality",
+            "standards",
+            "compliance",
+            "discipline",
+        ],
+    ),
+    (
+        "creativity_innovation",
+        [
+            "creativity_innovation",
+            "creative",
+            "novel",
+            "innovation",
+            "experimentation",
+            "design",
+        ],
+    ),
+    (
+        "career_role_alignment",
+        [
+            "career_role_alignment",
+            "career",
+            "role",
+            "ai_engineer",
+            "product_manager",
+            "alignment",
+        ],
+    ),
+]
+
+
+def canonicalize_tags(
+    raw_inputs: Sequence[Any], default_fallback: str = "technical_skills"
+) -> List[str]:
+    """
+    Maps raw categories, domain labels, or strings strictly into 1 to 3
+    of the 10 Allowed Canonical Taxonomy Tags.
+    """
+    matched_tags: List[str] = []
+
+    # Flatten and stringify
+    tokens = []
+    for item in raw_inputs:
+        if isinstance(item, str):
+            tokens.append(item.lower())
+        elif isinstance(item, (list, tuple, set)):
+            tokens.extend([str(x).lower() for x in item])
+
+    raw_text = " ".join(tokens)
+
+    # 1. Exact match against canonical tags
+    for tok in tokens:
+        if tok in ALLOWED_TAXONOMY_SET and tok not in matched_tags:
+            matched_tags.append(tok)
+
+    # 2. Keyword heuristic matching
+    for canonical_tag, keywords in TAG_KEYWORD_RULES:
+        if canonical_tag in matched_tags:
+            continue
+        for kw in keywords:
+            if re.search(rf"\b{re.escape(kw)}\b", raw_text) or kw in raw_text:
+                matched_tags.append(canonical_tag)
+                break
+
+    # 3. Fallback if none matched
+    if not matched_tags:
+        matched_tags = [default_fallback]
+
+    # Limit to top 3 canonical tags
+    return matched_tags[:3]
+
+
+def _deterministic_card_id(*parts: str) -> str:
+    raw_key = ":".join(str(p) for p in parts)
+    return str(uuid.uuid5(uuid.NAMESPACE_DNS, raw_key))
+
 
 def extract_memory_cards_from_assessments(
     assessments_data: List[Dict[str, Any]],
 ) -> List[Dict[str, Any]]:
+    """
+    Extracts quantitative skill score and competency memory cards from LMS
+    assessments, strictly mapped to the 10 canonical taxonomy tags.
+    """
     cards_by_id: Dict[str, Dict[str, Any]] = {}
 
     for record in assessments_data:
         learner_id = record.get("learner_id")
         mastery_cards = record.get("mastery_memory_cards", [])
+        lx_id = record.get("lx_id") or "assessment"
+        answers = record.get("answers", [])
 
+        # 1. Process mastery memory cards if pre-generated
         for raw_card in mastery_cards:
             if not isinstance(raw_card, dict):
                 continue
@@ -29,9 +267,15 @@ def extract_memory_cards_from_assessments(
             if not card_id:
                 continue
 
-            tags = raw_card.get("tags") or raw_card.get("profile_hints") or []
-            if isinstance(tags, str):
-                tags = [tags]
+            raw_tags = raw_card.get("tags") or raw_card.get("profile_hints") or []
+            if isinstance(raw_tags, str):
+                raw_tags = [raw_tags]
+            metric_key = raw_card.get("metric_key", "general_competency")
+
+            canonical_tags = canonicalize_tags(
+                raw_tags + [metric_key, raw_card.get("content", "")],
+                default_fallback="technical_skills",
+            )
 
             if card_id not in cards_by_id:
                 associated_learners = []
@@ -40,10 +284,10 @@ def extract_memory_cards_from_assessments(
 
                 card_obj = MemoryCard(
                     card_id=card_id,
-                    metric_key=raw_card.get("metric_key", "general_competency"),
+                    metric_key=metric_key,
                     content=raw_card.get("content", ""),
                     rationale=raw_card.get("rationale"),
-                    tags=list(set(tags)),
+                    tags=canonical_tags,
                     created_at=raw_card.get("created_at"),
                     associated_learner_ids=associated_learners,
                 )
@@ -54,31 +298,273 @@ def extract_memory_cards_from_assessments(
                 existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                 if learner_id and learner_id not in existing_learners:
                     existing_learners.append(learner_id)
+                cards_by_id[card_id]["tags"] = canonicalize_tags(
+                    cards_by_id[card_id]["tags"] + canonical_tags
+                )
+
+        # 2. Extract quantitative assessment scores if mastery cards empty
+        if not mastery_cards and answers:
+            for ans in answers:
+                if not isinstance(ans, dict):
+                    continue
+                q_id = ans.get("question_id", "Q")
+                metric_key = (
+                    ans.get("metric_key") or ans.get("domain") or "technical_skills"
+                )
+                score = ans.get("score")
+                learner_answer = ans.get("learner_answer", "")
+                notes = ans.get("evaluation_notes", "")
+                domain = ans.get("domain", "")
+
+                card_id = _deterministic_card_id(
+                    learner_id or "generic", lx_id, q_id, metric_key
+                )
+
+                content_str = (
+                    f"Quantitative Assessment [{metric_key}]: Score {score}/100. "
+                    f"Response: {learner_answer[:160]}"
+                )
+                rationale_str = (
+                    notes or f"Quantitative test score of {score}% in {metric_key}."
+                )
+                canonical_tags = canonicalize_tags(
+                    [domain, metric_key, notes, learner_answer],
+                    default_fallback="technical_skills",
+                )
+
+                if card_id not in cards_by_id:
+                    associated_learners = [learner_id] if learner_id else []
+                    card_obj = MemoryCard(
+                        card_id=card_id,
+                        metric_key=metric_key,
+                        content=content_str,
+                        rationale=rationale_str,
+                        tags=canonical_tags,
+                        created_at=(
+                            record.get("terminated_at") or record.get("activated_at")
+                        ),
+                        associated_learner_ids=associated_learners,
+                    )
+                    cards_by_id[card_id] = card_obj.model_dump(
+                        exclude={"profile_hints", "meeting_id"}
+                    )
+                else:
+                    existing_learners = cards_by_id[card_id]["associated_learner_ids"]
+                    if learner_id and learner_id not in existing_learners:
+                        existing_learners.append(learner_id)
 
     return list(cards_by_id.values())
 
 
+def extract_memory_cards_from_reviews(
+    reviews_data: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    """
+    Extracts qualitative and behavioral context memory cards from mentor
+    feedback and rubrics, strictly mapped to canonical taxonomy tags.
+    """
+    cards_by_id: Dict[str, Dict[str, Any]] = {}
+
+    for record in reviews_data:
+        learner_id = record.get("learner_id")
+        lx_id = record.get("lx_id") or "review_task"
+        task_headline = record.get("task_headline", "Task Review")
+        verdict = record.get("verdict", "reviewed")
+        feedback_summary = record.get("feedback_summary", "")
+        mentor_reply = record.get("mentor_reply", "")
+        timestamp = record.get("timestamp")
+        attempt_number = record.get("attempt_number", 1)
+        detailed_rubrics = record.get("detailed_rubric_evaluations", [])
+        mentor_metrics = record.get("mentor_evaluation_metrics", {})
+
+        # 1. Qualitative feedback summary card
+        if feedback_summary or mentor_reply:
+            card_id = _deterministic_card_id(
+                learner_id or "generic",
+                lx_id,
+                "mentor_qualitative_feedback",
+                str(attempt_number),
+            )
+            feedback_text = feedback_summary or mentor_reply
+            content_str = f"Mentor Review for {task_headline}: {feedback_text}"
+            rationale_str = (
+                f"Mentor evaluation verdict '{verdict}' (Attempt #{attempt_number})."
+            )
+            canonical_tags = canonicalize_tags(
+                ["communication", "adaptability_learning", feedback_text],
+                default_fallback="communication",
+            )
+
+            if card_id not in cards_by_id:
+                associated_learners = [learner_id] if learner_id else []
+                card_obj = MemoryCard(
+                    card_id=card_id,
+                    metric_key="mentor_feedback.qualitative_summary",
+                    content=content_str,
+                    rationale=rationale_str,
+                    tags=canonical_tags,
+                    created_at=timestamp,
+                    associated_learner_ids=associated_learners,
+                )
+                cards_by_id[card_id] = card_obj.model_dump(
+                    exclude={"profile_hints", "meeting_id"}
+                )
+            else:
+                existing_learners = cards_by_id[card_id]["associated_learner_ids"]
+                if learner_id and learner_id not in existing_learners:
+                    existing_learners.append(learner_id)
+
+        # 2. Detailed qualitative rubric evaluations
+        for rp in detailed_rubrics:
+            if not isinstance(rp, dict):
+                continue
+            category = rp.get("category", "general_skills")
+            requirement = rp.get("requirement", "")
+            status = rp.get("status", "Yes")
+            reason = rp.get("reason", "")
+            criteria = rp.get("evaluation_criteria", "")
+            rubric_id = rp.get("rubric_id") or requirement[:30]
+
+            if reason or criteria:
+                card_id = _deterministic_card_id(
+                    learner_id or "generic", lx_id, "rubric_point", str(rubric_id)
+                )
+                content_str = f"[{status}] {requirement}: {criteria}".strip()
+                rationale_str = reason or (
+                    f"Evaluated as '{status}' by mentor for: {requirement}."
+                )
+                canonical_tags = canonicalize_tags(
+                    [category, requirement, reason, criteria],
+                    default_fallback="problem_solving",
+                )
+
+                if card_id not in cards_by_id:
+                    associated_learners = [learner_id] if learner_id else []
+                    card_obj = MemoryCard(
+                        card_id=card_id,
+                        metric_key=f"mentor_rubric.{category}",
+                        content=content_str,
+                        rationale=rationale_str,
+                        tags=canonical_tags,
+                        created_at=timestamp,
+                        associated_learner_ids=associated_learners,
+                    )
+                    cards_by_id[card_id] = card_obj.model_dump(
+                        exclude={"profile_hints", "meeting_id"}
+                    )
+                else:
+                    existing_learners = cards_by_id[card_id]["associated_learner_ids"]
+                    if learner_id and learner_id not in existing_learners:
+                        existing_learners.append(learner_id)
+
+        # 3. Behavioral mentor evaluation metrics if present
+        if isinstance(mentor_metrics, dict):
+            for metric_name, eval_info in mentor_metrics.items():
+                if not isinstance(eval_info, dict):
+                    continue
+                score = eval_info.get("score")
+                notes = eval_info.get("notes", "")
+                card_id = _deterministic_card_id(
+                    learner_id or "generic", "behavioral_metric", metric_name
+                )
+                content_str = f"Behavioral Observation [{metric_name}]: {notes}"
+                rationale_str = f"Qualitative score rating: {score}/5.0"
+                canonical_tags = canonicalize_tags(
+                    [metric_name, notes],
+                    default_fallback="adaptability_learning",
+                )
+
+                if card_id not in cards_by_id:
+                    associated_learners = [learner_id] if learner_id else []
+                    card_obj = MemoryCard(
+                        card_id=card_id,
+                        metric_key=metric_name,
+                        content=content_str,
+                        rationale=rationale_str,
+                        tags=canonical_tags,
+                        created_at=timestamp,
+                        associated_learner_ids=associated_learners,
+                    )
+                    cards_by_id[card_id] = card_obj.model_dump(
+                        exclude={"profile_hints", "meeting_id"}
+                    )
+                else:
+                    existing_learners = cards_by_id[card_id]["associated_learner_ids"]
+                    if learner_id and learner_id not in existing_learners:
+                        existing_learners.append(learner_id)
+
+    return list(cards_by_id.values())
+
+
+def merge_memory_cards(
+    assessment_cards: List[Dict[str, Any]],
+    review_cards: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    """
+    Merges memory cards from both sources, resolving duplicates, combining
+    associated learners, and ensuring canonical taxonomy tags.
+    """
+    merged_by_id: Dict[str, Dict[str, Any]] = {}
+
+    for card in assessment_cards + review_cards:
+        card_id = card.get("card_id")
+        if not card_id:
+            continue
+
+        if card_id not in merged_by_id:
+            merged_by_id[card_id] = dict(card)
+        else:
+            existing = merged_by_id[card_id]
+            # Merge associated learners
+            existing_learners = set(existing.get("associated_learner_ids", []))
+            new_learners = set(card.get("associated_learner_ids", []))
+            existing["associated_learner_ids"] = list(existing_learners | new_learners)
+
+            # Merge and canonicalize tags
+            combined_tags = existing.get("tags", []) + card.get("tags", [])
+            existing["tags"] = canonicalize_tags(combined_tags)
+
+    return list(merged_by_id.values())
+
+
 def generate_memory_card_nodes(
     assessments_file: str = LMS_ASSESSMENTS_OUTPUT_FILE,
+    rubrics_file: str = RUBRICS_OUTPUT_FILE,
     output_file: str = MEMORY_CARDS_OUTPUT_FILE,
 ) -> List[Dict[str, Any]]:
-    if not os.path.exists(assessments_file):
+    """
+    Extracts memory cards from quantitative LMS assessments and qualitative
+    mentor feedback, canonicalizes tags, and serializes the unified list to JSON.
+    """
+    assessment_cards: List[Dict[str, Any]] = []
+    review_cards: List[Dict[str, Any]] = []
+
+    if os.path.exists(assessments_file):
+        with open(assessments_file, "r", encoding="utf-8") as f:
+            assessments_data = json.load(f)
+        assessment_cards = extract_memory_cards_from_assessments(assessments_data)
+        logger.info(f"Extracted {len(assessment_cards)} quantitative assessment cards.")
+    else:
         logger.warning(f"Assessments file not found: {assessments_file}")
-        return []
 
-    with open(assessments_file, "r", encoding="utf-8") as f:
-        assessments_data = json.load(f)
+    if os.path.exists(rubrics_file):
+        with open(rubrics_file, "r", encoding="utf-8") as f:
+            reviews_data = json.load(f)
+        review_cards = extract_memory_cards_from_reviews(reviews_data)
+        logger.info(f"Extracted {len(review_cards)} qualitative mentor review cards.")
+    else:
+        logger.warning(f"Rubrics file not found: {rubrics_file}")
 
-    cards = extract_memory_cards_from_assessments(assessments_data)
+    unified_cards = merge_memory_cards(assessment_cards, review_cards)
 
     with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(cards, f, indent=2, ensure_ascii=False)
+        json.dump(unified_cards, f, indent=2, ensure_ascii=False)
 
     logger.info(
-        f"[OK] Extracted {len(cards)} MemoryCard nodes and saved to "
-        f"'{output_file}'."
+        f"[OK] Generated {len(unified_cards)} unified MemoryCard nodes "
+        f"and saved to '{output_file}'."
     )
-    return cards
+    return unified_cards
 
 
 if __name__ == "__main__":

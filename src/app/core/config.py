@@ -1,14 +1,38 @@
+"""Application configuration, read from environment variables and `.env`.
+
+Combines:
+- Pydantic Settings for Neo4j database connection
+- Directory and output paths for data extraction & graph node pipelines
+- LiteLLM proxy and fallback configuration for preprocessing agents
+"""
+
+from __future__ import annotations
+
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 load_dotenv()
 
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    neo4j_uri: str = "bolt://neo4j:7687"
+    neo4j_username: str = "neo4j"
+    neo4j_password: str = ""
+
+
+settings = Settings()
+
+# Base Directories
 BASE_DIR = Path(__file__).resolve().parents[3]
 DATA_DIR = os.getenv("DATA_DIR", str(BASE_DIR / "data"))
 JSON_DIR = os.getenv("JSON_DIR", str(BASE_DIR / "json"))
 
+# Cohort Data Definitions
 GROUP_A = {
     "name": "Group A (AI Engineer)",
     "learners": os.path.join(DATA_DIR, "group-a-ai-engineer", "learners.jsonl"),
@@ -33,15 +57,14 @@ GROUP_B = {
 
 COHORT_GROUPS = [GROUP_A, GROUP_B]
 
+# Pipeline JSON Output Targets
 PROFILES_OUTPUT_FILE = os.path.join(JSON_DIR, "extracted_learner_profiles.json")
-
 DATASOURCE_OUTPUT_FILE = os.path.join(JSON_DIR, "graph_datasource_nodes.json")
-
 MEMORY_CARDS_OUTPUT_FILE = os.path.join(JSON_DIR, "graph_memory_cards.json")
-
 RUBRICS_OUTPUT_FILE = os.path.join(JSON_DIR, "extracted_mentor_rubrics.json")
 LMS_ASSESSMENTS_OUTPUT_FILE = os.path.join(JSON_DIR, "extracted_lms_assessments.json")
 
+# LLM Configuration
 LITE_LLM_KEY = os.getenv("LITE_LLM")
 LITELLM_BASE_URL = os.getenv(
     "LITELLM_BASE_URL", "https://management.sprints.ai/litellm/v1"
