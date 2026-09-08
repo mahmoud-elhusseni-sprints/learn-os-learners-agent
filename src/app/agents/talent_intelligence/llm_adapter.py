@@ -12,6 +12,11 @@ from typing import Any, Callable
 from .config import litellm_settings
 from .prompts import SYSTEM_PROMPT
 
+LOOP_FAILURE = (
+    "Unable to complete the investigation within the tool-call limit. "
+    "Please retry or narrow the question. This does not mean evidence is missing."
+)
+
 
 class LiteLLMGeminiAdapter:
     """Generate a grounded final response from already retrieved evidence.
@@ -138,7 +143,11 @@ class LiteLLMGeminiAdapter:
             tool_calls = message.tool_calls or []
             messages.append(message.model_dump(exclude_none=True))
             if not tool_calls:
-                return message.content or "Insufficient evidence"  # noqa: E501
+                return (
+                    message.content
+                    or "Unable to complete the investigation: "
+                    "empty model response. Please retry."
+                )
             for call in tool_calls:
                 try:
                     arguments = json.loads(
@@ -159,4 +168,4 @@ class LiteLLMGeminiAdapter:
                         "content": json.dumps(output, ensure_ascii=False, default=str),
                     }
                 )
-        return "Insufficient evidence"
+        return LOOP_FAILURE
