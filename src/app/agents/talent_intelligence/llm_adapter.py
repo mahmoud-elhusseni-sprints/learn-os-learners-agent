@@ -7,10 +7,15 @@ separate so a model/provider issue cannot change retrieval tool contracts.
 from __future__ import annotations
 
 import json
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 from .config import litellm_settings
 from .prompts import SYSTEM_PROMPT
+
+LOOP_FAILURE = (
+    "Unable to complete the investigation within the tool-call limit. "
+    "Please retry or narrow the question. This does not mean evidence is missing."
+)
 
 
 class LiteLLMGeminiAdapter:
@@ -72,6 +77,7 @@ class LiteLLMGeminiAdapter:
         """Let Gemini choose a tool while Python retains retrieval control."""
         try:
             from openai import OpenAI
+            from openai.types.chat import ChatCompletionMessageFunctionToolCall
         except ImportError as error:
             raise RuntimeError(
                 "Install optional dependencies with: pip install -r requirements.txt"
@@ -130,16 +136,22 @@ class LiteLLMGeminiAdapter:
             completion = client.chat.completions.create(
                 model=self._settings["AI_MODEL"],
                 temperature=0,
-                messages=messages,
-                tools=tools,  # type: ignore[call-overload]
+                messages=cast(Any, messages),
+                tools=cast(Any, tools),
                 tool_choice="auto",
             )
             message = completion.choices[0].message
             tool_calls = message.tool_calls or []
             messages.append(message.model_dump(exclude_none=True))
             if not tool_calls:
-                return message.content or "Insufficient evidence"  # noqa: E501
+                return (
+                    message.content
+                    or "Unable to complete the investigation: "
+                    "empty model response. Please retry."
+                )
             for call in tool_calls:
+                if not isinstance(call, ChatCompletionMessageFunctionToolCall):
+                    continue
                 try:
                     arguments = json.loads(
                         call.function.arguments or "{}"
@@ -159,4 +171,4 @@ class LiteLLMGeminiAdapter:
                         "content": json.dumps(output, ensure_ascii=False, default=str),
                     }
                 )
-        return "Insufficient evidence"
+        return LOOP_FAILURE

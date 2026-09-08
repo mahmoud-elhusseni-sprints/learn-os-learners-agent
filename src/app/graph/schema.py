@@ -143,6 +143,7 @@ class GraphNode(GraphModel):
 
     id: str = Field(description="Deterministic id - see src/app/graph/ids.py")
     created_at: UtcDatetime
+    label: str
 
 
 # ===========================================================================
@@ -475,9 +476,9 @@ class LearnerGraph(GraphModel):
                 node = idx.get(nid)
                 if node is None:
                     problems.append(f"{e}: {role} {nid} does not exist")
-                elif node.label != lbl:  # type: ignore[attr-defined]
+                elif node.label != lbl:
                     problems.append(
-                        f"{e}: {role} {nid} is a {node.label} but the edge says {lbl}"  # type: ignore[attr-defined]
+                        f"{e}: {role} {nid} is a {node.label} but the edge says {lbl}"
                     )
         if problems:
             raise ValueError("dangling or mislabelled edges: " + "; ".join(problems))

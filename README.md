@@ -1,3 +1,22 @@
+## Task 6 review regressions
+
+The deterministic Talent Intelligence Agent prioritizes a named skill over a
+general overview/strength/history intent. Multi-word skills are preserved; this
+is a small vocabulary and phrase parser, not a full natural-language classifier.
+Unexpected retrieval failures are recorded with `status="error"` and are not
+reported as missing evidence. Exhausting the optional LLM tool loop is also an
+execution failure, not an evidence judgment.
+
+The mock strengths tool conservatively includes explicit positive behavioral
+observations, not assignments, identity records, or blocker categories. Its
+word-based filter is intentionally limited and does not provide a complete skill
+assessment. Gaps describe missing category coverage, not learner weaknesses.
+
+Run the offline regression suite with `pytest tests/test_review_regressions.py`.
+It mocks model calls, requires no API key, and includes a check against the
+repository's sample evidence. With Docker available, run
+`docker compose run --rm --no-deps api pytest` for the full suite.
+
 ## Quick Start
 
 1. Clone the repository.
@@ -6,6 +25,78 @@
 4. Read `docs/data.md` if your task involves data.
 5. Read `docs/development.md` before creating a feature branch or Pull Request.
 
+
+## Graph Database: Initialization and Test Loads
+
+The graph database runs in Docker with a persistent volume, so data survives
+container restarts.
+
+### 1. Start the database
+
+```bash
+cp .env.example .env      # set NEO4J_PASSWORD
+docker compose up -d neo4j
+```
+
+Data lives in the `neo4j_data` volume. `docker compose down` keeps it;
+`docker compose down -v` deletes it.
+
+### 2. Initialize the schema
+
+Constraints and indexes are in `db/schema_init.cypher` (generated from
+`src/app/graph/schema.py` by `scripts/generate_constraints.py` — do not
+hand-edit). Applying them is idempotent: every statement is
+`IF NOT EXISTS`, so re-running is a no-op rather than an error.
+
+Either let the loader do it:
+
+```python
+from src.loader.graph_loader import get_driver, initialize_schema
+
+initialize_schema(get_driver())
+```
+
+or apply the file directly in Neo4j Browser / `cypher-shell`.
+
+### 3. Run a test load
+
+```bash
+docker compose run --rm api python3 -m src.loader.graph_loader \
+    --seed tests/fixtures/sample_learner_seed.json
+```
+
+Loading is idempotent — run it twice and the graph is identical, with no
+duplicate nodes or relationships, because every id is a deterministic UUIDv5
+and every write is a `MERGE`. Use `--batch-size N` to control how many rows
+go into each statement (default 1000).
+
+### 4. Run the integration tests
+
+```bash
+docker compose up -d neo4j
+docker compose run --rm api pytest tests/test_batch_loader.py
+```
+
+These run against the real database (no mocks) and cover connection
+handling, schema initialization, entity/relation/evidence ingestion,
+idempotency, chunking, and transaction rollback on invalid payloads. They
+skip automatically if Neo4j isn't running, so the rest of the suite still
+works without it.
+
+### Graph model
+
+```text
+LearnerProfile ──PRODUCED──►  DataSource  ──EXTRACTED_INTO──► MemoryCard
+      │                                                            ▲
+      └──────────────────── HAS_MEMORY_CARD ─────────────────────┘
+```
+
+Evidence is not a separate node: it is `DataSource.payload` (the embedded
+submission / feedback / assessment record) plus the `MemoryCard` distilled
+from it. Full reference: `docs/data/ONTOLOGY.md`; the ingestion contract is
+`docs/data/data_schema.md`.
+
+---
 
 ## Documentation Guide
 

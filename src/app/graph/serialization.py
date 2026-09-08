@@ -108,7 +108,7 @@ def _prop_map(props: dict[str, Any], indent: str = "  ") -> str:
 def node_merge_statement(node: GraphNode) -> str:
     props = flatten_node(node)
     node_id = props.pop("id")
-    label = node.label  # type: ignore[attr-defined]
+    label = node.label
     return (
         f"MERGE (n:{label} {{id: {cypher_literal(node_id, 'id')}}})\n"
         f"SET n += {_prop_map(props)};"

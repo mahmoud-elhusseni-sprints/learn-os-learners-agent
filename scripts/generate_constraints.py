@@ -25,6 +25,9 @@ import src.app.graph.schema as M
 ROOT = Path(__file__).resolve().parent.parent
 OUT_PY = ROOT / "src" / "app" / "graph" / "constraints.py"
 OUT_CQL = ROOT / "docs" / "data" / "schema_constraints.cql"
+#: Same DDL, at the path the task brief names as a deliverable. One
+#: generator, two destinations - so the two files cannot drift apart.
+OUT_SCHEMA_INIT = ROOT / "db" / "schema_init.cypher"
 
 #: business_key: the property that uniquely identifies the node in the real
 #: world - its own natural key from the source system.
@@ -276,9 +279,15 @@ if __name__ == "__main__":
     )
     args = ap.parse_args()
 
+    ddl = build()
+
     OUT_CQL.parent.mkdir(parents=True, exist_ok=True)
-    OUT_CQL.write_text(build(), encoding="utf-8")
+    OUT_CQL.write_text(ddl, encoding="utf-8")
     print(f"wrote {OUT_CQL.relative_to(ROOT)}")
+
+    OUT_SCHEMA_INIT.parent.mkdir(parents=True, exist_ok=True)
+    OUT_SCHEMA_INIT.write_text(ddl, encoding="utf-8")
+    print(f"wrote {OUT_SCHEMA_INIT.relative_to(ROOT)}")
 
     if args.write_module:
         OUT_PY.parent.mkdir(parents=True, exist_ok=True)
