@@ -8,334 +8,351 @@ document**. This is that document.
 - **Owner:** Task 2 (graph ontology)
 - **Audience:** Task 4 (submissions & assessments), Task 5 (meetings & chats),
   Task 3 (batch loader)
-- **Ontology version:** `0.1.0` — 26 node types, 42 relationship types
-- **Full reference:** [`ONTOLOGY.md`](ONTOLOGY.md)
+- **Ontology version:** `0.2.0` — 3 node types, 3 relationship types
+- **Full reference:** [`ONTOLOGY.md`](ONTOLOGY.md) (generated from the models)
+
+> **This document was rewritten for the v2 ontology.** The previous version
+> described a 26-node model (`Evidence`, `Provenance`, `Skill`, `Submission`,
+> `Assessment`, `deterministic_id()`, `evidence_uid()`, …). The mentor
+> rejected that design and it was replaced in PR #4. **None of those classes
+> or helpers exist any more** — code written against the old document will
+> not import. Everything below reflects what is actually in
+> `src/app/graph/schema.py` today.
 
 ---
 
 ## 1. The rule
 
-**Do not hand-roll dictionaries.** Build objects with the models in
-`src/app/graph/schema.py`.
+**Do not hand-roll dictionaries, and do not define your own copies of these
+models.** Build objects with the models in `src/app/graph/schema.py`.
 
 ```python
 # no — a typo here surfaces in Neo4j days later
-row = {"learner_id": x, "skill": y, "conf": 1.4}
+row = {"learner_id": x, "verdict": y, "conf": 1.4}
+
+# no — a parallel model means two sources of truth that silently drift
+class MyLearnerProfile(BaseModel): ...
 
 # yes — raises immediately, naming the field
-from src.app.graph.schema import Evidence, Provenance
-ev = Evidence(...)
+from src.app.graph.schema import LearnerProfile, LearnerRole
+profile = LearnerProfile(...)
 ```
 
-Every node type has required fields, value ranges and a closed vocabulary. The
-models enforce all three, so bad data fails in your pipeline instead of
+Every node type has required fields, value ranges and a closed vocabulary.
+The models enforce all three, so bad data fails in your pipeline instead of
 corrupting the graph.
 
 ---
 
-## 2. Five normalisation rules
+## 2. The whole model on one page
 
-### 2.1 Timestamps — ISO 8601, timezone-aware, UTC
-
-The raw export mixes two formats: **874** records use `Z`, **159** use
-`+00:00`. `meetings.jsonl` also carries a `starts_at_local` that is not UTC.
+Three node types. Nothing else is a node.
 
 ```text
-"2026-07-21T20:33:14.676Z"     accepted
-"2026-07-21T20:33:14+00:00"    accepted
-"2026-07-21 20:33:14"          REJECTED — no timezone
+LearnerProfile ──PRODUCED──►  DataSource  ──EXTRACTED_INTO──► MemoryCard
+      │                     (payload embedded)                     ▲
+      └──────────────────── HAS_MEMORY_CARD ─────────────────────┘
 ```
 
-The models normalise both accepted forms to UTC on the way in.
-
-### 2.2 `observed_at` is not `ingested_at`
-
-| Field | Meaning | Drives |
+| Relationship | Cardinality | Meaning |
 | --- | --- | --- |
-| `observed_at` | When it happened in the real world | Recency weighting (Epics 2 & 3) |
-| `ingested_at` | When we wrote it down | Freshness monitoring (Task 6) |
+| `(LearnerProfile)-[:PRODUCED]->(DataSource)` | `1:N` | A learner produces many source records |
+| `(DataSource)-[:EXTRACTED_INTO]->(MemoryCard)` | `1:N` | One record distils into several cards |
+| `(LearnerProfile)-[:HAS_MEMORY_CARD]->(MemoryCard)` | `N:M` | Direct learner → card shortcut |
 
-Setting `observed_at = now()` makes every learner look equally recent and
-breaks candidate ranking.
+An edge whose `(type, source, target)` triple is not in that table is
+**rejected at validation time**. There is no fourth node type and no fifth
+relationship: if you think you need one, raise it with Task 2 first.
 
-### 2.3 IDs are deterministic — never call `uuid4()`
+### Where "evidence" lives
+
+There is **no `Evidence` node** in this model. Evidence is:
+
+- **`DataSource.payload`** — the whole submission / mentor feedback /
+  assessment record, embedded on the node as a typed object, and
+- **`MemoryCard`** — the short, tagged insight distilled from it.
+
+---
+
+## 3. Node fields
+
+### `LearnerProfile`
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `id` | `str` | yes | `node_id("LearnerProfile", learner_id)` — see §5 |
+| `created_at` | datetime (UTC) | yes | When we wrote it down |
+| `learner_id` | `str` | yes | Source system's learner id |
+| `name` | `str` | yes | |
+| `role` | `LearnerRole` | yes | `lead` \| `member` |
+| `group_name` | `str` | yes | |
+| `round_name` | `str` | yes | |
+| `added_at` | datetime (UTC) | yes | When the learner joined |
+| `learner_status` | `str \| None` | no | Optional; may be dropped later |
+
+### `DataSource`
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `id` | `str` | yes | `node_id("DataSource", datasource_id)` |
+| `created_at` | datetime (UTC) | yes | |
+| `datasource_id` | `str` | yes | Your stable natural key — see §5 |
+| `datasource_name` | `DataSourceName` | yes | `review` \| `assesments` \| `chat` \| `meetings` |
+| `timestamp` | datetime (UTC) | yes | When the record happened |
+| `payload` | one of the shapes below | yes | Must match `datasource_name` |
+
+`payload` is a discriminated union, enforced by a validator:
+
+| `datasource_name` | required payload |
+| --- | --- |
+| `review` | `ReviewPayload` |
+| `assesments` *(sic — matches the source data)* | `AssessmentPayload` |
+| `chat`, `meetings` | `StubPayload()` (empty) |
+
+### `MemoryCard`
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `id` | `str` | yes | `node_id("MemoryCard", card_id)` |
+| `created_at` | datetime (UTC) | yes | |
+| `card_id` | `str` | yes | Card id from the source |
+| `metric_key` | `str` | yes | e.g. `learning_goals.learner_tasks` |
+| `content` | `str` | yes | The insight itself |
+| `rationale` | `str \| None` | no | Why the excerpt supports it |
+| `tags` | `list[str]` | no | Maps from `profile_hints` in the dataset |
+
+---
+
+## 4. Payload shapes
+
+### `ReviewPayload` — submission + mentor rubric evaluation
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `lx_id` | `str` | Learning-experience id |
+| `task_headline` | `str` | |
+| `attempt_number` | `int` | `>= 1` |
+| `hours_before_deadline` | `float \| None` | Negative = late. **`None` means unknown** — do not substitute `0.0`, which means "submitted exactly at the deadline" |
+| `submission_text` | `str` | |
+| `assets` | `list[str]` | code repositories + media assets combined |
+| `verdict` | `str` | e.g. `passed`, `failed_retry` |
+| `feedback_summary` | `str` | |
+| `mentor_reply` | `str` | |
+| `detailed_rubric_evaluations` | `list[RubricPointEvaluation]` | |
+
+`RubricPointEvaluation`: `rubric_id: int`, `category: str`,
+`requirement: str`, `status: RubricPointStatus` (`Yes` \| `Partial` \| `No`,
+capitalised — matches the grader), `evaluation_criteria: str`, `reason: str`,
+`confidence_score: float` **bounded 0..1**.
+
+### `AssessmentPayload` — LMS-style assessment
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `lx_id` | `str` | |
+| `assessment_type` | `str` | |
+| `topic_id` | `str` | |
+| `score` | `float` | `>= 0`, and **never greater than `max_score`** |
+| `max_score` | `float` | `>= 0` |
+| `answers` | `list[AssessmentAnswerItem]` | |
+
+`AssessmentAnswerItem`: `question_id`, `domain`, `metric_key`,
+`learner_answer`, `score` (`>= 0`), `evaluation_notes`.
+
+### `StubPayload` — chat / meetings
+
+Empty by design (`StubPayload()`). It rejects extra fields, so a chat record
+cannot quietly accumulate review fields.
+
+---
+
+## 5. IDs are deterministic — never call `uuid4()`
 
 ```python
-from src.app.graph.ids import deterministic_id
+from src.app.graph.ids import node_id
 
-node_id = deterministic_id(source_system, source_type, source_id)
+nid = node_id("LearnerProfile", learner_id)     # label + natural key
 ```
 
-UUIDv5 hashes `(source_system, source_type, source_id)`, so the same source
-record always yields the same UUID on any machine. Combined with `MERGE`, this
-is what satisfies the Sprint 1 acceptance criterion *"backfill can be rerun
-without duplicating events."*
-
+`node_id()` is UUIDv5 over `(label, natural_key)`, lowercased and stripped,
+so the same source record always yields the same id on any machine.
+Combined with the loader's `MERGE`, this is what satisfies the Sprint 1
+acceptance criterion *"backfill can be rerun without duplicating events."*
 A random UUID4 would create a new node on every run.
 
-### 2.4 Every record carries provenance
+Use these natural keys:
 
-```python
-Provenance(
-    source_system=SourceSystem.ASSESSMENT_ENGINE,
-    source_id="lx-144bd399:12",              # primary key in the source
-    source_type="interaction_log.feedback",  # record type
-    source_locator="rubric_point:102",       # optional pointer inside it
-    observed_at=entry_ts,
-    ingested_at=now,
-    extraction_method=ExtractionMethod.RULE_BASED,
-)
-```
+| Node | Natural key |
+| --- | --- |
+| `LearnerProfile` | `learner_id` from the source |
+| `DataSource` | a stable composite you construct, e.g. `f"review:{learner_id}:{lx_id}:{attempt_number}"` or `f"meetings:{learner_id}:{meeting_id}"` |
+| `MemoryCard` | `card_id` from the source |
 
-Use `source_locator` for the exact spot inside a record — `turn:657`,
-`entry_index:12`, `rubric_point:102`. Employers see these; they are how
-"show me the evidence" lands on a real line of work.
-
-### 2.5 Skill names are normalised before they reach the graph
-
-The corpus contains `Python 3.11`, `python`, `Python`, `py`. Collapse to one
-canonical name and keep the surface forms in `Skill.aliases`. Do not create
-four `Skill` nodes.
+The composite for `DataSource` matters: it must be stable across re-runs and
+unique per record, otherwise two different reviews collapse into one node.
+`scripts/build_seed.py` shows the convention in use.
 
 ---
 
-## 3. ID property convention
+## 6. Two normalisation rules that still bite
 
-Every node uses a single `id` property holding a UUIDv5 — **not** per-label
-names like `learner_id` or `skill_id`.
+### 6.1 Timestamps — ISO 8601, timezone-aware, UTC
 
-Rationale:
-
-- Task 3's batch loader stays generic. One `UNWIND … MERGE (n:Label {id: row.id})`
-  works for all 25 labels instead of 25 special cases.
-- The deterministic-ID scheme already encodes the source identity, so a second
-  per-label key adds no information.
-- Source identifiers are not lost: they are preserved on every node as
-  `source_id` + `source_system`, and on `LearnerIdentity` for identity
-  resolution.
-
-This replaces the earlier placeholder in `src/app/graph/constraints.py`.
-Raised for team review as part of this change.
-
----
-
-## 4. Which source file feeds which node
-
-### Task 4 — submissions & assessments
-
-| Source | Produces | Key field mapping |
-| --- | --- | --- |
-| `learners.jsonl` | `Learner`, `LearnerIdentity`, `Round`, `Group` | `email`→`canonical_email`, `name`→`display_name`, `round_name`→`round_key`, `group_id`→`group_key` |
-| `lx_configs.jsonl` | `Task`, `LearningExperience`, `Rubric`, `RubricCriterion` | `lx_id`→`lx_key`, `task.headline`→`headline`, `task_definition_id`→`task_key`, `status`/`outcome`→enums |
-| `…rubric.scopes[]` | `RubricCriterion` | `criterion_key = "{task_def}:{scope.id}:{point.id}"` — must be globally unique |
-| `interaction_logs.jsonl` → `entry.submission` | `Submission`, `Attempt`, `Artifact` | `kind`→`kind`, `text`→`text`, links parsed out of `text`→`code_repositories`/`media_assets`, `attachments`→`attachment_count` |
-| `interaction_logs.jsonl` → `entry.feedback` | `Assessment`, `Evidence` | `verdict`→`verdict`, `summary`→`summary`, **`raw` → parse the JSON array** |
-| `…feedback.raw` scope points | `Evidence` (one per point) | `reason`→`content`, `confidence_score`→`confidence`, `status`→`criterion_status`, `chunks_ids_met`→`Artifact` links |
-| LMS *(not in current export)* | `Evidence`, tier `exposed` | tier, edges and DDL exist; nothing populates them yet |
-
-**The grader payload is the richest source available.**
-`entry.feedback.raw` contains a JSON array after the marker
-`Scope Detailed Results:`. Each point already carries a claim, a confidence
-score and artifact citations — evidence with provenance, pre-built. Parse it
-with `json.JSONDecoder().raw_decode()`; the text following the array is not
-valid JSON.
-
-### Task 5 — meetings & agent chats
-
-| Source | Produces | Key field mapping |
-| --- | --- | --- |
-| `meetings.jsonl` | `Meeting` | `meeting_id`→`meeting_key`, `kind`→`MeetingKind`, `starts_at_utc`→`starts_at_utc` |
-| `meeting_memory_cards.jsonl` | `Evidence`, `Observation` | `content`→`content`/`behavior`, `confidence`→`confidence`, `source_locator`→`source_locator`, `rationale`→`outcome` |
-| `interaction_logs.jsonl` (chat entries) | `Interaction` | `tags`→`tags`, `summary`→`summary`, `ts`→`occurred_at`, `actor_messages`→`message_count` |
-| `transcripts/*.vtt` | `Evidence`, `Observation` | heavily Egyptian Arabic mixed with English technical terms |
-
-**Type memory cards honestly.** A learner saying *"I'm using Remotion"* in a
-standup is `SELF_DECLARED` / `LOW` — not demonstrated. Mapping talk to
-`DEMONSTRATED` inflates every profile and destroys the tier system.
-Behavioural cards are `OBSERVED_BEHAVIOR` / `MEDIUM`.
-
----
-
-## 5. Required fields
-
-Always required on every source-derived node:
+The raw export mixes formats. Both accepted forms are normalised to UTC by
+the models; a naive timestamp is rejected outright.
 
 ```text
-id · created_at · source_system · source_id · source_type
-source_observed_at · ingested_at
+"2026-07-30T10:17:08.550Z"     accepted
+"2026-07-30T10:17:08+00:00"    accepted
+"2026-07-30 10:17:08"          REJECTED — no timezone
 ```
 
-Additionally:
+Pass real `datetime` objects, not strings.
 
-| Node | Also required |
-| --- | --- |
-| `Learner` | `canonical_email`, `display_name` |
-| `LearnerIdentity` | `source_learner_id` |
-| `Round` / `Group` / `Cohort` | `*_key`, `name` |
-| `Task` | `task_key`, `headline` |
-| `LearningExperience` | `lx_key`, `status` |
-| `Attempt` | `attempt_number`, `verdict` |
-| `Submission` | `kind` |
-| `Artifact` | `artifact_key` |
-| `Rubric` / `RubricCriterion` | `rubric_key` / `criterion_key` |
-| `Assessment` | `assessment_kind` |
-| `Meeting` | `meeting_key`, `kind` |
-| `Interaction` | `interaction_kind`, `occurred_at` |
-| **`Evidence`** | `evidence_type`, `strength`, `title`, `content`, `observed_at` |
-| `Skill` | `canonical_name`, `slug`, `category` — no provenance; it is a registry entry |
-| `Observation` | `category`, `context`, `behavior`, `observed_at`, `computed_at`, `computed_by` |
+### 6.2 Unknown is not zero
+
+`hours_before_deadline=None` means "no deadline could be determined".
+`0.0` means "submitted exactly on the deadline". Substituting one for the
+other silently fabricates data — 18 of 32 real review records in the export
+have no parseable deadline.
 
 ---
 
-## 6. Closed vocabularies
+## 7. Which source file feeds which node
 
-Import the enums rather than typing strings. Values follow the raw export
-wherever one already existed.
+| Source | Produces | Notes |
+| --- | --- | --- |
+| `learners.jsonl` | `LearnerProfile` | `role` → `LearnerRole`; `added_at` → UTC datetime |
+| `interaction_logs.jsonl` → entries tagged `grader_call` + `feedback_delivered` with a non-null `verdict` | `DataSource(review)` | `entry.submission.text` → `submission_text`, `entry.feedback.{verdict,summary,mentor_reply}`, `entry.feedback.raw` → rubric points |
+| `…feedback.raw` JSON array | `RubricPointEvaluation[]` inside the payload | Array follows the `Scope Detailed Results:` marker; parse defensively and **log what you skip** |
+| LMS assessments *(not in the current export)* | `DataSource(assesments)` | Nothing real populates this yet; the fixture marks its records `SYNTHETIC` |
+| `meetings.jsonl` + `meeting_memory_cards.jsonl` | `DataSource(meetings)` (stub payload) | One per `(learner_id, meeting_id)` pair actually referenced by a card |
+| `meeting_memory_cards.jsonl` | `MemoryCard` | `normalized_payload.content` → `content`, `.rationale` → `rationale`, `.profile_hints` → `tags` |
+| chat entries | `DataSource(chat)` (stub payload) | Owned by Task 5 |
 
-| Enum | Allowed values |
-| --- | --- |
-| `SourceSystem` | `lms`, `virtual_internship`, `assessment_engine`, `meetings`, `meeting_memory`, `profile`, `scenario_engine`, `agent` |
-| `EvidenceType` | `direct_assessment`, `delivered_work`, `observed_behavior`, `mentor_feedback`, `learning_exposure`, `self_declared` |
-| `EvidenceStrength` | `high`, `medium_high`, `medium`, `low` |
-| `SkillEvidenceTier` | `declared`, `exposed`, `assessed`, `demonstrated` |
-| `AssertionStatus` | `no_evidence`, `weak`, `moderate`, `strong` |
-| `LXStatus` | `active`, `terminated` |
-| `LXOutcome` | `completed_success`, `completed_failed`, `expired`, `abandoned` |
-| `AttemptVerdict` | `passed`, `failed_retry`, `failed_final`, `pending` |
-| `CriterionStatus` | `Yes`, `Partial`, `No` — capitalised, matches the grader |
-| `MeetingKind` | `sprint_planning`, `standup`, `retro`, `ad_hoc` |
-| `AccessScope` | `internal_only`, `employer_shareable`, `learner_visible`, `restricted` |
-| `ExtractionMethod` | `direct_mapping`, `rule_based`, `llm_extraction`, `human_curated` |
+Edges to emit: `PRODUCED` for every `DataSource` you create, plus
+`EXTRACTED_INTO` and `HAS_MEMORY_CARD` for every `MemoryCard`.
 
 ---
 
-## 7. What gets rejected
+## 8. What gets rejected
 
 | Input | Error |
 | --- | --- |
 | Naive timestamp | `timestamp must be timezone-aware ISO 8601` |
-| Evidence with no provenance | `provenance → Field required` |
-| `confidence = 1.4` | `Input should be less than or equal to 1` |
 | Misspelled property | `Extra inputs are not permitted` |
-| Skill claim with 0 evidence | `requires at least one evidence item; use status=no_evidence` |
-| `no_evidence` + nonzero count | `status=no_evidence contradicts evidence_count=3` |
-| Reversed relationship | `illegal relationship (Skill)-[:DEMONSTRATED_SKILL]->(Learner)` |
-| `"the learner is lazy"` | `reads as a personality label, which PRD 8.2 forbids` |
-| Evidence with no source link | `Evidence <id> has no DERIVED_FROM source record` |
+| `confidence_score = 1.4` | `Input should be less than or equal to 1` |
+| `score` above `max_score` | `score 11.0 exceeds max_score 10.0` |
+| `ReviewPayload` on an `assesments` DataSource | `datasource_name='assesments' requires a AssessmentPayload payload` |
+| `attempt_number = 0` | `Input should be greater than or equal to 1` |
+| Reversed relationship | `illegal relationship (DataSource)-[:PRODUCED]->(LearnerProfile)` |
+| Edge pointing at a node not in the batch | `dangling or mislabelled edges: …: target <id> does not exist` |
+| Two nodes sharing an id | `duplicate node ids: …` |
 
-The last one matters most. `LearnerGraph` refuses to build if any evidence
-lacks a source or any claim lacks evidence. There is no bypass flag.
-
-If a record cannot supply provenance it does not belong in the graph — surface
-it in the failed-records queue instead. Sprint 1 requires unresolved records to
-be **visible, not dropped**.
+Note what is **not** enforced any more: the old "Evidence-First" invariant
+(no claim without evidence) went away with the `Evidence` / `SkillAssertion`
+nodes it protected. A `DataSource` payload is trusted as delivered, so
+validate your own extraction before handing it over.
 
 ---
 
-## 8. Known problems in the raw export
+## 9. Handing off to Task 3 (the loader)
 
-Found while building the seed fixture across all 14 learners in both groups.
+Build a `LearnerGraph` and pass it to the loader. That's the whole handoff —
+do not write Cypher yourself.
+
+```python
+from datetime import datetime, timezone
+
+from src.app.graph.connections import get_driver
+from src.app.graph.constraints import initialize_schema
+from src.app.graph.schema import (
+    DataSource, DataSourceName, Edge, EdgeType,
+    LearnerGraph, LearnerProfile, LearnerRole, ReviewPayload,
+)
+from src.app.graph.ids import node_id
+from src.app.ingestion.loader import load_graph
+
+now = datetime.now(timezone.utc)
+
+learner = LearnerProfile(
+    id=node_id("LearnerProfile", row["learner_id"]),
+    created_at=now,
+    learner_id=row["learner_id"],
+    name=row["name"],
+    role=LearnerRole(row["role"]),
+    group_name=row["group_name"],
+    round_name=row["round_name"],
+    added_at=parse_utc(row["added_at"]),
+)
+
+datasource_id = f"review:{row['learner_id']}:{lx_id}:{attempt_number}"
+review = DataSource(
+    id=node_id("DataSource", datasource_id),
+    created_at=now,
+    datasource_id=datasource_id,
+    datasource_name=DataSourceName.REVIEW,
+    timestamp=parse_utc(entry["ts"]),
+    payload=ReviewPayload(...),
+)
+
+graph = LearnerGraph(
+    generated_at=now,
+    nodes=[learner, review],
+    edges=[
+        Edge(
+            type=EdgeType.PRODUCED,
+            source_label="LearnerProfile", source_id=learner.id,
+            target_label="DataSource", target_id=review.id,
+        )
+    ],
+)
+
+driver = get_driver()
+initialize_schema(driver)   # idempotent
+load_graph(driver, graph)   # idempotent, one transaction
+```
+
+`LearnerGraph` validates the whole batch before a single write happens:
+unique ids, every edge endpoint present and correctly labelled, every edge a
+registered triple, cardinality respected.
+
+`load_graph()` batches by label and edge type (`UNWIND` + `MERGE`) and runs
+nodes and edges **in one write transaction** — a failure partway through
+commits nothing.
+
+If you need the flat property map yourself (rarely), use
+`flatten_node(node)` from `src/app/graph/serialization.py`; nested payloads
+are JSON-stringified onto `payload_json`, since Neo4j cannot store nested
+objects.
+
+---
+
+## 10. Known problems in the raw export
 
 | Count | Problem | Handling |
 | --- | --- | --- |
-| **246** | Real GitHub handle `MoHatemTC` survived anonymisation in `interaction_logs.jsonl` | **Scrub in the pipeline.** The export README flags glued strings as a known limit. |
-| 47 | `task.technologies` empty | Fall back to `rubric.scopes[].requirement` — a better skill signal anyway |
-| 31 | `extraction_status != done` on meetings | No transcript. Do not emit Evidence; mark pending |
-| 18 | Task has no rubric scopes | `Rubric`/`RubricCriterion` optional — skip, still emit `Task` |
-| 17 | `status=terminated` with `outcome=null` | `outcome` is nullable by design. Leave null; do not guess |
-| 10 | `attendee_emails` empty | Derive attendance from memory cards' `learner_id` |
-| 1 | LX `1435355e` has `deadline_at` before `activated_at` | Source bug. Ingest as-is and flag; do not correct source truth |
-| — | Two timestamp formats in one corpus | Normalise to UTC on the way in |
+| 246 | Real GitHub handle `MoHatemTC` survived anonymisation in `interaction_logs.jsonl` | Already scrubbed in the committed copy; **scrub again in the pipeline** if you read the original export |
+| 18 / 32 | Review records with no parseable deadline | Leave `hours_before_deadline=None`; do not fill in `0.0` |
+| — | Grader `feedback.raw` mixes JSON arrays with trailing prose | Parse defensively; log and count what you skip so data loss is visible |
+| — | LMS assessments absent from the export | `DataSource(assesments)` has no real source yet; mark anything you generate as synthetic |
+| — | Two timestamp formats in one corpus | Normalised to UTC by the models |
 | — | Transcripts are Egyptian Arabic + English | Test extraction on Arabic before assuming an English pipeline works |
 
-### Open question
-
-`docs/data/data.md` lists three expected files:
-
-```text
-learners.jsonl   meeting_memory_cards.jsonl   interaction_logs.jsonl
-```
-
-**`lx_configs.jsonl` is missing.** That file holds every task definition,
-rubric and rubric criterion. Without it, `Task`, `Rubric` and
-`RubricCriterion` cannot be populated and the assessment side of the graph is
-lost. Needs a team decision.
-
 ---
 
-## 9. Worked example
-
-```python
-from src.app.graph.schema import (
-    AccessScope,
-    Evidence,
-    EvidenceStrength,
-    EvidenceType,
-    ExtractionMethod,
-    Provenance,
-    SourceSystem,
-)
-from src.app.graph.ids import evidence_uid
-
-sid = f"{lx_id}:{entry_index}"
-
-ev = Evidence(
-    id=evidence_uid(
-        "assessment_engine", "rubric_point", sid, scope_id, rubric_point_id
-    ),
-    created_at=now,
-    provenance=Provenance(
-        source_system=SourceSystem.ASSESSMENT_ENGINE,
-        source_type="interaction_log.feedback.scope_point",
-        source_id=sid,
-        source_locator=f"scope:{scope_id}/rubric_point:{point_id}",
-        observed_at=entry_ts,
-        ingested_at=now,
-        extraction_method=ExtractionMethod.RULE_BASED,
-    ),
-    evidence_type=EvidenceType.DIRECT_ASSESSMENT,
-    strength=EvidenceStrength.HIGH,
-    confidence=point["confidence_score"],
-    title=f"Rubric point {point_id} scored '{status}'",
-    content=point["reason"],
-    observed_at=entry_ts,
-    access_scope=AccessScope.EMPLOYER_SHAREABLE,
-)
-```
-
-### Handing off to Task 3
-
-`flatten_node()` converts any node into a flat map of primitives — exactly the
-shape `UNWIND` needs as a query parameter. Verified JSON-serialisable with no
-nested maps.
-
-```python
-from src.app.graph.serialization import flatten_node
-
-rows = [flatten_node(n) for n in nodes if n.label == "Evidence"]
-session.run(
-    "UNWIND $rows AS row MERGE (n:Evidence {id: row.id}) SET n += row",
-    rows=rows,
-)
-```
-
-`src/app/graph/constraints.py` exposes `CONSTRAINTS`, `INDEXES`,
-`FULLTEXT_INDEXES` and `ALL_STATEMENTS` as plain lists of Cypher strings for
-schema initialisation, plus `ENTERPRISE_ONLY_CONSTRAINTS` for Enterprise
-deployments only.
-
-### A working reference implementation
-
-`scripts/build_seed.py` reads the real export and produces 297 validated nodes
-and 984 relationships. It is a **one-off fixture generator, not the production
-pipeline** — but its parsing logic for the grader payload, memory cards and
-attempt lineage is correct. Copy from it.
-
----
-
-## 10. Verify your output
+## 11. Verify your output
 
 ```bash
-docker compose run --rm api python scripts/validate_seed.py   # 34 checks
-docker compose run --rm api pytest                            # 43 tests
+docker compose run --rm api python scripts/validate_seed.py   # 27 checks
+docker compose run --rm api pytest                            # full suite
+
+# against a live database
+docker compose up -d neo4j
+docker compose run --rm api pytest tests/test_neo4j_loader.py
 ```
+
+`scripts/build_seed.py` reads the real export and produces a validated
+`LearnerGraph` (7 learners, 55 DataSource records, 53 MemoryCards). It is a
+**fixture generator, not the production pipeline** — but its parsing of the
+grader payload, memory cards and attempt lineage is correct. Copy from it.
