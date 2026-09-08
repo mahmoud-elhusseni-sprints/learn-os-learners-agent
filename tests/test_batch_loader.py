@@ -6,7 +6,7 @@ instance, not mocked.
 Run with a live database:
 
     docker compose up -d neo4j
-    docker compose run --rm api pytest tests/test_neo4j_loader.py
+    docker compose run --rm api pytest tests/test_batch_loader.py
 
 The whole module is skipped (not failed) when Neo4j isn't reachable, so
 the existing CI job - which runs pytest with ``--no-deps`` and therefore
@@ -27,10 +27,9 @@ from datetime import datetime, timezone
 
 import pytest
 from neo4j import Driver
-from neo4j.exceptions import ServiceUnavailable
+from neo4j.exceptions import ClientError, ServiceUnavailable
 
 from src.app.graph import connections
-from src.app.graph.constraints import initialize_schema
 from src.app.graph.ids import node_id
 from src.app.graph.schema import (
     DataSource,
@@ -43,7 +42,14 @@ from src.app.graph.schema import (
     MemoryCard,
     ReviewPayload,
 )
-from src.app.ingestion.loader import load_graph
+
+# Imported through the entry point the task brief names, which re-exports the
+# implementation under src/app/. Testing through it keeps that contract honest.
+from src.loader.graph_loader import (
+    initialize_schema,
+    load_graph,
+    load_graph_atomic,
+)
 
 NOW = datetime(2026, 8, 31, 12, 0, tzinfo=timezone.utc)
 _RUN = uuid.uuid4().hex[:8]
@@ -348,3 +354,114 @@ def test_transaction_rolls_back_on_failure(driver: Driver) -> None:
             id=learner.id,
         ).single()
     assert record["c"] == 0, "the write before the failure must not be committed"
+
+
+def test_invalid_payload_rolls_back_the_whole_batch(driver: Driver) -> None:
+    """A payload the database itself rejects (not a hand-raised error): a
+    property value Neo4j cannot store. The valid node written earlier in the
+    same transaction must not survive."""
+    good = _learner("rollback-good")
+    bad_row = {
+        "id": node_id("LearnerProfile", _key("rollback-bad")),
+        "learner_id": _key("rollback-bad"),
+        # Neo4j cannot store a nested map as a property value - this is
+        # rejected by the server, mid-transaction, after the good row landed.
+        "name": {"nested": "not a legal property value"},
+    }
+
+    def _write_good_then_invalid(tx: object) -> None:
+        from src.app.graph import queries
+        from src.app.graph.serialization import flatten_node
+
+        queries.merge_nodes(tx, "LearnerProfile", [flatten_node(good)])  # type: ignore[arg-type]
+        queries.merge_nodes(tx, "LearnerProfile", [bad_row])  # type: ignore[arg-type]
+
+    with driver.session() as session:
+        with pytest.raises((ClientError, TypeError, ValueError)):
+            session.execute_write(_write_good_then_invalid)
+
+    with driver.session() as session:
+        count = session.run(
+            "MATCH (l:LearnerProfile {id: $id}) RETURN count(l) AS c",
+            id=good.id,
+        ).single()["c"]
+    assert count == 0, "an invalid payload must roll back the whole batch"
+
+
+# ===========================================================================
+# Test 8 - batch chunking
+# ===========================================================================
+
+
+def test_chunked_load_writes_every_row(driver: Driver) -> None:
+    """A batch larger than the chunk size still lands in full, and stays
+    idempotent when replayed."""
+    learners = [_learner(f"chunk-{i}") for i in range(7)]
+    graph = LearnerGraph(generated_at=NOW, nodes=list(learners))
+
+    load_graph(driver, graph, batch_size=2)  # 7 rows over 4 chunks
+    load_graph(driver, graph, batch_size=2)  # replay
+
+    with driver.session() as session:
+        count = session.run(
+            "MATCH (l:LearnerProfile) WHERE l.id IN $ids RETURN count(l) AS c",
+            ids=[x.id for x in learners],
+        ).single()["c"]
+    assert count == 7
+
+
+def test_invalid_batch_size_is_rejected(driver: Driver) -> None:
+    graph = LearnerGraph(generated_at=NOW, nodes=[_learner("badsize")])
+    with pytest.raises(ValueError, match="batch size must be >= 1"):
+        load_graph(driver, graph, batch_size=0)
+
+
+# ===========================================================================
+# Test 9 - the atomic variant covers the whole payload
+# ===========================================================================
+
+
+def test_load_graph_atomic_loads_nodes_and_edges(driver: Driver) -> None:
+    learner = _learner("atomic")
+    datasource = _review_datasource("atomic")
+    graph = LearnerGraph(
+        generated_at=NOW,
+        nodes=[learner, datasource],
+        edges=[
+            Edge(
+                type=EdgeType.PRODUCED,
+                source_label="LearnerProfile",
+                source_id=learner.id,
+                target_label="DataSource",
+                target_id=datasource.id,
+            )
+        ],
+    )
+
+    load_graph_atomic(driver, graph)
+
+    with driver.session() as session:
+        count = session.run(
+            "MATCH (l:LearnerProfile {id: $lid})-[:PRODUCED]->(:DataSource) "
+            "RETURN count(*) AS c",
+            lid=learner.id,
+        ).single()["c"]
+    assert count == 1
+
+
+# ===========================================================================
+# Test 10 - connection error handling
+# ===========================================================================
+
+
+def test_unreachable_uri_raises_graph_connection_error() -> None:
+    """A bad URI must surface as this project's own error with a message
+    that says what to check - not a bare driver exception."""
+    from neo4j import GraphDatabase
+
+    bad = GraphDatabase.driver("bolt://127.0.0.1:1", auth=("neo4j", "nope"))
+    try:
+        with pytest.raises(connections.GraphConnectionError, match="not reachable"):
+            connections.verify_connection(bad)
+    finally:
+        bad.close()
