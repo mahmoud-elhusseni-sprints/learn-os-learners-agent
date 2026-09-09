@@ -76,16 +76,26 @@ __all__ = ["BuildResult", "build_graph_from_pipeline_output", "build_graph_from_
 
 @dataclass
 class BuildResult:
-    """The graph, plus an honest account of what did not make it in."""
+    """The graph, plus an honest account of what did not make it in.
+
+    ``skipped`` is data that could not be converted - a real quality
+    problem worth investigating upstream. ``duplicates`` is data that
+    converted fine but repeated an id already seen in this batch - expected
+    dedup, not a problem, but silently dropping the second copy without a
+    record of it would violate the same "never silently drop" principle
+    this module exists to uphold.
+    """
 
     graph: LearnerGraph
     skipped: list[str] = field(default_factory=list)
+    duplicates: list[str] = field(default_factory=list)
 
     def summary(self) -> str:
         counts = ", ".join(f"{k}={v}" for k, v in self.graph.counts().items())
         return (
             f"{len(self.graph.nodes)} nodes ({counts}), "
-            f"{len(self.graph.edges)} edges, {len(self.skipped)} skipped"
+            f"{len(self.graph.edges)} edges, {len(self.skipped)} skipped, "
+            f"{len(self.duplicates)} duplicates collapsed"
         )
 
 
@@ -240,6 +250,7 @@ def build_graph_from_pipeline_output(
     """
     now = ingested_at or datetime.now(timezone.utc)
     skipped: list[str] = []
+    duplicates: list[str] = []
 
     # ---- LearnerProfile -----------------------------------------------
     learner_nodes: dict[str, LearnerProfile] = {}  # learner_id -> node
@@ -249,6 +260,7 @@ def build_graph_from_pipeline_output(
             skipped.append("profile with no learner_id")
             continue
         if learner_id in learner_nodes:
+            duplicates.append(f"profile {learner_id}: repeated in this batch")
             continue  # the pipeline can emit a learner once per group file
         try:
             learner_nodes[learner_id] = LearnerProfile(
@@ -276,6 +288,7 @@ def build_graph_from_pipeline_output(
             skipped.append("datasource with no datasource_id")
             continue
         if datasource_id in datasource_nodes:
+            duplicates.append(f"datasource {datasource_id}: repeated in this batch")
             continue
 
         raw_name = row.get("datasource_name")
@@ -333,6 +346,7 @@ def build_graph_from_pipeline_output(
             skipped.append("memory card with no card_id")
             continue
         if card_id in card_nodes:
+            duplicates.append(f"memory card {card_id}: repeated in this batch")
             continue
         try:
             tags = list(row.get("tags") or row.get("profile_hints") or [])
@@ -414,7 +428,7 @@ def build_graph_from_pipeline_output(
         ],
         edges=edges,
     )
-    return BuildResult(graph=graph, skipped=skipped)
+    return BuildResult(graph=graph, skipped=skipped, duplicates=duplicates)
 
 
 def _read_json_list(path: Path) -> list[dict[str, Any]]:

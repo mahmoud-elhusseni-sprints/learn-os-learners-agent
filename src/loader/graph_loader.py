@@ -174,6 +174,8 @@ def main(argv: list[str] | None = None) -> int:
             print(f"loaded {result.summary()}")
             for entry in result.skipped:
                 print(f"  skipped: {entry}")
+            for entry in result.duplicates:
+                print(f"  duplicate: {entry}")
             close_driver()
             return 0
 

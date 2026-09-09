@@ -216,6 +216,8 @@ def test_duplicate_records_are_collapsed() -> None:
     )
     assert len(result.graph.by_label("LearnerProfile")) == 1
     assert len(result.graph.by_label("DataSource")) == 1
+    assert len(result.duplicates) == 2, "collapsing must be visible, not silent"
+    assert result.skipped == [], "a duplicate is not a data-quality problem"
 
 
 def test_null_rubric_fields_do_not_kill_the_review() -> None:
