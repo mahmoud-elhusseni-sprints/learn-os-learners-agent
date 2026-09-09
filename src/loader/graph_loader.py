@@ -48,6 +48,7 @@ from src.app.graph.connections import (
 )
 from src.app.graph.constraints import ALL_STATEMENTS, initialize_schema
 from src.app.graph.schema import LearnerGraph
+from src.app.ingestion.build_graph import BuildResult, build_graph_from_files
 from src.app.ingestion.loader import load_graph, load_graph_atomic
 
 __all__ = [
@@ -60,6 +61,7 @@ __all__ = [
     "load_graph",
     "load_graph_atomic",
     "load_seed_file",
+    "load_pipeline_output",
 ]
 
 logger = logging.getLogger(__name__)
@@ -80,6 +82,41 @@ def load_seed_file(path: Path, *, batch_size: int | None = None) -> LearnerGraph
     return graph
 
 
+def load_pipeline_output(
+    profiles_file: Path,
+    datasource_file: Path,
+    memory_cards_file: Path,
+    *,
+    extra_memory_cards_file: Path | None = None,
+    batch_size: int | None = None,
+) -> BuildResult:
+    """Load the preprocessing pipeline's output into Neo4j.
+
+    This is the seam between extraction and the graph: it converts records
+    into graph models, validates the whole batch, then loads it. Records
+    that could not be converted are reported in the returned
+    ``BuildResult.skipped`` rather than silently dropped.
+
+    ``extra_memory_cards_file`` is optional: Elgazzar's meeting/chat memory
+    card generator (``src/app/ingestion/generate_memory_cards.py``) isn't
+    part of ``pipeline.py`` yet, so its output (run with ``--format json``
+    or ``jsonl``) is merged in here rather than assumed to already be in
+    ``memory_cards_file``.
+    """
+    result = build_graph_from_files(
+        profiles_file,
+        datasource_file,
+        memory_cards_file,
+        extra_memory_cards_file=extra_memory_cards_file,
+    )
+
+    driver = get_driver()
+    verify_connection(driver)
+    initialize_schema(driver)
+    load_graph(driver, result.graph, batch_size=batch_size)
+    return result
+
+
 def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     # The driver logs an INFO notification for every `IF NOT EXISTS` statement
@@ -88,11 +125,31 @@ def main(argv: list[str] | None = None) -> int:
     logging.getLogger("neo4j.notifications").setLevel(logging.WARNING)
 
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument(
+    source = ap.add_mutually_exclusive_group(required=True)
+    source.add_argument(
         "--seed",
         type=Path,
-        required=True,
         help="Path to a serialized LearnerGraph JSON file to ingest.",
+    )
+    source.add_argument(
+        "--pipeline-dir",
+        type=Path,
+        help=(
+            "Directory holding the preprocessing pipeline's output "
+            "(extracted_learner_profiles.json, graph_datasource_nodes.json, "
+            "graph_memory_cards.json)."
+        ),
+    )
+    ap.add_argument(
+        "--extra-memory-cards",
+        type=Path,
+        default=None,
+        help=(
+            "Optional: output from Elgazzar's standalone "
+            "generate_memory_cards.py (--format json or jsonl), merged in "
+            "alongside --pipeline-dir's own memory cards. Not needed with "
+            "--seed."
+        ),
     )
     ap.add_argument(
         "--batch-size",
@@ -102,11 +159,29 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
 
-    if not args.seed.exists():
-        print(f"no such file: {args.seed}", file=sys.stderr)
-        return 2
-
     try:
+        if args.pipeline_dir:
+            if not args.pipeline_dir.is_dir():
+                print(f"no such directory: {args.pipeline_dir}", file=sys.stderr)
+                return 2
+            result = load_pipeline_output(
+                args.pipeline_dir / "extracted_learner_profiles.json",
+                args.pipeline_dir / "graph_datasource_nodes.json",
+                args.pipeline_dir / "graph_memory_cards.json",
+                extra_memory_cards_file=args.extra_memory_cards,
+                batch_size=args.batch_size,
+            )
+            print(f"loaded {result.summary()}")
+            for entry in result.skipped:
+                print(f"  skipped: {entry}")
+            for entry in result.duplicates:
+                print(f"  duplicate: {entry}")
+            close_driver()
+            return 0
+
+        if not args.seed.exists():
+            print(f"no such file: {args.seed}", file=sys.stderr)
+            return 2
         graph = load_seed_file(args.seed, batch_size=args.batch_size)
     except GraphConnectionError as exc:
         print(f"{exc}", file=sys.stderr)
