@@ -10,7 +10,7 @@ from src.app.core.config import (
     MEMORY_CARDS_OUTPUT_FILE,
     RUBRICS_OUTPUT_FILE,
 )
-from src.app.models.deliverables import MemoryCard
+from src.app.models.deliverables import DataSource, MemoryCard
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
@@ -258,6 +258,21 @@ def extract_memory_cards_from_assessments(
         lx_id = record.get("lx_id") or "assessment"
         answers = record.get("answers", [])
 
+        # Recomputed with the exact same fields/defaults
+        # evidence_payload_generation.py uses for the LMS assessment
+        # DataSource's own id, so this always matches the real node.
+        source_datasource_id = DataSource.generate_deterministic_id(
+            learner_id=str(learner_id),
+            lx_id=str(record.get("lx_id", "lms_assessment")),
+            timestamp=(
+                record.get("terminated_at")
+                or record.get("activated_at")
+                or "2026-08-01T00:00:00Z"
+            ),
+            source_type="assesments",
+            attempt=1,
+        )
+
         # 1. Process mastery memory cards if pre-generated
         for raw_card in mastery_cards:
             if not isinstance(raw_card, dict):
@@ -290,6 +305,7 @@ def extract_memory_cards_from_assessments(
                     tags=canonical_tags,
                     created_at=raw_card.get("created_at"),
                     associated_learner_ids=associated_learners,
+                    source_datasource_id=source_datasource_id,
                 )
                 cards_by_id[card_id] = card_obj.model_dump(
                     exclude={"profile_hints", "meeting_id"}
@@ -344,6 +360,7 @@ def extract_memory_cards_from_assessments(
                             record.get("terminated_at") or record.get("activated_at")
                         ),
                         associated_learner_ids=associated_learners,
+                        source_datasource_id=source_datasource_id,
                     )
                     cards_by_id[card_id] = card_obj.model_dump(
                         exclude={"profile_hints", "meeting_id"}
@@ -377,6 +394,18 @@ def extract_memory_cards_from_reviews(
         detailed_rubrics = record.get("detailed_rubric_evaluations", [])
         mentor_metrics = record.get("mentor_evaluation_metrics", {})
 
+        # Recomputed with the exact same fields/defaults
+        # evidence_payload_generation.py uses to derive the review
+        # DataSource's own id, so this always matches the real node -
+        # never a guess.
+        source_datasource_id = DataSource.generate_deterministic_id(
+            learner_id=str(learner_id),
+            lx_id=str(record.get("lx_id")),
+            timestamp=record.get("timestamp", "2026-08-01T00:00:00Z"),
+            source_type="review",
+            attempt=record.get("attempt_number", 1),
+        )
+
         # 1. Qualitative feedback summary card
         if feedback_summary or mentor_reply:
             card_id = _deterministic_card_id(
@@ -405,6 +434,7 @@ def extract_memory_cards_from_reviews(
                     tags=canonical_tags,
                     created_at=timestamp,
                     associated_learner_ids=associated_learners,
+                    source_datasource_id=source_datasource_id,
                 )
                 cards_by_id[card_id] = card_obj.model_dump(
                     exclude={"profile_hints", "meeting_id"}
@@ -448,6 +478,7 @@ def extract_memory_cards_from_reviews(
                         tags=canonical_tags,
                         created_at=timestamp,
                         associated_learner_ids=associated_learners,
+                        source_datasource_id=source_datasource_id,
                     )
                     cards_by_id[card_id] = card_obj.model_dump(
                         exclude={"profile_hints", "meeting_id"}
@@ -484,6 +515,7 @@ def extract_memory_cards_from_reviews(
                         tags=canonical_tags,
                         created_at=timestamp,
                         associated_learner_ids=associated_learners,
+                        source_datasource_id=source_datasource_id,
                     )
                     cards_by_id[card_id] = card_obj.model_dump(
                         exclude={"profile_hints", "meeting_id"}

@@ -152,6 +152,14 @@ class MemoryCard(BaseModel):
     meeting_id: Optional[str] = Field(
         default=None, description="Legacy session identifier"
     )
+    source_datasource_id: Optional[str] = Field(
+        default=None,
+        description=(
+            "datasource_id of the DataSource record this card was distilled "
+            "from, if any. Lets the graph loader draw the EXTRACTED_INTO "
+            "edge (DataSource -> MemoryCard) precisely instead of guessing."
+        ),
+    )
 
     @model_validator(mode="after")
     def sync_tags_and_hints(self) -> "MemoryCard":

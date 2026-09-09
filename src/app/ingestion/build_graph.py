@@ -338,6 +338,7 @@ def build_graph_from_pipeline_output(
     card_nodes: dict[str, MemoryCard] = {}
     card_owners: dict[str, list[str]] = {}
     card_meeting: dict[str, str] = {}
+    card_source_ds: dict[str, str] = {}  # card_id -> datasource_id, exact link
 
     for raw_row in memory_cards:
         row = _normalize_memory_card_row(raw_row)
@@ -372,6 +373,17 @@ def build_graph_from_pipeline_output(
         if row.get("meeting_id"):
             card_meeting[card_id] = str(row["meeting_id"])
 
+        source_ds_id = row.get("source_datasource_id")
+        if source_ds_id:
+            if source_ds_id in datasource_nodes:
+                card_source_ds[card_id] = source_ds_id
+            else:
+                skipped.append(
+                    f"memory card {card_id}: source_datasource_id "
+                    f"{source_ds_id!r} not in this batch, EXTRACTED_INTO "
+                    f"edge omitted"
+                )
+
     # ---- Edges ---------------------------------------------------------
     edges: list[Edge] = []
 
@@ -399,8 +411,23 @@ def build_graph_from_pipeline_output(
             )
 
         # EXTRACTED_INTO only when we can actually name the source record.
-        # EXTRACTED_INTO is 1:N - a card has at most one source - so take the
-        # first owning learner's meeting record and stop.
+        # EXTRACTED_INTO is 1:N - a card has at most one source. Prefer an
+        # explicit source_datasource_id (exact - Atia's review/assessment
+        # cards carry this) over inferring it from a shared meeting_id
+        # (Elgazzar's meeting cards, which carry no direct id instead).
+        direct_source = card_source_ds.get(card_id)
+        if direct_source:
+            edges.append(
+                Edge(
+                    type=EdgeType.EXTRACTED_INTO,
+                    source_label="DataSource",
+                    source_id=datasource_nodes[direct_source].id,
+                    target_label="MemoryCard",
+                    target_id=card_nodes[card_id].id,
+                )
+            )
+            continue
+
         meeting_id = card_meeting.get(card_id)
         if not meeting_id:
             continue
