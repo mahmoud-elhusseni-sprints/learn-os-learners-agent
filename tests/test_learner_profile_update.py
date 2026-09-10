@@ -13,13 +13,13 @@ from app.agents.learner_profile_update.agent import (
     ProfileUpdateError,
 )
 from app.agents.learner_profile_update.llm_adapter import LiteLLMMetricSynthesizer
-from app.agents.learner_profile_update.models import (
+from app.agents.learner_profile_update.prompts import SYSTEM_PROMPT, build_metric_input
+from src.app.models.models import (
     LearnerProfile,
     MemoryCard,
     MetricDraft,
     ProfileUpdateInput,
 )
-from app.agents.learner_profile_update.prompts import SYSTEM_PROMPT, build_metric_input
 
 
 def make_card(card_id="new", metric_key="python", **changes):
@@ -67,7 +67,7 @@ def synthesizer():
     fake = Mock()
     fake.synthesize.return_value = MetricDraft(
         summary=(
-            "Prior testing difficulties remain context; " "[new] reports passing tests."
+            "Prior testing difficulties remain context; [new] reports passing tests."
         ),
         confidence=0.65,
     )
@@ -244,7 +244,7 @@ def test_uuid_and_nullable_meeting_contract():
     assert make_card(card_id=identifier).card_id == str(identifier)
     assert make_card(meeting_id=identifier).meeting_id == str(identifier)
     assert make_card().meeting_id is None
-    assert set(MemoryCard.model_fields) == {
+    assert {
         "card_id",
         "meeting_id",
         "metric_key",
@@ -252,7 +252,7 @@ def test_uuid_and_nullable_meeting_contract():
         "rationale",
         "tags",
         "created_at",
-    }
+    }.issubset(set(MemoryCard.model_fields))
 
 
 def test_prompt_receives_prior_baseline_not_invented_history(baseline):

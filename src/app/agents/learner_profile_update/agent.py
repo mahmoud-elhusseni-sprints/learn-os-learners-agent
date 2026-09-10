@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import Protocol
 
-from .models import (
+from src.app.models.models import (
     LearnerProfile,
     MemoryCard,
     MetricDraft,

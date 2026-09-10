@@ -1,276 +1,346 @@
-"""JSONL-backed mock investigation tools.
-
-Only this module knows where the data comes from.  A Neo4j implementation can
-replace these functions later while preserving their public interfaces.
-"""
-
-from __future__ import annotations
-
-import json
+import json as _json
 import re
-from functools import lru_cache
-from pathlib import Path
 from typing import Any
 
-from .models import ToolResult
-
-DATA_DIR = Path(__file__).resolve().parents[4] / "docs" / "data"
-BEHAVIOR_METRICS = {
-    "behavioral_engagement.engagement",
-    "behavioral_engagement.effort_signals",
-    "behavioral_engagement.adaptability",
-}
-OUTCOME_TAGS = {
-    "learner_submission",
-    "feedback_delivered",
-    "grader_call",
-    "attempt_passed",
-    "task_closed",
-    "lx_ended_success",
-}
+from src.app.core import BEHAVIOR_METRICS, OUTCOME_TAGS
+from src.app.graph.connections import get_driver
+from src.app.models.models import ToolResult
 
 
-@lru_cache(maxsize=8)
-def _load_jsonl(filename: str) -> tuple[dict[str, Any], ...]:
-    """Load a JSONL file once per process; invalid rows are skipped safely."""
-    path = DATA_DIR / filename
-    if not path.exists():
-        return ()
-    rows: list[dict[str, Any]] = []
-    with path.open(encoding="utf-8") as source:
-        for line in source:
-            if not line.strip():
-                continue
-            try:
-                row = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-            if isinstance(row, dict):
-                rows.append(row)
-    return tuple(rows)
+def _run(cypher: str, **params: Any) -> list[dict[str, Any]]:
+    try:
+        with get_driver().session() as session:
+            result = session.run(cypher, **params)
+            return [dict(record) for record in result]
+    except Exception:
+        return []
+
+
+def _load_jsonl(name: str) -> tuple[dict[str, Any], ...]:
+    return ()
 
 
 def _find_learner(learner_query: str) -> dict[str, Any] | None:
     query = learner_query.strip().lower()
     if not query:
         return None
-    for learner in _load_jsonl("learners.jsonl"):
-        values = (
-            learner.get("learner_id", ""),
-            learner.get("name", ""),
-            learner.get("email", ""),
-        )
-        if any(query == str(value).lower() for value in values):
-            return learner
-    return None
+    rows = _run(
+        """
+        MATCH (l:LearnerProfile)
+        WHERE toLower(l.learner_id) = $q
+           OR toLower(l.name)       = $q
+        RETURN
+            l.learner_id    AS learner_id,
+            l.name          AS name,
+            l.role          AS role,
+            l.group_name    AS group_name,
+            l.round_name    AS round_name,
+            l.learner_status AS learner_status,
+            l.added_at      AS added_at
+        LIMIT 1
+        """,
+        q=query,
+    )
+    return rows[0] if rows else None
 
 
-def _meeting_metadata() -> dict[str, dict[str, Any]]:
-    return {
-        str(row.get("meeting_id")): row
-        for row in _load_jsonl("meetings.jsonl")
-        if row.get("meeting_id")
-    }
-
-
-def _card_to_evidence(card: dict[str, Any]) -> dict[str, Any]:
-    payload = card.get("normalized_payload") or {}
-    metadata = payload.get("project_metadata") or {}
-    meeting_id = card.get("meeting_id")
-    meeting = _meeting_metadata().get(str(meeting_id), {}) if meeting_id else {}
-    source_type = metadata.get("source_type", "meeting_memory_card")
-    date = (
-        metadata.get("scheduled_starts_at_utc")
-        or payload.get("created_at")
-        or card.get("created_at")
+def _cards_for_learner(learner_id: str) -> list[dict[str, Any]]:
+    return _run(
+        """
+        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
+        RETURN
+            m.card_id    AS evidence_id,
+            m.metric_key AS metric_key,
+            m.content    AS observation,
+            m.rationale  AS rationale,
+            m.tags       AS tags,
+            m.created_at AS date,
+            $learner_id  AS learner_id,
+            coalesce(m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null) AS source_ref,
+            coalesce(m.source_type, ds.datasource_name, 'meeting_transcript') AS source_type
+        ORDER BY m.created_at DESC
+        """,
+        learner_id=learner_id,
     )
 
-    topic = (
-        metadata.get("meeting_topic")
-        or meeting.get("topic")
-        or metadata.get("meeting_type")
-        or "Meeting"
+
+def _card_row_to_evidence(row: dict[str, Any]) -> dict[str, Any]:
+    tags = row.get("tags") or []
+    if isinstance(tags, str):
+        try:
+            tags = _json.loads(tags)
+        except Exception:
+            tags = []
+
+    source_ref = (
+        row.get("source_ref")
+        or row.get("meeting_id")
+        or row.get("task_ref")
+        or row.get("lx_id")
+        or row.get("source_datasource_id")
+        or row.get("source_id")
     )
+    source_type = row.get("source_type") or (
+        "meeting_transcript" if row.get("meeting_id") else "memory_card"
+    )
+
     return {
-        "evidence_id": card.get("card_id"),
-        "learner_id": card.get("learner_id"),
+        "evidence_id": row.get("evidence_id") or row.get("card_id"),
+        "learner_id": row.get("learner_id"),
         "source_type": source_type,
-        "source_ref": metadata.get("source_id") or card.get("meeting_id"),
-        "date": date,
-        "observation": payload.get("content", ""),
-        "context": topic,
-        "tags": list(metadata.get("tags") or []),
-        "metric_key": card.get("metric_key"),
-        "rationale": payload.get("rationale", ""),
+        "source_ref": source_ref,
+        "date": str(row["date"])
+        if row.get("date")
+        else (str(row["created_at"]) if row.get("created_at") else None),
+        "observation": row.get("observation")
+        or row.get("content")
+        or (
+            row.get("normalized_payload", {}).get("content", "")
+            if isinstance(row.get("normalized_payload"), dict)
+            else ""
+        ),
+        "context": row.get("context") or row.get("metric_key", ""),
+        "tags": list(tags),
+        "metric_key": row.get("metric_key"),
+        "rationale": row.get("rationale", ""),
     }
 
 
 def get_learner_profile(learner_query: str) -> ToolResult:
-    """Return profile context only; no inferred capability claims."""
     learner = _find_learner(learner_query)
     if learner is None:
         return ToolResult("not_found", None, "Learner not found.")
+
+    learner_id = learner["learner_id"]
+
+    coverage_rows = _run(
+        """
+        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
+        RETURN
+            count(m)           AS evidence_count,
+            max(m.created_at)  AS most_recent_evidence_date,
+            collect(DISTINCT coalesce(ds.datasource_name, 'meeting_transcript', 'memory_card')) AS source_types
+        """,
+        learner_id=learner_id,
+    )
+    cov = coverage_rows[0] if coverage_rows else {}
+
     profile = {
-        key: learner.get(key)
-        for key in (
-            "learner_id",
-            "name",
-            "email",
-            "group_id",
-            "group_name",
-            "round_name",
-            "learner_status",
-        )
+        "learner_id": learner_id,
+        "name": learner.get("name"),
+        "role": learner.get("role"),
+        "group_name": learner.get("group_name"),
+        "round_name": learner.get("round_name"),
+        "learner_status": learner.get("learner_status"),
+        "evidence_coverage": {
+            "evidence_count": cov.get("evidence_count", 0),
+            "most_recent_evidence_date": (
+                str(cov["most_recent_evidence_date"])
+                if cov.get("most_recent_evidence_date")
+                else None
+            ),
+            "source_types": sorted(
+                list(st)
+                if isinstance(st := cov.get("source_types"), (list, set, tuple))
+                else []
+            ),
+        },
     }
-    cards = [
-        card
-        for card in _load_jsonl("meeting_memory_cards.jsonl")
-        if card.get("learner_id") == learner["learner_id"]
-    ]
-    profile["evidence_coverage"] = {
-        "evidence_count": len(cards),
-        "most_recent_evidence_date": max(
-            ((_card_to_evidence(card).get("date") or "") for card in cards),
-            default=None,
-        ),
-        "source_types": sorted(
-            {_card_to_evidence(card)["source_type"] for card in cards}
-        ),
-    }
-    return ToolResult("ok", profile)
+    return ToolResult("ok", profile, "")
 
 
 def get_skill_proofs(learner_id: str, skill: str) -> ToolResult:
-    """Return cards explicitly matching a requested skill, never task assignments alone."""  # noqa: E501
     normalized = skill.strip().lower()
-    evidence: list[dict[str, Any]] = []
-    for card in _load_jsonl("meeting_memory_cards.jsonl"):
-        if card.get("learner_id") != learner_id:
-            continue
-        item = _card_to_evidence(card)
-        searchable = " ".join(
-            [item["observation"], item["metric_key"] or "", *item["tags"]]
-        ).lower()
-        if normalized not in searchable:
-            continue
-        # An assignment says what was requested, not what was demonstrated.
-        if item["metric_key"] == "learning_goals.learner_tasks":
-            continue
-        evidence.append(item)
-    evidence.sort(key=lambda item: item.get("date") or "", reverse=True)
+    rows = _run(
+        """
+        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
+        WHERE (toLower(m.content) CONTAINS $skill
+               OR toLower(m.metric_key) CONTAINS $skill)
+          AND m.metric_key <> 'learning_goals.learner_tasks'
+        RETURN
+            m.card_id    AS evidence_id,
+            m.metric_key AS metric_key,
+            m.content    AS observation,
+            m.rationale  AS rationale,
+            m.tags       AS tags,
+            m.created_at AS date,
+            $learner_id  AS learner_id,
+            coalesce(m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null) AS source_ref,
+            coalesce(m.source_type, ds.datasource_name, 'meeting_transcript') AS source_type
+        ORDER BY m.created_at DESC
+        """,
+        learner_id=learner_id,
+        skill=normalized,
+    )
+    evidence = [_card_row_to_evidence(r) for r in rows]
     if not evidence:
         return ToolResult(
             "insufficient_evidence", [], "No matching skill evidence was found."
         )
-    return ToolResult("ok", evidence)
+    return ToolResult("ok", evidence, "")
 
 
 def get_behavioral_context(learner_id: str) -> ToolResult:
-    """Return contextual behavior observations; no personality inferences."""
-    evidence: list[dict[str, Any]] = []
-    for card in _load_jsonl("meeting_memory_cards.jsonl"):
-        if card.get("learner_id") != learner_id:
-            continue
-        item = _card_to_evidence(card)
-        if item["metric_key"] in BEHAVIOR_METRICS:
-            evidence.append(item)
-    evidence.sort(key=lambda item: item.get("date") or "", reverse=True)
+    metrics = list(BEHAVIOR_METRICS)
+    rows = _run(
+        """
+        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
+        WHERE m.metric_key IN $metrics
+        RETURN
+            m.card_id    AS evidence_id,
+            m.metric_key AS metric_key,
+            m.content    AS observation,
+            m.rationale  AS rationale,
+            m.tags       AS tags,
+            m.created_at AS date,
+            $learner_id  AS learner_id,
+            coalesce(m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null) AS source_ref,
+            coalesce(m.source_type, ds.datasource_name, 'meeting_transcript') AS source_type
+        ORDER BY m.created_at DESC
+        """,
+        learner_id=learner_id,
+        metrics=metrics,
+    )
+    evidence = [_card_row_to_evidence(r) for r in rows]
     if not evidence:
         return ToolResult(
             "insufficient_evidence", [], "No behavioral observations were found."
         )
-    return ToolResult("ok", evidence)
+    return ToolResult("ok", evidence, "")
 
 
 def get_strengths_and_gaps(learner_id: str) -> ToolResult:
-    """Summarize observed evidence categories and state known coverage gaps."""
-    cards = [
-        card
-        for card in _load_jsonl("meeting_memory_cards.jsonl")
-        if card.get("learner_id") == learner_id
-    ]
-    if not cards:
+    metrics = list(BEHAVIOR_METRICS)
+    rows = _run(
+        """
+        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        WHERE m.metric_key IN $metrics
+        RETURN
+            m.card_id    AS evidence_id,
+            m.metric_key AS metric_key,
+            m.content    AS observation,
+            m.created_at AS date,
+            'memory_card' AS source_type
+        """,
+        learner_id=learner_id,
+        metrics=metrics,
+    )
+
+    if not rows:
+        jsonl_records = _load_jsonl("meeting_memory_cards.jsonl")
+        for rec in jsonl_records:
+            if rec.get("learner_id") == learner_id and rec.get("metric_key") in metrics:
+                obs = (
+                    rec.get("observation")
+                    or rec.get("content")
+                    or (
+                        rec.get("normalized_payload", {}).get("content", "")
+                        if isinstance(rec.get("normalized_payload"), dict)
+                        else ""
+                    )
+                )
+                rows.append(
+                    {
+                        "evidence_id": rec.get("card_id") or rec.get("evidence_id"),
+                        "metric_key": rec.get("metric_key"),
+                        "observation": obs,
+                        "date": rec.get("date") or rec.get("created_at"),
+                        "source_type": rec.get("source_type", "memory_card"),
+                    }
+                )
+
+    if not rows:
         return ToolResult(
             "not_found",
             {"strengths": [], "gaps": []},
             "Learner has no evidence records.",
         )
-    evidence = [_card_to_evidence(card) for card in cards]
+
+    _POSITIVE = re.compile(
+        r"\b(?:demonstrated|successfully|helped|resolved|adapted)\b",
+        re.IGNORECASE,
+    )
+    _NEGATIVE = re.compile(
+        r"\b(?:not|never|failed|unable|struggled|lack\w*)\b",
+        re.IGNORECASE,
+    )
     demonstrated = [
-        item
-        for item in evidence
-        # A category/tag alone is not proof of a strength. Keep only explicit
-        # positive observations in the supported behavioral categories.
-        if item["metric_key"] in BEHAVIOR_METRICS
-        and re.search(
-            r"\b(?:demonstrated|successfully|helped|resolved|adapted)\b",
-            item["observation"],
-            re.IGNORECASE,
-        )
-        and not re.search(
-            r"\b(?:not|never|failed|unable|struggled|lack\w*)\b",
-            item["observation"],
-            re.IGNORECASE,
-        )
+        r
+        for r in rows
+        if _POSITIVE.search(r.get("observation", ""))
+        and not _NEGATIVE.search(r.get("observation", ""))
     ]
     strengths = [
         {
-            "area": item["metric_key"],
-            "evidence_ids": [item["evidence_id"]],
-            "most_recent_date": item["date"],
-            "observation": item["observation"],
-            "source_type": item["source_type"],
+            "area": r["metric_key"],
+            "evidence_ids": [r["evidence_id"]],
+            "most_recent_date": str(r["date"]) if r.get("date") else None,
+            "observation": r["observation"],
+            "source_type": r["source_type"],
         }
-        for item in demonstrated
+        for r in demonstrated
     ]
-    present = {item["metric_key"] for item in evidence}
+    present = {r["metric_key"] for r in rows}
     gaps = [
         {
             "area": area,
             "status": "insufficient_evidence",
-            "reason": "No matching observation was found in the mock records.",
+            "reason": "No matching observation was found in the graph.",
         }
         for area in sorted(BEHAVIOR_METRICS - present)
     ]
-    return ToolResult("ok", {"strengths": strengths, "gaps": gaps})
+    return ToolResult("ok", {"strengths": strengths, "gaps": gaps}, "")
 
 
 def get_milestone_history(learner_id: str) -> ToolResult:
-    """Return submission, feedback, and outcome events in chronological order."""
+    outcome_tags = list(OUTCOME_TAGS)
+    rows = _run(
+        """
+        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:PRODUCED]->(ds:DataSource)
+        WHERE ds.datasource_name IN ['review', 'assessments']
+          AND any(tag IN ds.tags WHERE tag IN $outcome_tags)
+        RETURN
+            ds.datasource_id   AS event_id,
+            ds.timestamp       AS date,
+            ds.datasource_name AS source_type,
+            ds.payload_json    AS payload_json
+        ORDER BY ds.timestamp ASC
+        """,
+        learner_id=learner_id,
+        outcome_tags=outcome_tags,
+    )
+
     milestones: list[dict[str, Any]] = []
-    for row in _load_jsonl("interaction_logs.jsonl"):
-        if row.get("learner_id") != learner_id:
-            continue
-        entry = row.get("entry") or {}
-        tags = list(entry.get("tags") or [])
-        summary = entry.get("summary", "")
-        messages = entry.get("actor_messages") or []
-        learner_message = next(
-            (message for message in messages if message.get("from") == "learner"), None
+    for row in rows:
+        payload: dict[str, Any] = {}
+        if row.get("payload_json"):
+            try:
+                payload = _json.loads(row["payload_json"])
+            except Exception:
+                pass
+        verdict = payload.get("verdict", "")
+        summary = (
+            payload.get("task_headline")
+            or payload.get("assessment_type")
+            or row["source_type"]
         )
-        learner_milestone = learner_message and any(
-            phrase in (learner_message.get("text", "") + " " + summary).lower()
-            for phrase in ("submitted", "completed", "finished", "passed", "score")
-        )
-        if not set(tags).intersection(OUTCOME_TAGS) and not learner_milestone:
-            continue
         milestones.append(
             {
-                "event_id": f"{row.get('lx_id')}:{row.get('entry_index')}",
-                "date": entry.get("ts") or row.get("activated_at"),
-                "summary": summary,
-                "tags": tags,
-                "source_type": "interaction_log",
-                "context": (
-                    "Learner-authored message"
-                    if learner_message
-                    else "LX workflow event"
-                ),
+                "event_id": row["event_id"],
+                "date": str(row["date"]) if row.get("date") else None,
+                "summary": f"{summary} — {verdict}" if verdict else summary,
+                "tags": [verdict] if verdict else [],
+                "source_type": row["source_type"],
+                "context": "LX workflow event",
             }
         )
-    milestones.sort(key=lambda item: item.get("date") or "")
+
     if not milestones:
         return ToolResult(
             "insufficient_evidence", [], "No milestone history was found."
         )
-    return ToolResult("ok", milestones)
+    return ToolResult("ok", milestones, "")

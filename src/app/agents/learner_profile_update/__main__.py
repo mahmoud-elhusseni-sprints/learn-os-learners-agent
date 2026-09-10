@@ -5,8 +5,9 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
+from src.app.models.models import ProfileUpdateInput
+
 from .agent import LearnerProfileUpdateAgent, ProfileUpdateError
-from .models import ProfileUpdateInput
 
 
 def main() -> int:

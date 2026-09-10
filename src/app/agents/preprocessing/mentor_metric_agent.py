@@ -2,11 +2,15 @@ import json
 import os
 from typing import Any, Dict
 
-from .llm_client import safe_llm_generate_json
+from src.app.core.llm_client import build_llm_chain
+
 from .lms_prompts import get_mentor_metric_prompt
 
 
 class MentorMetricAgent:
+    def __init__(self) -> None:
+        self._chain = build_llm_chain()
+
     def evaluate_mentor_metrics_map(
         self, configs_filepath: str, logs_filepath: str
     ) -> Dict[str, Dict[str, Any]]:
@@ -97,7 +101,15 @@ class MentorMetricAgent:
                 f"[Agent 2 - Mentor Metric] Evaluating metrics for learner "
                 f"{learner_name} ({learner_id})..."
             )
-            llm_result = safe_llm_generate_json(prompt)
+
+            try:
+                llm_result = self._chain.invoke({"text": prompt})
+            except Exception as exc:
+                print(
+                    f"[Agent 2 - Mentor Metric] Chain failed for {learner_name}: {exc}"
+                )
+                metrics_map[learner_id] = {}
+                continue
 
             if llm_result and isinstance(llm_result, dict):
                 print(

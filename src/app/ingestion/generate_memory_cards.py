@@ -18,10 +18,7 @@ project_root = Path(__file__).resolve().parents[3]
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.app.agents.memory_card import (  # noqa: E402
-    MemoryCardAgent,
-    MemoryCardAgentConfig,
-)
+from src.app.agents.memory_card import MemoryCardAgent  # noqa: E402
 
 
 class GroupContext:
@@ -395,13 +392,14 @@ def main(argv: Optional[List[str]] = None) -> None:
     )
     args = parser.parse_args(argv)
 
-    config = MemoryCardAgentConfig.from_env()
-    agent = MemoryCardAgent(config=config)
+    agent = MemoryCardAgent()
 
     if not args.dry_run:
         try:
             agent.llm_adapter.initialize_client()
-            print(f"Initialized MemoryCardAgent using model: {config.model_name}")
+            print(
+                f"Initialized MemoryCardAgent using model: {agent.llm_adapter.model_name}"
+            )
         except Exception as e:
             print(f"Error initializing MemoryCardAgent: {e}")
             print(

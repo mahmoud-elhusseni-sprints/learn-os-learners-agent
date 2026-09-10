@@ -5,8 +5,9 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from src.app.models.models import ConversationState, ToolResult
+
 from . import tools
-from .models import ConversationState, ToolResult
 from .prompts import SYSTEM_PROMPT
 
 SKILL_TERMS = (

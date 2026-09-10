@@ -10,8 +10,9 @@ from dotenv import dotenv_values
 from openai import OpenAI
 from openai.types.shared_params import ResponseFormatJSONSchema
 
+from src.app.models.models import MemoryCard, MetricDraft, ProfileMetric
+
 from .agent import ProfileUpdateError
-from .models import MemoryCard, MetricDraft, ProfileMetric
 from .prompts import SYSTEM_PROMPT, build_metric_input
 
 

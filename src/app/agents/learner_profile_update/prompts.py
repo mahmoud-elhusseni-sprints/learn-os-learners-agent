@@ -2,7 +2,7 @@
 
 import json
 
-from .models import MemoryCard, ProfileMetric
+from src.app.models.models import MemoryCard, ProfileMetric
 
 SYSTEM_PROMPT = """
 You are the Learner Profile Update Agent (AI transformation layer).

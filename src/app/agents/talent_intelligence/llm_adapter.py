@@ -9,13 +9,32 @@ from __future__ import annotations
 import json
 from typing import Any, Callable, cast
 
-from .config import litellm_settings
+from src.app.core.config import get_api_key, get_base_url, get_default_model
+
 from .prompts import SYSTEM_PROMPT
 
 LOOP_FAILURE = (
     "Unable to complete the investigation within the tool-call limit. "
     "Please retry or narrow the question. This does not mean evidence is missing."
 )
+
+
+def litellm_settings() -> dict[str, str] | None:
+    """Read LiteLLM connection settings from the environment.
+
+    Falls back to the values already resolved in ``app.core.config``.
+    Returns ``None`` when any required value is absent.
+    """
+
+    api_key = get_api_key()
+    base_url = get_base_url()
+    model = get_default_model()
+    values = {
+        "AI_AGENT_URL": base_url or "",
+        "AI_API_KEY": api_key,
+        "AI_MODEL": model,
+    }
+    return values if all(values.values()) else None
 
 
 class LiteLLMGeminiAdapter:
@@ -153,9 +172,7 @@ class LiteLLMGeminiAdapter:
                 if not isinstance(call, ChatCompletionMessageFunctionToolCall):
                     continue
                 try:
-                    arguments = json.loads(
-                        call.function.arguments or "{}"
-                    )  # noqa: E501
+                    arguments = json.loads(call.function.arguments or "{}")  # noqa: E501
                 except json.JSONDecodeError:
                     arguments = {}
                 handler = tool_handlers.get(call.function.name)

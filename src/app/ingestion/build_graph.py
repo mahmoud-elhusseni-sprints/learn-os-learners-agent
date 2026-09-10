@@ -3,7 +3,7 @@ Adapter: preprocessing-pipeline output -> a validated ``LearnerGraph``.
 
 The missing link in the pipeline. ``src/app/ingestion/pipeline.py`` writes
 three JSON files (learner profiles, DataSource nodes, memory cards) built
-from the models in ``src/app/models/deliverables.py``. The batch loader in
+from the models in ``src/app/models/models.py``. The batch loader in
 ``src/app/ingestion/loader.py`` takes a ``LearnerGraph`` built from the
 models in ``src/app/graph/schema.py``. Nothing joined the two, so extraction
 output never reached Neo4j.

@@ -11,7 +11,7 @@ from app.agents.talent_intelligence.llm_adapter import (
     LOOP_FAILURE,
     LiteLLMGeminiAdapter,
 )
-from app.agents.talent_intelligence.models import ToolResult
+from src.app.models.models import ToolResult
 
 
 @pytest.mark.parametrize(

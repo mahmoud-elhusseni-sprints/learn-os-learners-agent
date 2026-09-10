@@ -30,11 +30,14 @@ models.** Build objects with the models in `src/app/graph/schema.py`.
 # no — a typo here surfaces in Neo4j days later
 row = {"learner_id": x, "verdict": y, "conf": 1.4}
 
+
 # no — a parallel model means two sources of truth that silently drift
 class MyLearnerProfile(BaseModel): ...
 
+
 # yes — raises immediately, naming the field
 from src.app.graph.schema import LearnerProfile, LearnerRole
+
 profile = LearnerProfile(...)
 ```
 
@@ -171,7 +174,7 @@ cannot quietly accumulate review fields.
 ```python
 from src.app.graph.ids import node_id
 
-nid = node_id("LearnerProfile", learner_id)     # label + natural key
+nid = node_id("LearnerProfile", learner_id)  # label + natural key
 ```
 
 `node_id()` is UUIDv5 over `(label, natural_key)`, lowercased and stripped,
@@ -267,8 +270,14 @@ from datetime import datetime, timezone
 from src.app.graph.connections import get_driver
 from src.app.graph.constraints import initialize_schema
 from src.app.graph.schema import (
-    DataSource, DataSourceName, Edge, EdgeType,
-    LearnerGraph, LearnerProfile, LearnerRole, ReviewPayload,
+    DataSource,
+    DataSourceName,
+    Edge,
+    EdgeType,
+    LearnerGraph,
+    LearnerProfile,
+    LearnerRole,
+    ReviewPayload,
 )
 from src.app.graph.ids import node_id
 from src.app.ingestion.loader import load_graph
@@ -302,15 +311,17 @@ graph = LearnerGraph(
     edges=[
         Edge(
             type=EdgeType.PRODUCED,
-            source_label="LearnerProfile", source_id=learner.id,
-            target_label="DataSource", target_id=review.id,
+            source_label="LearnerProfile",
+            source_id=learner.id,
+            target_label="DataSource",
+            target_id=review.id,
         )
     ],
 )
 
 driver = get_driver()
-initialize_schema(driver)   # idempotent
-load_graph(driver, graph)   # idempotent, one transaction
+initialize_schema(driver)  # idempotent
+load_graph(driver, graph)  # idempotent, one transaction
 ```
 
 `LearnerGraph` validates the whole batch before a single write happens:
