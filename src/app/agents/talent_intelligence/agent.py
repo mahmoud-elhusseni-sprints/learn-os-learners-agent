@@ -117,9 +117,7 @@ class TalentIntelligenceAgent:
         )
         return self._remember(query, answer)
 
-    def _ensure_learner(
-        self, query: str, learner_name_or_id: str | None
-    ) -> str | None:
+    def _ensure_learner(self, query: str, learner_name_or_id: str | None) -> str | None:
         if learner_name_or_id:
             self.state.active_learner_id = None
             profile = self._call(
@@ -328,8 +326,7 @@ class TalentIntelligenceAgent:
         if not items:
             return self._insufficient_answer("next steps")
         lines = "\n".join(
-            f"- {item['area']}: {item['action']} ({item['reason']})"
-            for item in items
+            f"- {item['area']}: {item['action']} ({item['reason']})" for item in items
         )
         return (
             "Direct conclusion\n- Additional evidence-gathering steps are "

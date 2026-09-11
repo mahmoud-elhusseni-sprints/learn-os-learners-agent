@@ -28,9 +28,7 @@ def canonicalize_tags(
         tokens = (
             [item]
             if isinstance(item, str)
-            else list(item)
-            if isinstance(item, (list, tuple, set))
-            else []
+            else list(item) if isinstance(item, (list, tuple, set)) else []
         )
         for tok in tokens:
             tag = str(tok).strip().lower()

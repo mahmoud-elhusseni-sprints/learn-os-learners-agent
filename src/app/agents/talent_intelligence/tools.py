@@ -95,9 +95,11 @@ def _card_row_to_evidence(row: dict[str, Any]) -> dict[str, Any]:
         "learner_id": row.get("learner_id"),
         "source_type": source_type,
         "source_ref": source_ref,
-        "date": str(row["date"])
-        if row.get("date")
-        else (str(row["created_at"]) if row.get("created_at") else None),
+        "date": (
+            str(row["date"])
+            if row.get("date")
+            else (str(row["created_at"]) if row.get("created_at") else None)
+        ),
         "observation": row.get("observation")
         or row.get("content")
         or (

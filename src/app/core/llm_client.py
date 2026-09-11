@@ -155,11 +155,7 @@ def get_chat_model(model_name: Optional[str] = None) -> Any:
         models = [DEFAULT_MODEL]
 
     def make_model(raw_model: str) -> ChatOpenAI:
-        model = (
-            raw_model
-            if raw_model.startswith("gemini/")
-            else f"gemini/{raw_model}"
-        )
+        model = raw_model if raw_model.startswith("gemini/") else f"gemini/{raw_model}"
         return ChatOpenAI(
             model=model,
             base_url=(DEFAULT_BASE_URL or "").rstrip("/") + "/",

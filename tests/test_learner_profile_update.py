@@ -274,9 +274,7 @@ def test_prompt_receives_prior_baseline_not_invented_history(baseline):
 
 def test_adapter_requests_structured_output_and_validates():
     generator = Mock(
-        return_value=MetricDraft(
-            summary="[new] records passing tests.", confidence=0.6
-        )
+        return_value=MetricDraft(summary="[new] records passing tests.", confidence=0.6)
     )
     adapter = LLMMetricSynthesizer("test-model", generator)
     result = adapter.synthesize("python", None, [make_card()])
