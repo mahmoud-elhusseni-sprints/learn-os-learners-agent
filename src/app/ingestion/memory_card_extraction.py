@@ -76,7 +76,7 @@ def extract_memory_cards_from_assessments(
             if not card_id:
                 continue
 
-            raw_tags = raw_card.get("tags") or raw_card.get("profile_hints") or []
+            raw_tags = raw_card.get("tags") or []
             if isinstance(raw_tags, str):
                 raw_tags = [raw_tags]
             metric_key = raw_card.get("metric_key", "general_competency")
@@ -101,9 +101,7 @@ def extract_memory_cards_from_assessments(
                     associated_learner_ids=associated_learners,
                     source_datasource_id=source_datasource_id,
                 )
-                cards_by_id[card_id] = card_obj.model_dump(
-                    exclude={"profile_hints", "meeting_id"}
-                )
+                cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
             else:
                 existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                 if learner_id and learner_id not in existing_learners:
@@ -157,9 +155,7 @@ def extract_memory_cards_from_assessments(
                         associated_learner_ids=associated_learners,
                         source_datasource_id=source_datasource_id,
                     )
-                    cards_by_id[card_id] = card_obj.model_dump(
-                        exclude={"profile_hints", "meeting_id"}
-                    )
+                    cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
                 else:
                     existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                     if learner_id and learner_id not in existing_learners:
@@ -219,9 +215,7 @@ def extract_memory_cards_from_reviews(
                     associated_learner_ids=associated_learners,
                     source_datasource_id=source_datasource_id,
                 )
-                cards_by_id[card_id] = card_obj.model_dump(
-                    exclude={"profile_hints", "meeting_id"}
-                )
+                cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
             else:
                 existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                 if learner_id and learner_id not in existing_learners:
@@ -264,9 +258,7 @@ def extract_memory_cards_from_reviews(
                         associated_learner_ids=associated_learners,
                         source_datasource_id=source_datasource_id,
                     )
-                    cards_by_id[card_id] = card_obj.model_dump(
-                        exclude={"profile_hints", "meeting_id"}
-                    )
+                    cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
                 else:
                     existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                     if learner_id and learner_id not in existing_learners:
@@ -299,9 +291,7 @@ def extract_memory_cards_from_reviews(
                         associated_learner_ids=associated_learners,
                         source_datasource_id=source_datasource_id,
                     )
-                    cards_by_id[card_id] = card_obj.model_dump(
-                        exclude={"profile_hints", "meeting_id"}
-                    )
+                    cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
                 else:
                     existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                     if learner_id and learner_id not in existing_learners:

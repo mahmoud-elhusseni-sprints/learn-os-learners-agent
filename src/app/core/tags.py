@@ -14,21 +14,6 @@ TAXONOMY_TAG_DESCRIPTIONS: dict[str, str] = {
 ALLOWED_TAXONOMY_TAGS: list[str] = list(TAXONOMY_TAG_DESCRIPTIONS.keys())
 ALLOWED_TAXONOMY_SET: set[str] = set(TAXONOMY_TAG_DESCRIPTIONS.keys())
 
-METRIC_KEYS: tuple[str, ...] = (
-    "learning_goals.learner_tasks",
-    "internship_context.tech_stack",
-    "internship_context.current_blockers",
-    "behavioral_engagement.effort_signals",
-    "behavioral_engagement.adaptability",
-    "behavioral_engagement.engagement",
-    "identity_context.bio",
-    "identity_context.location",
-    "identity_context.education_level",
-    "identity_context.field_of_study",
-    "knowledge_state.known_topics",
-    "learning_goals.short_term",
-)
-
 BEHAVIOR_METRIC_TAG_MAP: dict[str, list[str]] = {
     "behavioral_engagement.engagement": ["adaptability_learning", "professionalism"],
     "behavioral_engagement.effort_signals": ["time_task_management", "professionalism"],
@@ -40,15 +25,6 @@ BEHAVIOR_METRICS: set[str] = {
     "behavioral_engagement.engagement",
     "behavioral_engagement.effort_signals",
     "behavioral_engagement.adaptability",
-}
-
-OUTCOME_TAGS: set[str] = {
-    "learner_submission",
-    "feedback_delivered",
-    "grader_call",
-    "attempt_passed",
-    "task_closed",
-    "lx_ended_success",
 }
 
 

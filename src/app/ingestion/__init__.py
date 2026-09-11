@@ -1,6 +1,6 @@
 """Ingestion package for processing assessments, transcripts, and reviews."""
 
-from src.app.agents.memory_card import VALID_METRICS, VALID_TAGS
+from src.app.core.tags import ALLOWED_TAXONOMY_TAGS
 from src.app.ingestion.evidence_payload_generation import generate_datasource_nodes
 from src.app.ingestion.generate_memory_cards import (
     GroupContext,
@@ -28,8 +28,7 @@ from src.app.ingestion.mentor_rubric_extraction import (
 from src.app.ingestion.pipeline import run_pipeline
 
 __all__ = [
-    "VALID_METRICS",
-    "VALID_TAGS",
+    "ALLOWED_TAXONOMY_TAGS",
     "GroupContext",
     "build_card",
     "format_as_memory_card_code",

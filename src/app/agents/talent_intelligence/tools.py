@@ -2,7 +2,7 @@ import json as _json
 import re
 from typing import Any
 
-from src.app.core import BEHAVIOR_METRICS, OUTCOME_TAGS
+from src.app.core import BEHAVIOR_METRICS
 from src.app.graph.connections import get_driver
 from src.app.models.models import ToolResult
 
@@ -320,7 +320,14 @@ def get_strengths_and_gaps(learner_id: str) -> ToolResult:
 
 
 def get_milestone_history(learner_id: str) -> ToolResult:
-    outcome_tags = list(OUTCOME_TAGS)
+    outcome_tags = [
+        "learner_submission",
+        "feedback_delivered",
+        "grader_call",
+        "attempt_passed",
+        "task_closed",
+        "lx_ended_success",
+    ]
     rows = _run(
         """
         MATCH (l:LearnerProfile {learner_id: $learner_id})-[:PRODUCED]->(ds:DataSource)
