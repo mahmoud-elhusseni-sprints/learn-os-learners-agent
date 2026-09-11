@@ -292,7 +292,7 @@ def _nested_memory_card(card_id: str, learner_id: str, meeting_id: str) -> dict:
         "normalized_payload": {
             "content": "Learner described their assigned task in standup.",
             "rationale": "Stated directly by the learner.",
-            "profile_hints": ["task_assignment"],
+            "tags": ["task_assignment"],
         },
         "delivery_status": "pending",
         "created_at": "2026-07-27T20:30:11.396259+00:00",
