@@ -35,7 +35,7 @@ class ConversationState:
 
 
 class MemoryCard(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     card_id: NonEmpty
     meeting_id: Optional[Union[NonEmpty, str]] = None
@@ -45,7 +45,7 @@ class MemoryCard(BaseModel):
     tags: list[NonEmpty] = Field(
         default_factory=list, description="Predefined competency tags"
     )
-    created_at: Optional[Union[AwareDatetime, str]] = Field(
+    created_at: Optional[AwareDatetime] = Field(
         default=None, description="Creation timestamp"
     )
     associated_learner_ids: list[str] = Field(

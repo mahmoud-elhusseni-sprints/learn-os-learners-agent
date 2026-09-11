@@ -314,7 +314,11 @@ def test_adapter_does_not_expose_provider_secrets():
 
 
 def test_from_env_requires_configuration(tmp_path, monkeypatch):
-    for name in ("AI_AGENT_URL", "AI_API_KEY", "AI_MODEL"):
-        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr("app.agents.learner_profile_update.agent.LITE_LLM_KEY", None)
+    monkeypatch.setattr(
+        "app.agents.learner_profile_update.agent.LITELLM_BASE_URL", None
+    )
+    monkeypatch.setattr("app.agents.learner_profile_update.agent.PRIMARY_MODEL", None)
+    monkeypatch.setattr("app.agents.learner_profile_update.agent.AI_MODEL", None)
     with pytest.raises(ProfileUpdateError, match="Configure"):
         LLMMetricSynthesizer.from_env()
