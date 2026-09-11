@@ -107,6 +107,7 @@ class TalentIntelligenceAgent:
             return failure
 
         learner_id = self.state.active_learner_id
+        assert learner_id is not None
 
         handlers = self._tool_handlers(learner_id)
         answer = run_tool_loop(

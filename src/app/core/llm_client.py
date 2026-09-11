@@ -34,10 +34,10 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=BaseModel)
 
-DEFAULT_API_KEY: str = LITE_LLM_KEY
-DEFAULT_BASE_URL: str = LITELLM_BASE_URL
+DEFAULT_API_KEY: str = LITE_LLM_KEY or ""
+DEFAULT_BASE_URL: str = LITELLM_BASE_URL or ""
 DEFAULT_MODEL: str = PRIMARY_MODEL or AI_MODEL or "gemini-2.5-flash"
-DEFAULT_FALLBACK_CHAIN: list[str] = FALLBACK_CHAIN
+DEFAULT_FALLBACK_CHAIN: list[str] = [model for model in FALLBACK_CHAIN if model]
 
 
 def get_openai_client(
@@ -159,7 +159,7 @@ def get_chat_model(model_name: Optional[str] = None) -> Any:
         return ChatOpenAI(
             model=model,
             base_url=(DEFAULT_BASE_URL or "").rstrip("/") + "/",
-            api_key=api_key,
+            api_key=cast(Any, api_key),
             temperature=0,
         )
 
