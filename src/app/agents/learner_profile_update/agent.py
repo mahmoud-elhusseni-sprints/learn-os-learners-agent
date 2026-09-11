@@ -3,8 +3,15 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from typing import Protocol
+from typing import Any, Protocol
 
+from src.app.core.config import (
+    AI_MODEL,
+    LITE_LLM_KEY,
+    LITELLM_BASE_URL,
+    PRIMARY_MODEL,
+)
+from src.app.core.llm_client import generate_structured_output
 from src.app.models.models import (
     LearnerProfile,
     MemoryCard,
@@ -12,6 +19,8 @@ from src.app.models.models import (
     ProfileMetric,
     ProfileUpdateInput,
 )
+
+from .prompts import SYSTEM_PROMPT, build_metric_input
 
 
 class ProfileUpdateError(RuntimeError):
@@ -29,6 +38,48 @@ class MetricSynthesizer(Protocol):
     ) -> MetricDraft:
         """Produce one grounded metric draft without storage side effects."""
         ...
+
+
+class LLMMetricSynthesizer:
+    """Profile metric synthesizer backed by the shared LangChain client."""
+
+    def __init__(self, model_name: str | None = None, generator: Any = None) -> None:
+        self.model_name = model_name
+        self.generator = generator or generate_structured_output
+
+    @classmethod
+    def from_env(cls) -> "LLMMetricSynthesizer":
+        model = PRIMARY_MODEL or AI_MODEL
+        if not all((LITE_LLM_KEY, LITELLM_BASE_URL, model)):
+            raise ProfileUpdateError(
+                "Configure AI_AGENT_URL, AI_API_KEY and PRIMARY_MODEL."
+            )
+        return cls(model)
+
+    def synthesize(
+        self,
+        metric_key: str,
+        previous: ProfileMetric | None,
+        cards: list[MemoryCard],
+    ) -> MetricDraft:
+        try:
+            return self.generator(
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {
+                        "role": "user",
+                        "content": build_metric_input(metric_key, previous, cards),
+                    },
+                ],
+                schema_model=MetricDraft,
+                schema_name="metric_update",
+                model_name=self.model_name,
+                temperature=0,
+            )
+        except Exception:
+            raise ProfileUpdateError(
+                "Model request failed or returned an invalid metric update."
+            ) from None
 
 
 class LearnerProfileUpdateAgent:

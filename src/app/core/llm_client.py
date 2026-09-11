@@ -1,7 +1,17 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional, Sequence, Type, TypeVar, Union, cast
+from typing import (
+    Any,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+)
 
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
@@ -13,6 +23,7 @@ from openai.types.shared_params import ResponseFormatJSONSchema
 from pydantic import BaseModel
 
 from src.app.core.config import (
+    AI_MODEL,
     FALLBACK_CHAIN,
     LITE_LLM_KEY,
     LITELLM_BASE_URL,
@@ -25,7 +36,7 @@ T = TypeVar("T", bound=BaseModel)
 
 DEFAULT_API_KEY: str = LITE_LLM_KEY
 DEFAULT_BASE_URL: str = LITELLM_BASE_URL
-DEFAULT_MODEL: str = PRIMARY_MODEL or "gemini-2.5-flash"
+DEFAULT_MODEL: str = PRIMARY_MODEL or AI_MODEL or "gemini-2.5-flash"
 DEFAULT_FALLBACK_CHAIN: list[str] = FALLBACK_CHAIN
 
 
@@ -51,43 +62,27 @@ def get_openai_client(
     return OpenAI(**client_kwargs)
 
 
-def build_llm_chain(model_name: Optional[str] = None) -> Runnable:
-    api_key = DEFAULT_API_KEY
-    if not api_key:
-        raise ValueError("[LiteLLM] LITE_LLM API key is not configured in .env.")
-
-    base_url = DEFAULT_BASE_URL
-
-    def _make_llm(model: str) -> ChatOpenAI:
-        prefixed = model if model.startswith("gemini/") else f"gemini/{model}"
-        return ChatOpenAI(
-            model=prefixed,
-            base_url=base_url.rstrip("/") + "/",
-            api_key=api_key,
-            temperature=0,
-        )
-
-    models: list[str] = (
-        [model_name] if model_name else [m for m in DEFAULT_FALLBACK_CHAIN if m]
+def build_llm_chain(
+    model_name: Optional[str] = None,
+    system_prompt: str | None = None,
+) -> Runnable:
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", system_prompt or "Return valid JSON only."),
+            ("human", "{text}"),
+        ]
     )
-    if not models:
-        raise ValueError("[LiteLLM] FALLBACK_CHAIN is empty — no models to use.")
-
-    primary = _make_llm(models[0])
-    fallbacks = [_make_llm(m) for m in models[1:]]
-    llm: Any = primary.with_fallbacks(fallbacks) if fallbacks else primary
-
-    prompt = ChatPromptTemplate.from_messages([("human", "{text}")])
-    return prompt | llm | JsonOutputParser()
+    return prompt | get_chat_model(model_name) | JsonOutputParser()
 
 
 def safe_llm_generate_json(
     text: str,
     model_name: Optional[str] = None,
     retries_per_model: int = 3,
+    system_prompt: str | None = None,
 ) -> Optional[Union[Dict[str, Any], List[Any]]]:
     try:
-        chain = build_llm_chain(model_name)
+        chain = build_llm_chain(model_name, system_prompt)
         return chain.invoke({"text": text})
     except Exception as exc:
         logger.error("[LiteLLM] Chain invocation failed: %s", exc)
@@ -148,3 +143,30 @@ def generate_structured_output(
         raise ValueError("Incomplete or refused model response")
     raw_content = choice.message.content or ""
     return schema_model.model_validate_json(raw_content)
+
+
+def get_chat_model(model_name: Optional[str] = None) -> Any:
+    """Return the configured LangChain chat model for agent orchestration."""
+    api_key = DEFAULT_API_KEY
+    if not api_key:
+        raise ValueError("[LiteLLM] API key is not configured in environment or .env.")
+    models = [model_name] if model_name else [m for m in DEFAULT_FALLBACK_CHAIN if m]
+    if not models:
+        models = [DEFAULT_MODEL]
+
+    def make_model(raw_model: str) -> ChatOpenAI:
+        model = (
+            raw_model
+            if raw_model.startswith("gemini/")
+            else f"gemini/{raw_model}"
+        )
+        return ChatOpenAI(
+            model=model,
+            base_url=(DEFAULT_BASE_URL or "").rstrip("/") + "/",
+            api_key=api_key,
+            temperature=0,
+        )
+
+    primary = make_model(models[0])
+    fallbacks = [make_model(model) for model in models[1:]]
+    return primary.with_fallbacks(fallbacks) if fallbacks else primary

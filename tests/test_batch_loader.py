@@ -389,7 +389,49 @@ def test_invalid_payload_rolls_back_the_whole_batch(driver: Driver) -> None:
 
 
 # ===========================================================================
-# Test 8 - batch chunking
+# Test 8 - the database-level business key constraint actually fires
+# ===========================================================================
+
+
+def test_duplicate_natural_key_is_rejected_by_the_database(driver: Driver) -> None:
+    """Two *different* nodes claiming the same natural key must be rejected.
+
+    This is the failure the business-key constraints exist for, and it is a
+    different thing from the idempotency MERGE guarantees. MERGE protects
+    against the same record arriving twice under the same generated id.
+    This protects against the same real-world learner arriving under two
+    different ids - which is what an inconsistently-generated id upstream
+    would look like, and which MERGE cannot catch because the ids differ.
+    """
+    initialize_schema(driver)
+
+    shared_learner_id = _key("dup-natural-key")
+    first = _learner("dup-a", learner_id=shared_learner_id)
+    second = _learner(
+        "dup-b",
+        # deliberately a different node id, same natural key: exactly what a
+        # buggy id generation upstream would produce
+        id=node_id("LearnerProfile", _key("dup-natural-key-DIFFERENT")),
+        learner_id=shared_learner_id,
+    )
+    assert first.id != second.id, "the point of this test is two distinct ids"
+
+    load_graph(driver, LearnerGraph(generated_at=NOW, nodes=[first]))
+
+    with pytest.raises(ClientError) as exc_info:
+        load_graph(driver, LearnerGraph(generated_at=NOW, nodes=[second]))
+    assert "constraint" in str(exc_info.value).lower()
+
+    with driver.session() as session:
+        count = session.run(
+            "MATCH (l:LearnerProfile {learner_id: $lid}) RETURN count(l) AS c",
+            lid=shared_learner_id,
+        ).single()["c"]
+    assert count == 1, "the rejected node must not have landed"
+
+
+# ===========================================================================
+# Test 9 - batch chunking
 # ===========================================================================
 
 
@@ -417,7 +459,7 @@ def test_invalid_batch_size_is_rejected(driver: Driver) -> None:
 
 
 # ===========================================================================
-# Test 9 - the atomic variant covers the whole payload
+# Test 10 - the atomic variant covers the whole payload
 # ===========================================================================
 
 
@@ -450,7 +492,7 @@ def test_load_graph_atomic_loads_nodes_and_edges(driver: Driver) -> None:
 
 
 # ===========================================================================
-# Test 10 - connection error handling
+# Test 11 - connection error handling
 # ===========================================================================
 
 

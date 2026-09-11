@@ -1,7 +1,6 @@
 """Synthetic, offline contract/regression tests for Task 10."""
 
 import json
-from types import SimpleNamespace
 from unittest.mock import Mock
 from uuid import uuid4
 
@@ -10,9 +9,9 @@ from pydantic import ValidationError
 
 from app.agents.learner_profile_update.agent import (
     LearnerProfileUpdateAgent,
+    LLMMetricSynthesizer,
     ProfileUpdateError,
 )
-from app.agents.learner_profile_update.llm_adapter import LiteLLMMetricSynthesizer
 from app.agents.learner_profile_update.prompts import SYSTEM_PROMPT, build_metric_input
 from src.app.models.models import (
     LearnerProfile,
@@ -273,55 +272,44 @@ def test_prompt_receives_prior_baseline_not_invented_history(baseline):
         assert rule in SYSTEM_PROMPT
 
 
-def completion(content, finish_reason="stop", refusal=None):
-    return SimpleNamespace(
-        choices=[
-            SimpleNamespace(
-                finish_reason=finish_reason,
-                message=SimpleNamespace(content=content, refusal=refusal),
-            )
-        ]
-    )
-
-
 def test_adapter_requests_structured_output_and_validates():
-    client = Mock()
-    client.chat.completions.create.return_value = completion(
-        '{"summary":"[new] records passing tests.","confidence":0.6}'
+    generator = Mock(
+        return_value=MetricDraft(
+            summary="[new] records passing tests.", confidence=0.6
+        )
     )
-    adapter = LiteLLMMetricSynthesizer(client, "test-model")
+    adapter = LLMMetricSynthesizer("test-model", generator)
     result = adapter.synthesize("python", None, [make_card()])
     assert result.confidence == 0.6
-    kwargs = client.chat.completions.create.call_args.kwargs
-    assert kwargs["response_format"]["json_schema"]["strict"] is True
+    kwargs = generator.call_args.kwargs
+    assert kwargs["schema_model"] is MetricDraft
+    assert kwargs["schema_name"] == "metric_update"
     assert kwargs["messages"][0]["content"] == SYSTEM_PROMPT
 
 
 @pytest.mark.parametrize(
     "response",
     [
-        completion("not JSON"),
-        completion(""),
-        completion('{"summary":"OK","confidence":2}'),
-        completion('{"summary":"OK","confidence":0.5,"evidence_ids":["fake"]}'),
-        completion('{"summary":"OK","confidence":0.5}', finish_reason="length"),
-        completion(None, refusal="Cannot comply"),
+        ValueError("not JSON"),
+        ValueError("empty"),
+        ValueError("invalid confidence"),
+        ValueError("unexpected field"),
+        ValueError("truncated"),
+        ValueError("refused"),
     ],
 )
 def test_adapter_fails_closed(response):
-    client = Mock()
-    client.chat.completions.create.return_value = response
+    generator = Mock(side_effect=response)
     with pytest.raises(ProfileUpdateError):
-        LiteLLMMetricSynthesizer(client, "test").synthesize(
+        LLMMetricSynthesizer("test", generator).synthesize(
             "python", None, [make_card()]
         )
 
 
 def test_adapter_does_not_expose_provider_secrets():
-    client = Mock()
-    client.chat.completions.create.side_effect = RuntimeError("secret-key")
+    generator = Mock(side_effect=RuntimeError("secret-key"))
     with pytest.raises(ProfileUpdateError) as error:
-        LiteLLMMetricSynthesizer(client, "test").synthesize(
+        LLMMetricSynthesizer("test", generator).synthesize(
             "python", None, [make_card()]
         )
     assert "secret-key" not in str(error.value)
@@ -331,4 +319,4 @@ def test_from_env_requires_configuration(tmp_path, monkeypatch):
     for name in ("AI_AGENT_URL", "AI_API_KEY", "AI_MODEL"):
         monkeypatch.delenv(name, raising=False)
     with pytest.raises(ProfileUpdateError, match="Configure"):
-        LiteLLMMetricSynthesizer.from_env(tmp_path / "missing.env")
+        LLMMetricSynthesizer.from_env()

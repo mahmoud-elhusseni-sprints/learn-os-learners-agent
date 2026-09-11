@@ -344,3 +344,79 @@ def get_milestone_history(learner_id: str) -> ToolResult:
             "insufficient_evidence", [], "No milestone history was found."
         )
     return ToolResult("ok", milestones, "")
+
+
+def investigate_employer(learner_id: str, focus: str = "") -> ToolResult:
+
+    normalized_focus = focus.strip().lower()
+    rows = _run(
+        """
+        MATCH (l:LearnerProfile {learner_id: $learner_id})
+        OPTIONAL MATCH (l)-[:HAS_MEMORY_CARD]->(direct:MemoryCard)
+        OPTIONAL MATCH (l)-[:PRODUCED]->(:DataSource)-[:EXTRACTED_INTO]->
+            (derived:MemoryCard)
+        WITH l, collect(DISTINCT direct) + collect(DISTINCT derived) AS cards
+        UNWIND cards AS m
+        WITH DISTINCT m
+        WHERE m IS NOT NULL
+          AND ($focus = '' OR toLower(m.content) CONTAINS $focus
+               OR toLower(m.metric_key) CONTAINS $focus)
+        RETURN
+            m.card_id AS evidence_id,
+            m.metric_key AS metric_key,
+            m.content AS observation,
+            m.rationale AS rationale,
+            m.tags AS tags,
+            m.created_at AS date,
+            $learner_id AS learner_id,
+            'memory_card' AS source_type
+        ORDER BY m.created_at DESC
+        LIMIT 100
+        """,
+        learner_id=learner_id,
+        focus=normalized_focus,
+    )
+    evidence = [_card_row_to_evidence(row) for row in rows]
+    if not evidence:
+        return ToolResult(
+            "insufficient_evidence", [], "No investigation evidence was found."
+        )
+    return ToolResult("ok", evidence, "")
+
+
+def suggest_next_steps(learner_id: str) -> ToolResult:
+    """Suggest evidence-gathering actions from observed coverage gaps."""
+    result = get_strengths_and_gaps(learner_id)
+    if result.status == "error":
+        return result
+    if result.status != "ok":
+        return ToolResult(
+            "insufficient_evidence",
+            [],
+            "More learner evidence is needed before suggesting next steps.",
+        )
+
+    gaps = result.data.get("gaps", []) if isinstance(result.data, dict) else []
+    steps = [
+        {
+            "area": gap["area"],
+            "action": (
+                "Collect a learner submission or mentor observation that directly "
+                f"covers {gap['area']}."
+            ),
+            "reason": gap["reason"],
+        }
+        for gap in gaps
+    ]
+    if not steps:
+        steps = [
+            {
+                "area": "evidence depth",
+                "action": (
+                    "Collect a recent, directly attributable outcome or mentor "
+                    "review."
+                ),
+                "reason": "Existing observations do not establish broader capability.",
+            }
+        ]
+    return ToolResult("ok", steps, "")

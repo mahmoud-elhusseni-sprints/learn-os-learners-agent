@@ -13,6 +13,8 @@ Available tools:
 - get_behavioral_context(learner_id)
 - get_strengths_and_gaps(learner_id)
 - get_milestone_history(learner_id)
+- investigate_employer(learner_id, focus)
+- suggest_next_steps(learner_id)
 
 Core rules:
 

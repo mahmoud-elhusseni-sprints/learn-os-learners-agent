@@ -34,7 +34,6 @@ class ConversationState:
     last_tool_calls: list[dict[str, Any]] = field(default_factory=list)
 
 
-
 class MemoryCard(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -92,7 +91,6 @@ class ProfileMetric(MetricDraft):
 
 
 class LearnerProfile(BaseModel):
-
     model_config = ConfigDict(extra="allow")
 
     learner_id: Optional[str] = Field(

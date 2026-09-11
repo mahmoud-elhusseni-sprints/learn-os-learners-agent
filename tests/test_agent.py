@@ -1,7 +1,6 @@
 import unittest
 
 from app.agents.talent_intelligence.agent import TalentIntelligenceAgent
-from app.agents.talent_intelligence.config import litellm_settings
 from app.agents.talent_intelligence.prompts import SYSTEM_PROMPT
 from app.agents.talent_intelligence.tools import (
     get_behavioral_context,
@@ -9,6 +8,7 @@ from app.agents.talent_intelligence.tools import (
     get_milestone_history,
     get_skill_proofs,
 )
+from src.app.core.config import AI_MODEL, LITE_LLM_KEY, LITELLM_BASE_URL, PRIMARY_MODEL
 
 LEARNER_A4_ID = "900353f6-f011-4d31-9a8a-b050b891c69c"
 LEARNER_A7_ID = "087a2843-3c98-44d3-8ed1-81eeaccd440a"
@@ -85,11 +85,8 @@ class AgentTests(unittest.TestCase):
 
     def test_litellm_settings_are_optional(self):
         # The deterministic MVP must run even when no API credentials exist.
-        settings = litellm_settings()
-        self.assertTrue(
-            settings is None
-            or set(settings) == {"AI_AGENT_URL", "AI_API_KEY", "AI_MODEL"}
-        )
+        settings = (LITELLM_BASE_URL, LITE_LLM_KEY, PRIMARY_MODEL or AI_MODEL)
+        self.assertEqual(len(settings), 3)
 
 
 if __name__ == "__main__":

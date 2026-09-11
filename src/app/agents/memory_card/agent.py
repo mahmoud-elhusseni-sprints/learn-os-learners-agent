@@ -3,7 +3,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from .llm_adapter import MemoryCardLLMAdapter
+from src.app.core.llm_client import safe_llm_generate_json
+
 from .prompts import (
     SYSTEM_PROMPT,
     VALID_METRICS,
@@ -14,24 +15,26 @@ from .prompts import (
 
 
 class MemoryCardAgent:
-
     system_prompt = SYSTEM_PROMPT
 
     def __init__(self, llm_adapter: Optional[Any] = None) -> None:
-        self.llm_adapter = llm_adapter or MemoryCardLLMAdapter()
+        self.llm_adapter = llm_adapter
 
     def normalize_metric(self, metric_key: str) -> str:
         if metric_key in VALID_METRICS:
             return metric_key
         key_suffix = metric_key.split(".")[-1]
-        return next((vm for vm in VALID_METRICS if key_suffix in vm), "learning_goals.learner_tasks")
+        return next(
+            (vm for vm in VALID_METRICS if key_suffix in vm),
+            "learning_goals.learner_tasks",
+        )
 
     def normalize_tags(self, raw_tags: List[Any]) -> List[str]:
         deduped: List[str] = []
         for rt in raw_tags:
             if not isinstance(rt, str):
                 continue
-            
+
             clean_t = rt.strip()
             norm_t = clean_t.replace("-", "_").lower()
 
@@ -41,7 +44,9 @@ class MemoryCardAgent:
             elif norm_t in VALID_TAGS:
                 matched = norm_t
             else:
-                matched = next((vt for vt in VALID_TAGS if norm_t in vt or vt in norm_t), None)
+                matched = next(
+                    (vt for vt in VALID_TAGS if norm_t in vt or vt in norm_t), None
+                )
 
             if matched and matched not in deduped:
                 deduped.append(matched)
@@ -68,7 +73,7 @@ class MemoryCardAgent:
         learner_id = learner.get("learner_id", "")
         metric_key = self.normalize_metric(item.get("metric_key", ""))
         source_locator = str(item.get("source_locator", "turn:0"))
-        
+
         timestamp = created_at_utc or datetime.now(timezone.utc).isoformat()
         now_iso = datetime.now(timezone.utc).isoformat()
         card_id = f"{source_id}:{learner_id}:{source_locator}:{metric_key}"
@@ -87,20 +92,27 @@ class MemoryCardAgent:
         meeting_id = None
         if meeting_meta:
             meeting_id = meeting_meta.get("meeting_id")
-            project_metadata.update({
-                "meeting_type": meeting_meta.get("kind", "meeting"),
-                "meeting_topic": meeting_meta.get("topic", group_name),
-                "zoom_meeting_id": meeting_meta.get("zoom_meeting_id"),
-                "zoom_meeting_uuid": meeting_meta.get("zoom_meeting_uuid") or source_id,
-                "scheduled_meeting_id": meeting_id,
-                "scheduled_starts_at_utc": meeting_meta.get("starts_at_utc", timestamp),
-            })
+            project_metadata.update(
+                {
+                    "meeting_type": meeting_meta.get("kind", "meeting"),
+                    "meeting_topic": meeting_meta.get("topic", group_name),
+                    "zoom_meeting_id": meeting_meta.get("zoom_meeting_id"),
+                    "zoom_meeting_uuid": meeting_meta.get("zoom_meeting_uuid")
+                    or source_id,
+                    "scheduled_meeting_id": meeting_id,
+                    "scheduled_starts_at_utc": meeting_meta.get(
+                        "starts_at_utc", timestamp
+                    ),
+                }
+            )
         elif lx_meta:
-            project_metadata.update({
-                "interaction_type": lx_meta.get("flow", "lx_interaction"),
-                "lx_id": lx_meta.get("lx_id"),
-                "topic": lx_meta.get("topic", "learner_mentorship"),
-            })
+            project_metadata.update(
+                {
+                    "interaction_type": lx_meta.get("flow", "lx_interaction"),
+                    "lx_id": lx_meta.get("lx_id"),
+                    "topic": lx_meta.get("topic", "learner_mentorship"),
+                }
+            )
 
         return {
             "card_id": card_id,
@@ -137,13 +149,12 @@ class MemoryCardAgent:
                 f'metric_key="{card.get("metric_key", "")}",\n\n'
                 f'content=(\n    "{payload.get("content", "")}",\n),\n\n'
                 f'rationale=(\n    "{payload.get("rationale", "")}",\n),\n\n'
-                f'tags=[\n{formatted_tags}\n], # predefined\n\n'
+                f"tags=[\n{formatted_tags}\n], # predefined\n\n"
                 f'created_at="{card.get("created_at", "")}",\n\n'
             )
             blocks.append(block)
-            
-        return "\n".join(blocks)
 
+        return "\n".join(blocks)
 
     def extract_from_transcript(self, **kwargs: Any) -> List[Dict[str, Any]]:
         dry_run = kwargs.pop("dry_run", False)
@@ -159,4 +170,7 @@ class MemoryCardAgent:
         if dry_run:
             print(f"  [Dry Run] Prepared prompt ({len(prompt)} chars).")
             return []
-        return self.llm_adapter.generate(prompt) if hasattr(self.llm_adapter, "generate") else []
+        if self.llm_adapter is not None and hasattr(self.llm_adapter, "generate"):
+            return self.llm_adapter.generate(prompt)
+        result = safe_llm_generate_json(prompt, system_prompt=SYSTEM_PROMPT)
+        return result if isinstance(result, list) else []

@@ -2,11 +2,12 @@
 
 from src.app.models.models import LearnerProfile, MemoryCard, ProfileUpdateInput
 
-from .agent import LearnerProfileUpdateAgent, ProfileUpdateError
+from .agent import LearnerProfileUpdateAgent, LLMMetricSynthesizer, ProfileUpdateError
 
 __all__ = [
     "LearnerProfileUpdateAgent",
     "ProfileUpdateError",
+    "LLMMetricSynthesizer",
     "LearnerProfile",
     "MemoryCard",
     "ProfileUpdateInput",
