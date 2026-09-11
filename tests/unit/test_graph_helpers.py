@@ -76,7 +76,9 @@ def test_agent_routes_next_steps_command():
     with patch.object(
         tools,
         "suggest_next_steps",
-        return_value=ToolResult("ok", [{"area": "testing", "action": "Collect", "reason": "gap"}]),
+        return_value=ToolResult(
+            "ok", [{"area": "testing", "action": "Collect", "reason": "gap"}]
+        ),
     ) as suggest:
         answer = agent.respond("What are the next steps?")
 

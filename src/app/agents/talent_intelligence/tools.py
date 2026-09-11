@@ -47,7 +47,8 @@ def _find_learner(learner_query: str) -> dict[str, Any] | None:
 def _cards_for_learner(learner_id: str) -> list[dict[str, Any]]:
     return _run(
         """
-        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        MATCH (l:LearnerProfile {learner_id: $learner_id})
+            -[:HAS_MEMORY_CARD]->(m:MemoryCard)
         OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
         RETURN
             m.card_id    AS evidence_id,
@@ -57,8 +58,12 @@ def _cards_for_learner(learner_id: str) -> list[dict[str, Any]]:
             m.tags       AS tags,
             m.created_at AS date,
             $learner_id  AS learner_id,
-            coalesce(m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null) AS source_ref,
-            coalesce(m.source_type, ds.datasource_name, 'meeting_transcript') AS source_type
+            coalesce(
+                m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null
+            ) AS source_ref,
+            coalesce(
+                m.source_type, ds.datasource_name, 'meeting_transcript'
+            ) AS source_type
         ORDER BY m.created_at DESC
         """,
         learner_id=learner_id,
@@ -116,12 +121,17 @@ def get_learner_profile(learner_query: str) -> ToolResult:
 
     coverage_rows = _run(
         """
-        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        MATCH (l:LearnerProfile {learner_id: $learner_id})
+            -[:HAS_MEMORY_CARD]->(m:MemoryCard)
         OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
         RETURN
             count(m)           AS evidence_count,
             max(m.created_at)  AS most_recent_evidence_date,
-            collect(DISTINCT coalesce(ds.datasource_name, 'meeting_transcript', 'memory_card')) AS source_types
+            collect(
+                DISTINCT coalesce(
+                    ds.datasource_name, 'meeting_transcript', 'memory_card'
+                )
+            ) AS source_types
         """,
         learner_id=learner_id,
     )
@@ -155,7 +165,8 @@ def get_skill_proofs(learner_id: str, skill: str) -> ToolResult:
     normalized = skill.strip().lower()
     rows = _run(
         """
-        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        MATCH (l:LearnerProfile {learner_id: $learner_id})
+            -[:HAS_MEMORY_CARD]->(m:MemoryCard)
         OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
         WHERE (toLower(m.content) CONTAINS $skill
                OR toLower(m.metric_key) CONTAINS $skill)
@@ -168,8 +179,12 @@ def get_skill_proofs(learner_id: str, skill: str) -> ToolResult:
             m.tags       AS tags,
             m.created_at AS date,
             $learner_id  AS learner_id,
-            coalesce(m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null) AS source_ref,
-            coalesce(m.source_type, ds.datasource_name, 'meeting_transcript') AS source_type
+            coalesce(
+                m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null
+            ) AS source_ref,
+            coalesce(
+                m.source_type, ds.datasource_name, 'meeting_transcript'
+            ) AS source_type
         ORDER BY m.created_at DESC
         """,
         learner_id=learner_id,
@@ -187,7 +202,8 @@ def get_behavioral_context(learner_id: str) -> ToolResult:
     metrics = list(BEHAVIOR_METRICS)
     rows = _run(
         """
-        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        MATCH (l:LearnerProfile {learner_id: $learner_id})
+            -[:HAS_MEMORY_CARD]->(m:MemoryCard)
         OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
         WHERE m.metric_key IN $metrics
         RETURN
@@ -198,8 +214,12 @@ def get_behavioral_context(learner_id: str) -> ToolResult:
             m.tags       AS tags,
             m.created_at AS date,
             $learner_id  AS learner_id,
-            coalesce(m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null) AS source_ref,
-            coalesce(m.source_type, ds.datasource_name, 'meeting_transcript') AS source_type
+            coalesce(
+                m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null
+            ) AS source_ref,
+            coalesce(
+                m.source_type, ds.datasource_name, 'meeting_transcript'
+            ) AS source_type
         ORDER BY m.created_at DESC
         """,
         learner_id=learner_id,
@@ -217,7 +237,8 @@ def get_strengths_and_gaps(learner_id: str) -> ToolResult:
     metrics = list(BEHAVIOR_METRICS)
     rows = _run(
         """
-        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        MATCH (l:LearnerProfile {learner_id: $learner_id})
+            -[:HAS_MEMORY_CARD]->(m:MemoryCard)
         WHERE m.metric_key IN $metrics
         RETURN
             m.card_id    AS evidence_id,

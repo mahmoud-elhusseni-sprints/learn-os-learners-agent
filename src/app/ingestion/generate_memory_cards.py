@@ -394,20 +394,6 @@ def main(argv: Optional[List[str]] = None) -> None:
 
     agent = MemoryCardAgent()
 
-    if not args.dry_run:
-        try:
-            agent.llm_adapter.initialize_client()
-            print(
-                f"Initialized MemoryCardAgent using model: {agent.llm_adapter.model_name}"
-            )
-        except Exception as e:
-            print(f"Error initializing MemoryCardAgent: {e}")
-            print(
-                "To inspect prompts and verify data structure without an API "
-                "key, run with --dry-run"
-            )
-            sys.exit(1)
-
     base_dir = Path(__file__).resolve().parent
     logs_candidates = [
         base_dir / "AI Internship Logs",

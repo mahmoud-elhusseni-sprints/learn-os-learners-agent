@@ -138,7 +138,7 @@ def extract_memory_cards_from_assessments(
                 rationale_str = (
                     notes or f"Quantitative test score of {score}% in {metric_key}."
                 )
-                # Use metric_key/domain directly if they are canonical tags, else fallback
+                # Use canonical metric/domain tags when available; otherwise fall back.
                 canonical_tags = [
                     t
                     for t in [metric_key.lower(), domain.lower()]
