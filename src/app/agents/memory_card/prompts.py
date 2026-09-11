@@ -2,37 +2,10 @@
 
 from __future__ import annotations
 
-from typing import List
+from src.app.core.tags import ALLOWED_TAXONOMY_TAGS, METRIC_KEYS
 
-# Standard Metric Categories based on dataset
-VALID_METRICS: List[str] = [
-    "learning_goals.learner_tasks",
-    "internship_context.tech_stack",
-    "internship_context.current_blockers",
-    "behavioral_engagement.effort_signals",
-    "behavioral_engagement.adaptability",
-    "behavioral_engagement.engagement",
-    "identity_context.bio",
-    "identity_context.location",
-    "identity_context.education_level",
-    "identity_context.field_of_study",
-    "knowledge_state.known_topics",
-    "learning_goals.short_term",
-]
-
-# Predefined tag enum — only these values are allowed
-VALID_TAGS: List[str] = [
-    "technical_skills",
-    "problem_solving",
-    "communication",
-    "teamwork_collaboration",
-    "leadership",
-    "time_task_management",
-    "adaptability_learning",
-    "professionalism",
-    "creativity_innovation",
-    "career_role_alignment",
-]
+VALID_METRICS = METRIC_KEYS
+VALID_TAGS = ALLOWED_TAXONOMY_TAGS
 
 SYSTEM_PROMPT = (
     "You are an AI Memory Card Extractor for an internship program.\n"

@@ -99,7 +99,8 @@ Programmatic use:
 
 ```python
 from app.agents.learner_profile_update import (
-    LearnerProfileUpdateAgent, ProfileUpdateInput,
+    LearnerProfileUpdateAgent,
+    ProfileUpdateInput,
 )
 from app.agents.learner_profile_update.llm_adapter import LiteLLMMetricSynthesizer
 

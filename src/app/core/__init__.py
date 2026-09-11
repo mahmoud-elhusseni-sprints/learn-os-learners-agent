@@ -1,4 +1,5 @@
 from .config import (
+    AI_MODEL,
     BASE_DIR,
     COHORT_GROUPS,
     DATA_DIR,
@@ -17,8 +18,27 @@ from .config import (
     SECONDARY_MODEL,
     TERTIARY_MODEL,
 )
+from .llm_client import (
+    build_llm_chain,
+    generate_chat_completion,
+    generate_structured_output,
+    get_chat_model,
+    get_openai_client,
+    safe_llm_generate_json,
+)
+from .tags import (
+    ALLOWED_TAXONOMY_SET,
+    ALLOWED_TAXONOMY_TAGS,
+    BEHAVIOR_METRIC_TAG_MAP,
+    BEHAVIOR_METRICS,
+    METRIC_KEYS,
+    OUTCOME_TAGS,
+    TAXONOMY_TAG_DESCRIPTIONS,
+    build_taxonomy_prompt_block,
+)
 
 __all__ = [
+    # config
     "BASE_DIR",
     "DATA_DIR",
     "JSON_DIR",
@@ -33,7 +53,24 @@ __all__ = [
     "LITE_LLM_KEY",
     "LITELLM_BASE_URL",
     "PRIMARY_MODEL",
+    "AI_MODEL",
     "SECONDARY_MODEL",
     "TERTIARY_MODEL",
     "FALLBACK_CHAIN",
+    # tags
+    "ALLOWED_TAXONOMY_TAGS",
+    "ALLOWED_TAXONOMY_SET",
+    "TAXONOMY_TAG_DESCRIPTIONS",
+    "build_taxonomy_prompt_block",
+    "BEHAVIOR_METRIC_TAG_MAP",
+    "BEHAVIOR_METRICS",
+    "METRIC_KEYS",
+    "OUTCOME_TAGS",
+    # llm_client
+    "build_llm_chain",
+    "safe_llm_generate_json",
+    "get_openai_client",
+    "generate_chat_completion",
+    "generate_structured_output",
+    "get_chat_model",
 ]

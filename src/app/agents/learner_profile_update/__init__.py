@@ -1,11 +1,13 @@
 """Public Task 10 transformation API; import adapter only for live model use."""
 
-from .agent import LearnerProfileUpdateAgent, ProfileUpdateError
-from .models import LearnerProfile, MemoryCard, ProfileUpdateInput
+from src.app.models.models import LearnerProfile, MemoryCard, ProfileUpdateInput
+
+from .agent import LearnerProfileUpdateAgent, LLMMetricSynthesizer, ProfileUpdateError
 
 __all__ = [
     "LearnerProfileUpdateAgent",
     "ProfileUpdateError",
+    "LLMMetricSynthesizer",
     "LearnerProfile",
     "MemoryCard",
     "ProfileUpdateInput",

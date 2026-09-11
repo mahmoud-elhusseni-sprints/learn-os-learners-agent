@@ -3,7 +3,7 @@ Tests for the extraction -> graph adapter (``src/app/ingestion/build_graph.py``)
 
 These are deliberately written as **contract tests**: the input fixtures are
 not hand-typed dicts, they are produced by calling ``.model_dump()`` on the
-pipeline's own models in ``src/app/models/deliverables.py``. If the pipeline
+pipeline's own models in ``src/app/models/models.py``. If the pipeline
 changes the shape of its output, these tests fail - which is the point. A
 hand-written fixture would keep passing while the real integration quietly
 broke.
@@ -20,15 +20,15 @@ import pytest
 
 from src.app.graph.schema import DataSourceName, EdgeType, LearnerGraph
 from src.app.ingestion.build_graph import build_graph_from_pipeline_output
-from src.app.models.deliverables import (
+from src.app.models.models import (
     DataSource as PipelineDataSource,
 )
-from src.app.models.deliverables import (
+from src.app.models.models import (
     DataSourceType,
     ReviewPayload,
     RubricPointEvaluation,
 )
-from src.app.models.deliverables import (
+from src.app.models.models import (
     MemoryCard as PipelineMemoryCard,
 )
 

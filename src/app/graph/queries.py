@@ -29,7 +29,7 @@ def merge_nodes(tx: ManagedTransaction, label: str, rows: list[dict[str, Any]]) 
     if not rows:
         return
     tx.run(
-        f"UNWIND $rows AS row " f"MERGE (n:{label} {{id: row.id}}) " f"SET n += row",
+        f"UNWIND $rows AS row MERGE (n:{label} {{id: row.id}}) SET n += row",
         rows=rows,
     ).consume()
 

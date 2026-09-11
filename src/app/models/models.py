@@ -1,27 +1,127 @@
-import hashlib
-from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from __future__ import annotations
 
-from pydantic import BaseModel, Field, model_validator
+import hashlib
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Annotated, Any, Dict, List, Optional, Union
+from uuid import UUID
+
+from pydantic import (
+    AwareDatetime,
+    BaseModel,
+    ConfigDict,
+    Field,
+    StringConstraints,
+    field_validator,
+    model_validator,
+)
+
+NonEmpty = Annotated[str, StringConstraints(min_length=1, pattern=r"\S")]
+Confidence = Annotated[float, Field(ge=0.0, le=1.0, allow_inf_nan=False, strict=True)]
+
+
+@dataclass
+class ToolResult:
+    status: str
+    data: Any
+    message: str = ""
+
+
+@dataclass
+class ConversationState:
+    active_learner_id: str | None = None
+    turns: list[dict[str, str]] = field(default_factory=list)
+    last_tool_calls: list[dict[str, Any]] = field(default_factory=list)
+
+
+class MemoryCard(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    card_id: NonEmpty
+    meeting_id: Optional[Union[NonEmpty, str]] = None
+    metric_key: NonEmpty
+    content: NonEmpty
+    rationale: Optional[str] = Field(default="", description="Rationale explanation")
+    tags: list[NonEmpty] = Field(
+        default_factory=list, description="Predefined competency tags"
+    )
+    created_at: Optional[AwareDatetime] = Field(
+        default=None, description="Creation timestamp"
+    )
+    associated_learner_ids: list[str] = Field(
+        default_factory=list,
+        description="List of LearnerProfile UUIDs linked to this card (Many-to-Many)",
+    )
+    profile_hints: Optional[list[str]] = Field(
+        default=None, description="Legacy alias for tags"
+    )
+    source_datasource_id: Optional[str] = Field(
+        default=None,
+        description=(
+            "datasource_id of the DataSource record this card was distilled "
+            "from, if any. Lets the graph loader draw the EXTRACTED_INTO "
+            "edge (DataSource -> MemoryCard) precisely instead of guessing."
+        ),
+    )
+
+    @field_validator("card_id", "meeting_id", mode="before")
+    @classmethod
+    def normalize_uuid(cls, value: Any) -> Any:
+        """Accept UUID objects as well as nonempty string identifiers."""
+        return str(value) if isinstance(value, UUID) else value
+
+    @model_validator(mode="after")
+    def sync_tags_and_hints(self) -> MemoryCard:
+        if not self.tags and self.profile_hints:
+            self.tags = list(self.profile_hints)
+        elif not self.profile_hints and self.tags:
+            self.profile_hints = list(self.tags)
+        return self
+
+
+class MetricDraft(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    summary: NonEmpty
+    confidence: Confidence
+
+
+class ProfileMetric(MetricDraft):
+    model_config = ConfigDict(extra="allow")
+    evidence_ids: list[NonEmpty] = Field(default_factory=list)
 
 
 class LearnerProfile(BaseModel):
-    learner_id: str = Field(..., description="Unique UUID for the learner")
-    name: str = Field(..., description="Learner name/pseudonym")
+    model_config = ConfigDict(extra="allow")
+
+    learner_id: Optional[str] = Field(
+        default=None, description="Unique UUID for the learner"
+    )
+    name: Optional[str] = Field(default=None, description="Learner name/pseudonym")
     role: str = Field(default="member", description="Team role (lead/member)")
-    group_name: str = Field(..., description="Internship track name")
-    round_name: str = Field(..., description="Internship round label")
+    group_name: Optional[str] = Field(default=None, description="Internship track name")
+    round_name: Optional[str] = Field(
+        default=None, description="Internship round label"
+    )
     added_at: Optional[str] = Field(
         default=None, description="ISO timestamp when learner joined"
     )
     learner_status: Optional[str] = Field(
         default=None, description="Active status indicator"
     )
+    metrics: dict[NonEmpty, ProfileMetric] = Field(
+        default_factory=dict, description="Consolidated competency metrics"
+    )
+
+
+class ProfileUpdateInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    previous_profile: Optional[LearnerProfile] = None
+    memory_cards: list[MemoryCard] = Field(default_factory=list)
 
 
 class DataSourceType(str, Enum):
     REVIEW = "review"
-    ASSESSMENTS = "assesments"
+    ASSESSMENTS = "assessments"
     CHAT = "chat"
     MEETINGS = "meetings"
 
@@ -109,7 +209,7 @@ class DataSource(BaseModel):
         ..., description="Unique UUID for this data source event"
     )
     datasource_name: Union[DataSourceType, str] = Field(
-        ..., description="'review', 'assesments', 'chat', 'meetings'"
+        ..., description="'review', 'assessments', 'chat', 'meetings'"
     )
     timestamp: str = Field(..., description="ISO 8601 UTC timestamp")
     learner_id: Optional[str] = Field(
@@ -129,42 +229,25 @@ class DataSource(BaseModel):
         source_type: str,
         attempt: int = 1,
     ) -> str:
+        """Generate a deterministic SHA-256 hash-based ID for data sources."""
         raw_key = f"{learner_id}:{lx_id}:{timestamp}:{source_type}:{attempt}"
         return "ds_" + hashlib.sha256(raw_key.encode("utf-8")).hexdigest()[:24]
 
 
-class MemoryCard(BaseModel):
-    card_id: str = Field(..., description="Unique memory card UUID")
-    metric_key: str = Field(..., description="Competency metric key")
-    content: str = Field(..., description="Summary content")
-    rationale: Optional[str] = Field(default=None, description="Rationale explanation")
-    tags: List[str] = Field(
-        default_factory=list, description="Predefined competency tags"
-    )
-    created_at: Optional[str] = Field(default=None, description="Creation timestamp")
-    associated_learner_ids: List[str] = Field(
-        default_factory=list,
-        description=("List of LearnerProfile UUIDs linked to this card (Many-to-Many)"),
-    )
-    profile_hints: Optional[List[str]] = Field(
-        default=None, description="Legacy alias for tags"
-    )
-    meeting_id: Optional[str] = Field(
-        default=None, description="Legacy session identifier"
-    )
-    source_datasource_id: Optional[str] = Field(
-        default=None,
-        description=(
-            "datasource_id of the DataSource record this card was distilled "
-            "from, if any. Lets the graph loader draw the EXTRACTED_INTO "
-            "edge (DataSource -> MemoryCard) precisely instead of guessing."
-        ),
-    )
-
-    @model_validator(mode="after")
-    def sync_tags_and_hints(self) -> "MemoryCard":
-        if not self.tags and self.profile_hints:
-            self.tags = list(self.profile_hints)
-        elif not self.profile_hints and self.tags:
-            self.profile_hints = list(self.tags)
-        return self
+__all__ = [
+    "NonEmpty",
+    "Confidence",
+    "ToolResult",
+    "ConversationState",
+    "MemoryCard",
+    "MetricDraft",
+    "ProfileMetric",
+    "LearnerProfile",
+    "ProfileUpdateInput",
+    "DataSourceType",
+    "RubricPointEvaluation",
+    "ReviewPayload",
+    "AssessmentAnswer",
+    "AssessmentPayload",
+    "DataSource",
+]
