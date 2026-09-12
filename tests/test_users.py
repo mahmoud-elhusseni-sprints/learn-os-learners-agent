@@ -20,6 +20,7 @@ def test_create_user():
         json={
             "name": "Pytest User",
             "email": email,
+            "password": "TestPassword123",
         },
     )
 
@@ -49,6 +50,7 @@ def test_get_user_by_id():
         json={
             "name": "Get User Test",
             "email": email,
+            "password": "TestPassword123",
         },
     )
 
@@ -89,6 +91,7 @@ def test_duplicate_email():
         json={
             "name": "First User",
             "email": email,
+            "password": "TestPassword123",
         },
     )
 
@@ -99,6 +102,7 @@ def test_duplicate_email():
         json={
             "name": "Second User",
             "email": email,
+            "password": "TestPassword123",
         },
     )
 

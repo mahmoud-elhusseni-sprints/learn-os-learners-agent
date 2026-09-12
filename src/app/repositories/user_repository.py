@@ -18,6 +18,25 @@ def create_user(db: Session, user_data: UserCreate) -> User:
     return user
 
 
+def create_auth_user(
+    db: Session,
+    name: str,
+    email: str,
+    password_hash: str,
+) -> User:
+    user = User(
+        name=name,
+        email=email,
+        password_hash=password_hash,
+    )
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    return user
+
+
 def get_users(db: Session) -> list[User]:
     statement = select(User).order_by(User.id)
     return list(db.scalars(statement).all())

@@ -8,6 +8,7 @@ from src.app.schemas.conversation import (
     MessageResponse,
 )
 from src.app.services import conversation_service
+from src.app.api.dependencies.auth import get_current_user
 
 
 router = APIRouter(
@@ -43,6 +44,7 @@ def create_conversation(
 def get_user_conversations(
     user_id: int,
     db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
 ):
     try:
         return conversation_service.get_user_conversations(
