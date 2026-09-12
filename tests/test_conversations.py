@@ -5,13 +5,17 @@ from src.app.main import app
 
 client = TestClient(app)
 
+TEST_EMAIL = "conversation_test@example.com"
+TEST_PASSWORD = "TestPassword123"
+
 
 def create_test_user():
     response = client.post(
         "/users",
         json={
             "name": "Conversation Test User",
-            "email": "conversation_test@example.com",
+            "email": TEST_EMAIL,
+            "password": TEST_PASSWORD,
         },
     )
 
@@ -19,14 +23,34 @@ def create_test_user():
     # retrieve it instead.
     if response.status_code == 400:
         users_response = client.get("/users")
+        assert users_response.status_code == 200
+
         users = users_response.json()
 
         for user in users:
-            if user["email"] == "conversation_test@example.com":
+            if user["email"] == TEST_EMAIL:
                 return user["id"]
 
     assert response.status_code == 201
     return response.json()["id"]
+
+
+def get_auth_headers():
+    response = client.post(
+        "/auth/signin",
+        json={
+            "email": TEST_EMAIL,
+            "password": TEST_PASSWORD,
+        },
+    )
+
+    assert response.status_code == 200
+
+    token = response.json()["access_token"]
+
+    return {
+        "Authorization": f"Bearer {token}",
+    }
 
 
 def test_create_conversation():
@@ -57,6 +81,7 @@ def test_get_user_conversations():
 
     response = client.get(
         f"/users/{user_id}/conversations",
+        headers=get_auth_headers(),
     )
 
     assert response.status_code == 200
