@@ -17,6 +17,41 @@ It mocks model calls, requires no API key, and includes a check against the
 repository's sample evidence. With Docker available, run
 `docker compose run --rm --no-deps api pytest` for the full suite.
 
+## Task 10: Learner Profile Update Agent
+
+Creates or selectively updates profile metrics from tagged memory cards, with
+Pydantic validation, evidence-first prompts and no database operations.
+See [contracts, architecture, examples and tests](docs/learner_profile_update.md).
+
+## Task 12: Employer Chat Interface MVP (Next.js & React)
+
+A minimalist, responsive conversational AI chat interface for the Employer Talent Intelligence
+platform, built with React, Next.js, and Tailwind CSS. Features session management, new chat initialization,
+and a decoupled mock service layer simulating candidate evaluations and intelligence reports.
+
+### Frontend Prerequisites & Quick Start
+
+- **Prerequisites:** Node.js v18.18+ (or v20+) and npm / yarn.
+- **Install dependencies:**
+  ```bash
+  cd frontend
+  npm install
+  # or: yarn install
+  ```
+- **Run the local development server:**
+  ```bash
+  npm run dev
+  # or: yarn dev
+  ```
+- Open [http://localhost:3000](http://localhost:3000) in your browser.
+- **Build and lint:**
+  ```bash
+  npm run build
+  npm run lint
+  ```
+For detailed frontend component architecture and mock service contracts, see [`frontend/README.md`](frontend/README.md).
+
+
 ## Quick Start
 
 1. Clone the repository.
@@ -306,6 +341,7 @@ Use this table as a quick reference:
 | Prepare or preprocess data                      | `docs/data.md`         |
 | Load data into Neo4j                            | `docs/data.md`         |
 | Understand the data pipeline                    | `docs/data.md`         |
+| Run or develop the Employer Chat Interface MVP  | `frontend/README.md`   |
 
 ### Recommended Reading Order
 

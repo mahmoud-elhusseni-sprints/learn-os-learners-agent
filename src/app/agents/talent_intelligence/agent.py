@@ -3,25 +3,14 @@
 from __future__ import annotations
 
 import re
-from typing import Any
+from typing import Any, Callable
+
+from src.app.models.models import ConversationState, ToolResult
 
 from . import tools
-from .models import ConversationState, ToolResult
+from .graph import TOOL_SCHEMAS, run_tool_loop
 from .prompts import SYSTEM_PROMPT
 
-SKILL_TERMS = (
-    "machine learning",
-    "natural language processing",
-    "deep learning",
-    "fastapi",
-    "python",
-    "api",
-    "rag",
-    "remotion",
-    "debugging",
-    "html",
-    "mp4",
-)
 BEHAVIOR_TERMS = (
     "behavior",
     "communication",
@@ -34,7 +23,6 @@ BEHAVIOR_TERMS = (
 
 
 class TalentIntelligenceAgent:
-    """Calls stable tool interfaces and renders evidence-first answers."""
 
     system_prompt = SYSTEM_PROMPT
 
@@ -46,31 +34,12 @@ class TalentIntelligenceAgent:
 
     def respond(self, query: str, learner_name_or_id: str | None = None) -> str:
         self.state.last_tool_calls = []
-        if learner_name_or_id:
-            self.state.active_learner_id = None
-            profile = self._call(
-                "get_learner_profile",
-                tools.get_learner_profile,
-                learner_name_or_id,
-            )
-            if profile.status != "ok":
-                return self._remember(
-                    query,
-                    (
-                        self._error_answer()
-                        if profile.status == "error"
-                        else self._no_learner_answer()
-                    ),
-                )
-            self.state.active_learner_id = profile.data["learner_id"]
-
-        if not self.state.active_learner_id:
-            return self._remember(query, self._no_learner_answer())
+        failure = self._ensure_learner(query, learner_name_or_id)
+        if failure is not None:
+            return failure
 
         lower = query.lower()
         skill = self._extract_skill(lower)
-        # A named skill narrows general requests such as "strongest Python
-        # contributions" to skill evidence, rather than an unfiltered overview.
         if skill is not None:
             result = self._call(
                 "get_skill_proofs",
@@ -102,6 +71,23 @@ class TalentIntelligenceAgent:
                 self.state.active_learner_id,
             )
             answer = self._evidence_answer("behavioral context", result)
+        elif any(term in lower for term in ("next step", "next action", "what should")):
+            result = self._call(
+                "suggest_next_steps",
+                tools.suggest_next_steps,
+                self.state.active_learner_id,
+            )
+            answer = self._next_steps_answer(result)
+        elif any(
+            term in lower for term in ("investigate", "investigation", "employer")
+        ):
+            result = self._call(
+                "investigate_employer",
+                tools.investigate_employer,
+                self.state.active_learner_id,
+                query,
+            )
+            answer = self._evidence_answer("employer investigation", result)
         else:
             result = self._call(
                 "get_learner_profile",
@@ -116,6 +102,23 @@ class TalentIntelligenceAgent:
     ) -> str:
         """Optional Gemini path. Python tools remain the only data source."""
         self.state.last_tool_calls = []
+        failure = self._ensure_learner(query, learner_name_or_id)
+        if failure is not None:
+            return failure
+
+        learner_id = self.state.active_learner_id
+        assert learner_id is not None
+
+        handlers = self._tool_handlers(learner_id)
+        answer = run_tool_loop(
+            query,
+            SYSTEM_PROMPT,
+            TOOL_SCHEMAS,
+            handlers,
+        )
+        return self._remember(query, answer)
+
+    def _ensure_learner(self, query: str, learner_name_or_id: str | None) -> str | None:
         if learner_name_or_id:
             self.state.active_learner_id = None
             profile = self._call(
@@ -124,22 +127,21 @@ class TalentIntelligenceAgent:
                 learner_name_or_id,
             )
             if profile.status != "ok":
-                return self._remember(
-                    query,
-                    (
-                        self._error_answer()
-                        if profile.status == "error"
-                        else self._no_learner_answer()
-                    ),
+                answer = (
+                    self._error_answer()
+                    if profile.status == "error"
+                    else self._no_learner_answer()
                 )
+                return self._remember(query, answer)
             self.state.active_learner_id = profile.data["learner_id"]
+
         if not self.state.active_learner_id:
             return self._remember(query, self._no_learner_answer())
+        return None
 
-        from .llm_adapter import LiteLLMGeminiAdapter
-
-        learner_id = self.state.active_learner_id
-
+    def _tool_handlers(
+        self, learner_id: str
+    ) -> dict[str, Callable[[dict[str, Any]], dict[str, Any]]]:
         def invoke(name: str, function: Any, *arguments: Any) -> dict[str, Any]:
             result = self._call(name, function, *arguments)
             return {
@@ -149,11 +151,9 @@ class TalentIntelligenceAgent:
             }
 
         # Learner ID is controlled in Python; model-provided identities are ignored.
-        handlers = {
+        return {
             "get_learner_profile": lambda _: invoke(
-                "get_learner_profile",
-                tools.get_learner_profile,
-                learner_id,
+                "get_learner_profile", tools.get_learner_profile, learner_id
             ),
             "get_skill_proofs": lambda args: invoke(
                 "get_skill_proofs",
@@ -162,51 +162,61 @@ class TalentIntelligenceAgent:
                 str(args.get("skill", "")),
             ),
             "get_behavioral_context": lambda _: invoke(
-                "get_behavioral_context",
-                tools.get_behavioral_context,
-                learner_id,
+                "get_behavioral_context", tools.get_behavioral_context, learner_id
             ),
             "get_strengths_and_gaps": lambda _: invoke(
-                "get_strengths_and_gaps",
-                tools.get_strengths_and_gaps,
-                learner_id,
+                "get_strengths_and_gaps", tools.get_strengths_and_gaps, learner_id
             ),
             "get_milestone_history": lambda _: invoke(
-                "get_milestone_history",
-                tools.get_milestone_history,
+                "get_milestone_history", tools.get_milestone_history, learner_id
+            ),
+            "investigate_employer": lambda args: invoke(
+                "investigate_employer",
+                tools.investigate_employer,
                 learner_id,
+                str(args.get("focus", "")),
+            ),
+            "suggest_next_steps": lambda _: invoke(
+                "suggest_next_steps", tools.suggest_next_steps, learner_id
             ),
         }
-        answer = LiteLLMGeminiAdapter().run_tool_loop(query, handlers)
-        return self._remember(query, answer)
 
     @staticmethod
     def _extract_skill(query: str) -> str | None:
         query = query.lower().strip()
-        known = next(
-            (
-                term
-                for term in SKILL_TERMS
-                if re.search(rf"(?<!\w){re.escape(term)}(?!\w)", query)
-            ),
-            None,
-        )
-        if known:
-            return known
-        # A named capability should be looked up even when it is not in the
-        # small MVP vocabulary; this enables the required insufficient-evidence
-        # response for questions such as "Do they know Kubernetes?".
+        # A named capability is extracted from the question instead of being
+        # limited to a hardcoded skill vocabulary.
         match = re.search(
             r"\b(?:know|with|using|experience in|experience with)\s+"
             r"([a-z0-9+.#-]+(?:\s+[a-z0-9+.#-]+)*)",
             query,
         )
-        if not match:
-            return None
-        phrase = re.split(
-            r"\s+(?:and|or|in|for|during|on|at|based|so)\b", match.group(1)
-        )[0]
-        return phrase.rstrip(".") or None
+        if match:
+            phrase = re.split(
+                r"\s+(?:and|or|in|for|during|on|at|based|so)\b", match.group(1)
+            )[0]
+            return phrase.rstrip(".") or None
+
+        # Covers questions such as "strongest Python contributions" without
+        # requiring Python to be registered in this agent.
+        match = re.search(
+            r"\b(?:strongest|best|recent|relevant)\s+"
+            r"([a-z0-9+.#-]+(?:\s+[a-z0-9+.#-]+)*)\s+"
+            r"(?:contributions?|experience|work|history)\b",
+            query,
+        )
+        if match:
+            return match.group(1).strip()
+
+        match = re.search(
+            r"\b(?:their|the learner's|learner's)\s+"
+            r"([a-z0-9+.#-]+(?:\s+[a-z0-9+.#-]+)*)\s+"
+            r"(?:history|experience)\b",
+            query,
+        )
+        if match:
+            return match.group(1).strip()
+        return None
 
     def _call(self, name: str, function: Any, *arguments: Any) -> ToolResult:
         try:
@@ -308,6 +318,25 @@ class TalentIntelligenceAgent:
             "not an overall ranking or hiring recommendation.\n\n"
             f"Recency and coverage\n- Evidence coverage: {len(strengths)} observed record(s).\n\n"  # noqa: E501
             f"Uncertainty / gaps\n{gap_lines}"
+        )
+
+    def _next_steps_answer(self, result: ToolResult) -> str:
+        if result.status == "error":
+            return self._error_answer()
+        items = result.data if isinstance(result.data, list) else []
+        if not items:
+            return self._insufficient_answer("next steps")
+        lines = "\n".join(
+            f"- {item['area']}: {item['action']} ({item['reason']})" for item in items
+        )
+        return (
+            "Direct conclusion\n- Additional evidence-gathering steps are "
+            "available.\n\n"
+            f"Observed evidence\n{lines}\n\n"
+            "Interpretation\n- These actions address coverage gaps; they are "
+            "not hiring recommendations.\n\n"
+            "Uncertainty / gaps\n- The suggested steps do not establish "
+            "capability until new evidence is recorded."
         )
 
     @staticmethod

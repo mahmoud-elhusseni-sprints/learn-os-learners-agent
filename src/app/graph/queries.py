@@ -19,13 +19,19 @@ from neo4j import ManagedTransaction
 
 
 def merge_nodes(tx: ManagedTransaction, label: str, rows: list[dict[str, Any]]) -> None:
-    """UNWIND + MERGE one batch of same-label nodes, keyed by ``id``."""
+    """UNWIND + MERGE one batch of same-label nodes, keyed by ``id``.
+
+    ``.consume()`` discards the (empty) result and returns the summary. It
+    isn't needed for correctness on the current driver - a failing statement
+    already raises at the ``run()`` call - but it makes that independent of
+    the driver's result-streaming behaviour rather than relying on it.
+    """
     if not rows:
         return
     tx.run(
-        f"UNWIND $rows AS row " f"MERGE (n:{label} {{id: row.id}}) " f"SET n += row",
+        f"UNWIND $rows AS row MERGE (n:{label} {{id: row.id}}) SET n += row",
         rows=rows,
-    )
+    ).consume()
 
 
 def merge_edges(
@@ -50,4 +56,4 @@ def merge_edges(
         f"MATCH (b:{target_label} {{id: row.dst}}) "
         f"MERGE (a)-[r:{edge_type}]->(b)",
         rows=rows,
-    )
+    ).consume()

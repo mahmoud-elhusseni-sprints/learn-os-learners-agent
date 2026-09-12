@@ -18,10 +18,12 @@ project_root = Path(__file__).resolve().parents[3]
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.app.agents.memory_card import (  # noqa: E402
-    MemoryCardAgent,
-    MemoryCardAgentConfig,
+from src.app.agents.memory_card import MemoryCardAgent  # noqa: E402
+from src.app.agents.memory_card.prompts import (  # noqa: E402
+    build_conversation_prompt,
+    build_transcript_prompt,
 )
+from src.app.core.llm_client import safe_llm_generate_json  # noqa: E402
 
 
 class GroupContext:
@@ -120,8 +122,8 @@ _default_agent = MemoryCardAgent()
 
 
 def get_gemini_client() -> tuple[str, Any]:
-    """Initialize Gemini client via the default agent's adapter."""
-    return _default_agent.llm_adapter.initialize_client()
+    """Return the shared LLM provider marker and client placeholder."""
+    return "shared", None
 
 
 def call_gemini_llm(
@@ -129,8 +131,9 @@ def call_gemini_llm(
     client: Any,
     prompt: str,
 ) -> List[Dict[str, Any]]:
-    """Call LLM via the default agent's adapter."""
-    return _default_agent.llm_adapter.generate(prompt)
+    """Call the shared JSON LLM client."""
+    result = safe_llm_generate_json(prompt)
+    return result if isinstance(result, list) else []
 
 
 def build_card(
@@ -213,7 +216,7 @@ def process_transcript_file(
 
     active_agent = agent or _default_agent
 
-    prompt = active_agent.build_transcript_prompt(
+    prompt = build_transcript_prompt(
         group_name=ctx.group_name,
         meeting_topic=meeting_topic,
         meeting_kind=meeting_kind,
@@ -309,7 +312,7 @@ def process_conversation_file(
 
     active_agent = agent or _default_agent
 
-    prompt = active_agent.build_conversation_prompt(
+    prompt = build_conversation_prompt(
         group_name=ctx.group_name,
         learner_name=learner.get("name", ""),
         learner_id=learner.get("learner_id", ""),
@@ -395,20 +398,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     )
     args = parser.parse_args(argv)
 
-    config = MemoryCardAgentConfig.from_env()
-    agent = MemoryCardAgent(config=config)
-
-    if not args.dry_run:
-        try:
-            agent.llm_adapter.initialize_client()
-            print(f"Initialized MemoryCardAgent using model: {config.model_name}")
-        except Exception as e:
-            print(f"Error initializing MemoryCardAgent: {e}")
-            print(
-                "To inspect prompts and verify data structure without an API "
-                "key, run with --dry-run"
-            )
-            sys.exit(1)
+    agent = MemoryCardAgent()
 
     base_dir = Path(__file__).resolve().parent
     logs_candidates = [

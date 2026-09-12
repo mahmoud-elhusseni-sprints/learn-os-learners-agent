@@ -4,7 +4,8 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, List
 
-from .llm_client import safe_llm_generate_json
+from src.app.core.llm_client import build_llm_chain
+
 from .lms_prompts import get_lms_memory_card_prompt
 
 
@@ -12,6 +13,7 @@ class LMSMemoryCardAgent:
     def __init__(self, catalog_filepath: str) -> None:
         self.catalog_filepath = catalog_filepath
         self.questions = self._load_catalog(catalog_filepath)
+        self._chain = build_llm_chain()
 
     def _load_catalog(self, filepath: str) -> List[Dict[str, Any]]:
         if not os.path.exists(filepath):
@@ -131,17 +133,23 @@ class LMSMemoryCardAgent:
                 f"[Agent 1 - LMS Card] Generating cards for learner "
                 f"{learner_name} ({learner_id})..."
             )
-            llm_result = safe_llm_generate_json(prompt)
-            learner_cards = []
+
+            try:
+                llm_result = self._chain.invoke({"text": prompt})
+            except Exception as exc:
+                print(f"[Agent 1 - LMS Card] Chain failed for {learner_name}: {exc}")
+                cards_map[learner_id] = []
+                continue
 
             if not llm_result or not isinstance(llm_result, list):
                 print(
-                    f"[Agent 1 - LMS Card] LLM generation failed or returned "
-                    f"invalid format for {learner_name}."
+                    f"[Agent 1 - LMS Card] LLM returned invalid format "
+                    f"for {learner_name}."
                 )
                 cards_map[learner_id] = []
                 continue
 
+            learner_cards = []
             for idx, item in enumerate(llm_result):
                 card_uuid = str(
                     uuid.uuid5(
