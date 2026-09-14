@@ -1,5 +1,8 @@
-from src.app.models.conversation import ConversationSession
-from src.app.models.message import Message
+"""Shared schemas; SQL models are loaded only when explicitly requested."""
+
+from importlib import import_module
+from typing import Any
+
 from src.app.models.models import (
     AssessmentAnswer,
     AssessmentPayload,
@@ -17,7 +20,6 @@ from src.app.models.models import (
     RubricPointEvaluation,
     ToolResult,
 )
-from src.app.models.user import User
 
 __all__ = [
     "User",
@@ -39,3 +41,14 @@ __all__ = [
     "DataSource",
     "ProfileUpdateInput",
 ]
+
+
+def __getattr__(name: str) -> Any:
+    modules = {
+        "User": "user",
+        "ConversationSession": "conversation",
+        "Message": "message",
+    }
+    if name not in modules:
+        raise AttributeError(name)
+    return getattr(import_module(f"src.app.models.{modules[name]}"), name)
