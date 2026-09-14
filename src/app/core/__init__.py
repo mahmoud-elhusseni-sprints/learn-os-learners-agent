@@ -29,10 +29,6 @@ from .llm_client import (
 from .tags import (
     ALLOWED_TAXONOMY_SET,
     ALLOWED_TAXONOMY_TAGS,
-    BEHAVIOR_METRIC_TAG_MAP,
-    BEHAVIOR_METRICS,
-    METRIC_KEYS,
-    OUTCOME_TAGS,
     TAXONOMY_TAG_DESCRIPTIONS,
     build_taxonomy_prompt_block,
 )
@@ -62,10 +58,6 @@ __all__ = [
     "ALLOWED_TAXONOMY_SET",
     "TAXONOMY_TAG_DESCRIPTIONS",
     "build_taxonomy_prompt_block",
-    "BEHAVIOR_METRIC_TAG_MAP",
-    "BEHAVIOR_METRICS",
-    "METRIC_KEYS",
-    "OUTCOME_TAGS",
     # llm_client
     "build_llm_chain",
     "safe_llm_generate_json",

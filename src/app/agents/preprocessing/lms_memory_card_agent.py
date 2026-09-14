@@ -159,7 +159,7 @@ class LMSMemoryCardAgent:
                 )
                 lx_id = tasks[idx % len(tasks)]["lx_id"] if tasks else str(uuid.uuid4())
 
-                raw_hints = item.get("profile_hints", [])
+                raw_hints = item.get("tags", [])
                 if isinstance(raw_hints, str):
                     raw_hints = [raw_hints]
                 hints = list(set(raw_hints + ["quantitative", "skill_score"]))
@@ -173,7 +173,7 @@ class LMSMemoryCardAgent:
                     ),
                     "content": item.get("content", ""),
                     "rationale": item.get("rationale", ""),
-                    "profile_hints": hints,
+                    "tags": hints,
                     "created_at": datetime.now(timezone.utc).isoformat(),
                 }
                 learner_cards.append(card)

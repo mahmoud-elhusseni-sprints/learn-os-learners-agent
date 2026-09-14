@@ -179,7 +179,7 @@ def _normalize_memory_card_row(row: dict[str, Any]) -> dict[str, Any]:
     flat = dict(row)
     flat.setdefault("content", payload.get("content"))
     flat.setdefault("rationale", payload.get("rationale"))
-    flat.setdefault("tags", payload.get("profile_hints") or payload.get("tags"))
+    flat.setdefault("tags", payload.get("tags"))
     learner_id = row.get("learner_id")
     if learner_id and "associated_learner_ids" not in flat:
         flat["associated_learner_ids"] = [learner_id]
@@ -350,7 +350,7 @@ def build_graph_from_pipeline_output(
             duplicates.append(f"memory card {card_id}: repeated in this batch")
             continue
         try:
-            tags = list(row.get("tags") or row.get("profile_hints") or [])
+            tags = list(row.get("tags") or [])
             card_nodes[card_id] = MemoryCard(
                 id=node_id("MemoryCard", card_id),
                 created_at=_parse_utc(row.get("created_at"), now),

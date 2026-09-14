@@ -2,11 +2,6 @@
 
 from __future__ import annotations
 
-from src.app.core.tags import ALLOWED_TAXONOMY_TAGS, METRIC_KEYS
-
-VALID_METRICS = METRIC_KEYS
-VALID_TAGS = ALLOWED_TAXONOMY_TAGS
-
 SYSTEM_PROMPT = (
     "You are an AI Memory Card Extractor for an internship program.\n"
     "Your job is to analyze meeting transcripts and mentor-learner "
@@ -20,13 +15,7 @@ SYSTEM_PROMPT = (
     "[\n"
     "  {\n"
     '    "learner_name_or_id": "Learner name (e.g. Learner A1) or UUID",\n'
-    '    "metric_key": "one of: learning_goals.learner_tasks, '
-    "internship_context.tech_stack, internship_context.current_blockers, "
-    "behavioral_engagement.effort_signals, behavioral_engagement."
-    "adaptability, behavioral_engagement.engagement, identity_context.bio, "
-    "identity_context.location, identity_context.education_level, "
-    "identity_context.field_of_study, knowledge_state.known_topics, "
-    'learning_goals.short_term",\n'
+    '    "metric_key": "the source metric or competency key",\n'
     '    "content": "A clear, concise, 1-2 sentence factual summary of what '
     'occurred or was learned about the learner.",\n'
     '    "rationale": "Why this excerpt supports the memory card.",\n'

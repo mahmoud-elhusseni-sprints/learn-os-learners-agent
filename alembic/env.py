@@ -4,10 +4,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-
 from src.app.database.base import Base
-from src.app.models import ConversationSession, Message, User
-
 
 config = context.config
 

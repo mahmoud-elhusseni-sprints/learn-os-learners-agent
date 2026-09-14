@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from src.app.database.connection import get_db
+from src.app.models.user import User
 from src.app.schemas.user import UserCreate, UserResponse
 from src.app.services import user_service
-
 
 router = APIRouter(
     prefix="/users",
@@ -19,8 +19,8 @@ router = APIRouter(
 )
 def create_user(
     user_data: UserCreate,
-    db: Session = Depends(get_db),
-):
+    db: Session = Depends(get_db),  # noqa: B008
+) -> User:
     try:
         return user_service.create_user(db, user_data)
     except ValueError as exc:
@@ -35,8 +35,8 @@ def create_user(
     response_model=list[UserResponse],
 )
 def get_users(
-    db: Session = Depends(get_db),
-):
+    db: Session = Depends(get_db),  # noqa: B008
+) -> list[User]:
     return user_service.get_users(db)
 
 
@@ -46,8 +46,8 @@ def get_users(
 )
 def get_user(
     user_id: int,
-    db: Session = Depends(get_db),
-):
+    db: Session = Depends(get_db),  # noqa: B008
+) -> User:
     user = user_service.get_user_by_id(db, user_id)
 
     if user is None:
