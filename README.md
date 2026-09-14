@@ -366,3 +366,7 @@ docs/development.md
 After completing the setup, developers should read the architecture documentation before implementing features.
 
 The README should remain a high-level guide rather than duplicating the detailed documentation. Detailed procedures and rules should be maintained in the appropriate document under `docs/`.
+## Task 14: Periodic Profile Update Worker
+
+Weekly Celery Beat updates, isolated per learner, with Redis and atomic Neo4j
+profile/checkpoint persistence. See [setup, contracts and tests](docs/periodic_profile_updates.md).
