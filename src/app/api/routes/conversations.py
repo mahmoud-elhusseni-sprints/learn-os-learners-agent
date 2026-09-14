@@ -2,13 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from src.app.database.connection import get_db
+from src.app.models.conversation import ConversationSession
+from src.app.models.message import Message
 from src.app.schemas.conversation import (
     ConversationResponse,
     MessageCreate,
     MessageResponse,
 )
 from src.app.services import conversation_service
-
 
 router = APIRouter(
     tags=["Conversations"],
@@ -22,8 +23,8 @@ router = APIRouter(
 )
 def create_conversation(
     user_id: int,
-    db: Session = Depends(get_db),
-):
+    db: Session = Depends(get_db),  # noqa: B008
+) -> ConversationSession:
     try:
         return conversation_service.create_conversation(
             db,
@@ -42,8 +43,8 @@ def create_conversation(
 )
 def get_user_conversations(
     user_id: int,
-    db: Session = Depends(get_db),
-):
+    db: Session = Depends(get_db),  # noqa: B008
+) -> list[ConversationSession]:
     try:
         return conversation_service.get_user_conversations(
             db,
@@ -64,8 +65,8 @@ def get_user_conversations(
 def add_message(
     conversation_id: int,
     message_data: MessageCreate,
-    db: Session = Depends(get_db),
-):
+    db: Session = Depends(get_db),  # noqa: B008
+) -> Message:
     try:
         return conversation_service.add_message(
             db,
@@ -86,8 +87,8 @@ def add_message(
 )
 def get_messages(
     conversation_id: int,
-    db: Session = Depends(get_db),
-):
+    db: Session = Depends(get_db),  # noqa: B008
+) -> list[Message]:
     try:
         return conversation_service.get_messages(
             db,

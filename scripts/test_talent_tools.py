@@ -25,7 +25,11 @@ def _json_default(value: Any) -> str:
 
 def _evidence_ids(data: Any) -> list[Any]:
     if isinstance(data, list):
-        return [item.get("evidence_id", item.get("event_id")) for item in data if isinstance(item, dict)]
+        return [
+            item.get("evidence_id", item.get("event_id"))
+            for item in data
+            if isinstance(item, dict)
+        ]
     if isinstance(data, dict):
         ids: list[Any] = []
         for value in data.values():
@@ -36,7 +40,11 @@ def _evidence_ids(data: Any) -> list[Any]:
 
 def _summary(data: Any) -> dict[str, Any]:
     if isinstance(data, list):
-        return {"type": "list", "count": len(data), "first_item": data[0] if data else None}
+        return {
+            "type": "list",
+            "count": len(data),
+            "first_item": data[0] if data else None,
+        }
     if isinstance(data, dict):
         return {"type": "object", "keys": sorted(data), "value": data}
     return {"type": type(data).__name__, "value": data}
@@ -46,15 +54,13 @@ def main() -> int:
     driver = get_driver()
     driver.verify_connectivity()
     with driver.session() as session:
-        learner = session.run(
-            """
+        learner = session.run("""
             MATCH (l:LearnerProfile)-[:HAS_MEMORY_CARD]->(m:MemoryCard)
             RETURN l.learner_id AS learner_id, l.name AS name,
                    coalesce(m.metric_key, 'evidence') AS skill
             ORDER BY l.name
             LIMIT 1
-            """
-        ).single()
+            """).single()
     if learner is None:
         raise RuntimeError("No learner with evidence exists in Neo4j")
 
@@ -112,7 +118,9 @@ def main() -> int:
         "tools": results,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(json.dumps(report, indent=2, default=_json_default), encoding="utf-8")
+    OUTPUT.write_text(
+        json.dumps(report, indent=2, default=_json_default), encoding="utf-8"
+    )
     print(f"Wrote {OUTPUT}")
     print(json.dumps(report["summary"], indent=2))
     close_driver()

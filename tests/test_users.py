@@ -4,7 +4,6 @@ from fastapi.testclient import TestClient
 
 from src.app.main import app
 
-
 client = TestClient(app)
 
 
@@ -103,6 +102,4 @@ def test_duplicate_email():
     )
 
     assert second_response.status_code == 400
-    assert second_response.json()["detail"] == (
-        "A user with this email already exists"
-    )
+    assert second_response.json()["detail"] == ("A user with this email already exists")

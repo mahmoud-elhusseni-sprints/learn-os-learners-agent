@@ -258,9 +258,8 @@ def get_strengths_and_gaps(learner_id: str) -> ToolResult:
         jsonl_records = _load_jsonl("meeting_memory_cards.jsonl")
         for rec in jsonl_records:
             tags = rec.get("tags") or []
-            if (
-                rec.get("learner_id") == learner_id
-                and any(tag in TAXONOMY_TAG_DESCRIPTIONS for tag in tags)
+            if rec.get("learner_id") == learner_id and any(
+                tag in TAXONOMY_TAG_DESCRIPTIONS for tag in tags
             ):
                 obs = (
                     rec.get("observation")
@@ -297,12 +296,6 @@ def get_strengths_and_gaps(learner_id: str) -> ToolResult:
         r"\b(?:not|never|failed|unable|struggled|lack\w*)\b",
         re.IGNORECASE,
     )
-    demonstrated = [
-        r
-        for r in rows
-        if _POSITIVE.search(r.get("observation", ""))
-        and not _NEGATIVE.search(r.get("observation", ""))
-    ]
     strengths = []
     present: set[str] = set()
     for row in rows:
@@ -467,6 +460,3 @@ def suggest_next_steps(learner_id: str) -> ToolResult:
             }
         ]
     return ToolResult("ok", steps, "")
-
-
-

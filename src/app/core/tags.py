@@ -14,6 +14,7 @@ TAXONOMY_TAG_DESCRIPTIONS: dict[str, str] = {
 ALLOWED_TAXONOMY_TAGS: list[str] = list(TAXONOMY_TAG_DESCRIPTIONS.keys())
 ALLOWED_TAXONOMY_SET: set[str] = set(TAXONOMY_TAG_DESCRIPTIONS.keys())
 
+
 def build_taxonomy_prompt_block() -> str:
 
     lines = [f'- "{tag}": {desc}' for tag, desc in TAXONOMY_TAG_DESCRIPTIONS.items()]
