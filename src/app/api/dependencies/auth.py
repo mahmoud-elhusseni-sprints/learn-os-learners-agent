@@ -3,11 +3,13 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from src.app.core.config import JWT_ALGORITHM, JWT_SECRET_KEY
+from src.app.core.security import (
+    JWT_ALGORITHM,
+    get_jwt_secret_key,
+)
 from src.app.database.connection import get_db
 from src.app.models.user import User
 from src.app.repositories import user_repository
-
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/signin",
@@ -27,7 +29,7 @@ def get_current_user(
     try:
         payload = jwt.decode(
             token,
-            JWT_SECRET_KEY,
+            get_jwt_secret_key(),
             algorithms=[JWT_ALGORITHM],
         )
 
@@ -39,7 +41,7 @@ def get_current_user(
         user_id = int(subject)
 
     except (jwt.InvalidTokenError, ValueError):
-        raise credentials_exception
+        raise credentials_exception from None
 
     user = user_repository.get_user_by_id(
         db,

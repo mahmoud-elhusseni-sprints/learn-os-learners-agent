@@ -20,26 +20,7 @@ NEO4J_CONNECTION_ACQUISITION_TIMEOUT = float(
     os.getenv("NEO4J_CONNECTION_ACQUISITION_TIMEOUT", "60.0")
 )
 
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-if not JWT_SECRET_KEY:
-    raise RuntimeError("JWT_SECRET_KEY environment variable is not set")
 
-JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
-if not JWT_ALGORITHM:
-    raise RuntimeError("JWT_ALGORITHM environment variable is not set")
-
-JWT_ACCESS_TOKEN_EXPIRE_MINUTES_VALUE = os.getenv(
-    "JWT_ACCESS_TOKEN_EXPIRE_MINUTES"
-)
-
-if not JWT_ACCESS_TOKEN_EXPIRE_MINUTES_VALUE:
-    raise RuntimeError(
-        "JWT_ACCESS_TOKEN_EXPIRE_MINUTES environment variable is not set"
-    )
-
-JWT_ACCESS_TOKEN_EXPIRE_MINUTES = int(
-    JWT_ACCESS_TOKEN_EXPIRE_MINUTES_VALUE
-)
 
 GRAPH_LOADER_BATCH_SIZE = int(
     os.getenv("GRAPH_LOADER_BATCH_SIZE", "1000")

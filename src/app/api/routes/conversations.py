@@ -1,15 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from src.app.api.dependencies.auth import get_current_user
 from src.app.database.connection import get_db
+from src.app.models.conversation import ConversationSession
+from src.app.models.message import Message
+from src.app.models.user import User
 from src.app.schemas.conversation import (
     ConversationResponse,
     MessageCreate,
     MessageResponse,
 )
 from src.app.services import conversation_service
-from src.app.api.dependencies.auth import get_current_user
-
 
 router = APIRouter(
     tags=["Conversations"],
@@ -24,11 +26,13 @@ router = APIRouter(
 def create_conversation(
     user_id: int,
     db: Session = Depends(get_db),
-):
+    current_user: User = Depends(get_current_user),
+) -> ConversationSession:
     try:
         return conversation_service.create_conversation(
             db,
             user_id,
+            current_user.id,
         )
     except ValueError as exc:
         raise HTTPException(
@@ -44,12 +48,13 @@ def create_conversation(
 def get_user_conversations(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
-):
+    current_user: User = Depends(get_current_user),
+) -> list[ConversationSession]:
     try:
         return conversation_service.get_user_conversations(
             db,
             user_id,
+            current_user.id,
         )
     except ValueError as exc:
         raise HTTPException(
@@ -67,13 +72,15 @@ def add_message(
     conversation_id: int,
     message_data: MessageCreate,
     db: Session = Depends(get_db),
-):
+    current_user: User = Depends(get_current_user),
+) -> Message:
     try:
         return conversation_service.add_message(
             db,
             conversation_id,
             message_data.sender_role,
             message_data.content,
+            current_user.id,
         )
     except ValueError as exc:
         raise HTTPException(
@@ -89,11 +96,13 @@ def add_message(
 def get_messages(
     conversation_id: int,
     db: Session = Depends(get_db),
-):
+    current_user: User = Depends(get_current_user),
+) -> list[Message]:
     try:
         return conversation_service.get_messages(
             db,
             conversation_id,
+            current_user.id,
         )
     except ValueError as exc:
         raise HTTPException(

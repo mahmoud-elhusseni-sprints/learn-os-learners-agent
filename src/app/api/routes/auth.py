@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from src.app.schemas.auth import SigninRequest, SignupRequest, TokenResponse
 
 from src.app.database.connection import get_db
-from src.app.schemas.auth import SignupRequest
+from src.app.models.user import User
+from src.app.schemas.auth import SigninRequest, SignupRequest, TokenResponse
 from src.app.schemas.user import UserResponse
 from src.app.services import user_service
-
 
 router = APIRouter(
     prefix="/auth",
@@ -22,7 +21,7 @@ router = APIRouter(
 def signup(
     signup_data: SignupRequest,
     db: Session = Depends(get_db),
-):
+) -> User:
     try:
         return user_service.signup(db, signup_data)
     except ValueError as exc:
@@ -39,7 +38,7 @@ def signup(
 def signin(
     signin_data: SigninRequest,
     db: Session = Depends(get_db),
-):
+) -> TokenResponse:
     try:
         access_token = user_service.signin(
             db,

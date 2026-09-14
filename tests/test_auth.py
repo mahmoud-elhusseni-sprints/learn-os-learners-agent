@@ -1,13 +1,11 @@
-
+from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
+import jwt
 from fastapi.testclient import TestClient
 
+from src.app.core.security import JWT_ALGORITHM, get_jwt_secret_key
 from src.app.main import app
-from datetime import datetime, timedelta, timezone
-
-import jwt
-from src.app.core.config import JWT_ALGORITHM, JWT_SECRET_KEY
 
 client = TestClient(app)
 
@@ -66,10 +64,7 @@ def test_signup_duplicate_email():
     )
 
     assert second_response.status_code == 409
-    assert second_response.json()["detail"] == (
-        "A user with this email already exists"
-    )
-
+    assert second_response.json()["detail"] == ("A user with this email already exists")
 
 
 def test_signin():
@@ -172,6 +167,7 @@ def test_protected_route_without_token():
 
     assert response.status_code == 401
 
+
 def test_protected_route_with_invalid_token():
     response = client.get(
         "/users/13/conversations",
@@ -190,7 +186,7 @@ def test_protected_route_with_expired_token():
             "sub": "13",
             "exp": datetime.now(timezone.utc) - timedelta(minutes=1),
         },
-        JWT_SECRET_KEY,
+        get_jwt_secret_key(),
         algorithm=JWT_ALGORITHM,
     )
 

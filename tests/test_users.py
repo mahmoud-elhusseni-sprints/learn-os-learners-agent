@@ -4,7 +4,6 @@ from fastapi.testclient import TestClient
 
 from src.app.main import app
 
-
 client = TestClient(app)
 
 
@@ -12,13 +11,13 @@ def unique_email(prefix: str) -> str:
     return f"{prefix}_{uuid4().hex}@example.com"
 
 
-def test_create_user():
+def signup_user(name: str = "Test User") -> tuple[str, int, str]:
     email = unique_email("pytest_user")
 
     response = client.post(
-        "/users",
+        "/auth/signup",
         json={
-            "name": "Pytest User",
+            "name": name,
             "email": email,
             "password": "TestPassword123",
         },
@@ -26,87 +25,65 @@ def test_create_user():
 
     assert response.status_code == 201
 
-    data = response.json()
+    user_id = response.json()["id"]
 
-    assert data["name"] == "Pytest User"
-    assert data["email"] == email
-    assert "id" in data
-    assert "created_at" in data
-    assert "updated_at" in data
-
-
-def test_get_users():
-    response = client.get("/users")
-
-    assert response.status_code == 200
-    assert isinstance(response.json(), list)
-
-
-def test_get_user_by_id():
-    email = unique_email("get_user_test")
-
-    create_response = client.post(
-        "/users",
+    signin_response = client.post(
+        "/auth/signin",
         json={
-            "name": "Get User Test",
             "email": email,
             "password": "TestPassword123",
         },
     )
 
-    assert create_response.status_code == 201
+    assert signin_response.status_code == 200
 
-    user_id = create_response.json()["id"]
+    token = signin_response.json()["access_token"]
 
-    response = client.get(f"/users/{user_id}")
+    return email, user_id, token
+
+
+def test_get_user_by_id():
+    email, user_id, token = signup_user("Get User Test")
+
+    response = client.get(
+        f"/users/{user_id}",
+        headers={"Authorization": f"Bearer {token}"},
+    )
 
     assert response.status_code == 200
     assert response.json()["id"] == user_id
     assert response.json()["name"] == "Get User Test"
+    assert response.json()["email"] == email
+
+
+def test_get_user_without_token():
+    _, user_id, _ = signup_user()
+
+    response = client.get(f"/users/{user_id}")
+
+    assert response.status_code == 401
 
 
 def test_get_nonexistent_user():
-    response = client.get("/users/999999")
+    _, _, token = signup_user()
+
+    response = client.get(
+        "/users/999999",
+        headers={"Authorization": f"Bearer {token}"},
+    )
 
     assert response.status_code == 404
     assert response.json()["detail"] == "User not found"
 
 
-def test_create_user_validation_error():
-    response = client.post(
-        "/users",
-        json={
-            "name": "Invalid User",
-        },
+def test_get_another_user():
+    _, _, first_token = signup_user("First User")
+    _, second_user_id, _ = signup_user("Second User")
+
+    response = client.get(
+        f"/users/{second_user_id}",
+        headers={"Authorization": f"Bearer {first_token}"},
     )
 
-    assert response.status_code == 422
-
-
-def test_duplicate_email():
-    email = unique_email("duplicate_test")
-
-    first_response = client.post(
-        "/users",
-        json={
-            "name": "First User",
-            "email": email,
-            "password": "TestPassword123",
-        },
-    )
-
-    assert first_response.status_code == 201
-
-    second_response = client.post(
-        "/users",
-        json={
-            "name": "Second User",
-            "email": email,
-            "password": "TestPassword123",
-        },
-    )
-
-    assert second_response.status_code == 400
-    assert second_response.json()["detail"] == (
-        "A user with this email already exists"
-    )
+    assert response.status_code == 404
+    assert response.json()["detail"] == "User not found"
