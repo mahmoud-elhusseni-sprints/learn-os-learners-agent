@@ -13,7 +13,6 @@ from pydantic import (
     Field,
     StringConstraints,
     field_validator,
-    model_validator,
 )
 
 NonEmpty = Annotated[str, StringConstraints(min_length=1, pattern=r"\S")]
@@ -52,9 +51,6 @@ class MemoryCard(BaseModel):
         default_factory=list,
         description="List of LearnerProfile UUIDs linked to this card (Many-to-Many)",
     )
-    profile_hints: Optional[list[str]] = Field(
-        default=None, description="Legacy alias for tags"
-    )
     source_datasource_id: Optional[str] = Field(
         default=None,
         description=(
@@ -69,14 +65,6 @@ class MemoryCard(BaseModel):
     def normalize_uuid(cls, value: Any) -> Any:
         """Accept UUID objects as well as nonempty string identifiers."""
         return str(value) if isinstance(value, UUID) else value
-
-    @model_validator(mode="after")
-    def sync_tags_and_hints(self) -> MemoryCard:
-        if not self.tags and self.profile_hints:
-            self.tags = list(self.profile_hints)
-        elif not self.profile_hints and self.tags:
-            self.profile_hints = list(self.tags)
-        return self
 
 
 class MetricDraft(BaseModel):

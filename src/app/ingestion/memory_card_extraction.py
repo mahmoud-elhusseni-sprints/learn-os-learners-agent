@@ -4,7 +4,7 @@ import os
 import uuid
 from typing import Any, Dict, List, Sequence
 
-from src.app.core import ALLOWED_TAXONOMY_SET, BEHAVIOR_METRIC_TAG_MAP
+from src.app.core import ALLOWED_TAXONOMY_SET, TAXONOMY_TAG_DESCRIPTIONS
 from src.app.core.config import (
     LMS_ASSESSMENTS_OUTPUT_FILE,
     MEMORY_CARDS_OUTPUT_FILE,
@@ -32,7 +32,7 @@ def canonicalize_tags(
         )
         for tok in tokens:
             tag = str(tok).strip().lower()
-            if tag in ALLOWED_TAXONOMY_SET and tag not in matched_tags:
+            if tag in TAXONOMY_TAG_DESCRIPTIONS and tag not in matched_tags:
                 matched_tags.append(tag)
 
     if not matched_tags:
@@ -76,7 +76,7 @@ def extract_memory_cards_from_assessments(
             if not card_id:
                 continue
 
-            raw_tags = raw_card.get("tags") or raw_card.get("profile_hints") or []
+            raw_tags = raw_card.get("tags") or []
             if isinstance(raw_tags, str):
                 raw_tags = [raw_tags]
             metric_key = raw_card.get("metric_key", "general_competency")
@@ -101,9 +101,7 @@ def extract_memory_cards_from_assessments(
                     associated_learner_ids=associated_learners,
                     source_datasource_id=source_datasource_id,
                 )
-                cards_by_id[card_id] = card_obj.model_dump(
-                    exclude={"profile_hints", "meeting_id"}
-                )
+                cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
             else:
                 existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                 if learner_id and learner_id not in existing_learners:
@@ -157,9 +155,7 @@ def extract_memory_cards_from_assessments(
                         associated_learner_ids=associated_learners,
                         source_datasource_id=source_datasource_id,
                     )
-                    cards_by_id[card_id] = card_obj.model_dump(
-                        exclude={"profile_hints", "meeting_id"}
-                    )
+                    cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
                 else:
                     existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                     if learner_id and learner_id not in existing_learners:
@@ -219,9 +215,7 @@ def extract_memory_cards_from_reviews(
                     associated_learner_ids=associated_learners,
                     source_datasource_id=source_datasource_id,
                 )
-                cards_by_id[card_id] = card_obj.model_dump(
-                    exclude={"profile_hints", "meeting_id"}
-                )
+                cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
             else:
                 existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                 if learner_id and learner_id not in existing_learners:
@@ -264,9 +258,7 @@ def extract_memory_cards_from_reviews(
                         associated_learner_ids=associated_learners,
                         source_datasource_id=source_datasource_id,
                     )
-                    cards_by_id[card_id] = card_obj.model_dump(
-                        exclude={"profile_hints", "meeting_id"}
-                    )
+                    cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
                 else:
                     existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                     if learner_id and learner_id not in existing_learners:
@@ -283,8 +275,8 @@ def extract_memory_cards_from_reviews(
                 )
                 content_str = f"Behavioral Observation [{metric_name}]: {notes}"
                 rationale_str = f"Qualitative score rating: {score}/5.0"
-                canonical_tags = BEHAVIOR_METRIC_TAG_MAP.get(
-                    metric_name, ["adaptability_learning"]
+                canonical_tags = canonicalize_tags(
+                    eval_info.get("tags", []), default_fallback="problem_solving"
                 )
 
                 if card_id not in cards_by_id:
@@ -299,9 +291,7 @@ def extract_memory_cards_from_reviews(
                         associated_learner_ids=associated_learners,
                         source_datasource_id=source_datasource_id,
                     )
-                    cards_by_id[card_id] = card_obj.model_dump(
-                        exclude={"profile_hints", "meeting_id"}
-                    )
+                    cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
                 else:
                     existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                     if learner_id and learner_id not in existing_learners:

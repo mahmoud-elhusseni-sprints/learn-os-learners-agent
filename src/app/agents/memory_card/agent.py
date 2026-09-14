@@ -4,11 +4,10 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from src.app.core.llm_client import safe_llm_generate_json
+from src.app.core.tags import ALLOWED_TAXONOMY_TAGS
 
 from .prompts import (
     SYSTEM_PROMPT,
-    VALID_METRICS,
-    VALID_TAGS,
     build_conversation_prompt,
     build_transcript_prompt,
 )
@@ -21,13 +20,7 @@ class MemoryCardAgent:
         self.llm_adapter = llm_adapter
 
     def normalize_metric(self, metric_key: str) -> str:
-        if metric_key in VALID_METRICS:
-            return metric_key
-        key_suffix = metric_key.split(".")[-1]
-        return next(
-            (vm for vm in VALID_METRICS if key_suffix in vm),
-            "learning_goals.learner_tasks",
-        )
+        return metric_key.strip() or "general_competency"
 
     def normalize_tags(self, raw_tags: List[Any]) -> List[str]:
         deduped: List[str] = []
@@ -39,13 +32,18 @@ class MemoryCardAgent:
             norm_t = clean_t.replace("-", "_").lower()
 
             matched = None
-            if clean_t in VALID_TAGS:
+            if clean_t in ALLOWED_TAXONOMY_TAGS:
                 matched = clean_t
-            elif norm_t in VALID_TAGS:
+            elif norm_t in ALLOWED_TAXONOMY_TAGS:
                 matched = norm_t
             else:
                 matched = next(
-                    (vt for vt in VALID_TAGS if norm_t in vt or vt in norm_t), None
+                    (
+                        vt
+                        for vt in ALLOWED_TAXONOMY_TAGS
+                        if norm_t in vt or vt in norm_t
+                    ),
+                    None,
                 )
 
             if matched and matched not in deduped:
@@ -126,7 +124,7 @@ class MemoryCardAgent:
                 "rationale": item.get("rationale", ""),
                 "created_at": timestamp,
                 "project_slug": project_slug,
-                "profile_hints": [metric_key],
+                "tags": self.normalize_tags([metric_key]),
                 "project_metadata": project_metadata,
                 "response_excerpt": item.get("response_excerpt", ""),
             },

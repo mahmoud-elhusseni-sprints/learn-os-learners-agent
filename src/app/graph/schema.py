@@ -302,7 +302,7 @@ class MemoryCard(GraphNode):
     rationale: str | None = None
     tags: list[str] = Field(
         default_factory=list,
-        description="Corresponds to profile_hints in the dataset (MD file's own note).",
+        description="Canonical competency tags associated with this memory card.",
     )
     created_at: UtcDatetime
 

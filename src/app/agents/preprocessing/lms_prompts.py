@@ -8,7 +8,7 @@ You are Agent 1 (LMS Memory Card Generator Agent).
 Evaluate learner '{learner_name}' (ID: {learner_id}) based on their work logs
 and task submissions.
 
-ALLOWED TAXONOMY TAGS FOR profile_hints:
+ALLOWED TAXONOMY TAGS:
 {taxonomy_tags}
 
 BENCHMARK QUESTIONS (First 15 domain benchmarks):
@@ -21,7 +21,7 @@ Interaction Logs: {logs}
 
 TASK: Evaluate the learner against each benchmark question.
 Generate JSON output as an array of exactly {cards_per_learner} memory cards.
-For each memory card, choose 1 to 3 relevant tags for 'profile_hints'
+For each memory card, choose 1 to 3 relevant tags for 'tags'
 STRICLY from the ALLOWED TAXONOMY TAGS list above.
 
 Return ONLY a valid JSON array with format:
@@ -30,7 +30,7 @@ Return ONLY a valid JSON array with format:
     "metric_key": "<benchmark metric_key>",
     "content": "<Evaluation content of how learner met/missed criteria>",
     "rationale": "<Reasoning based on learner code submissions and logs>",
-    "profile_hints": ["technical_skills", "problem_solving"]
+    "tags": ["technical_skills", "problem_solving"]
   }}
 ]
 """
@@ -43,7 +43,7 @@ Evaluate learner '{learner_name}' (ID: {learner_id}) across mentor metrics:
 3. behavioral_engagement.adaptability
 4. technical_execution.code_quality
 
-ALLOWED TAXONOMY TAGS FOR profile_hints:
+ALLOWED TAXONOMY TAGS:
 {taxonomy_tags}
 
 LEARNER EVIDENCE:
@@ -52,29 +52,29 @@ Submission Excerpts: {subs}
 Interaction Logs: {logs}
 
 TASK: Return a JSON object with qualitative assessments (1-5 scale) per metric.
-For each metric, also assign 1 to 3 relevant tags for 'profile_hints'
+For each metric, also assign 1 to 3 relevant tags for 'tags'
 STRICTLY from the ALLOWED TAXONOMY TAGS list above.
 
 {{
   "behavioral_engagement.engagement": {{
     "score": 4.5,
     "notes": "Active participant in sprints.",
-    "profile_hints": ["adaptability_learning", "professionalism"]
+    "tags": ["adaptability_learning", "professionalism"]
   }},
   "behavioral_engagement.effort_signals": {{
     "score": 4.0,
     "notes": "Submitted tasks ahead of deadline.",
-    "profile_hints": ["time_task_management", "professionalism"]
+    "tags": ["time_task_management", "professionalism"]
   }},
   "behavioral_engagement.adaptability": {{
     "score": 4.2,
     "notes": "Incorporated mentor feedback quickly.",
-    "profile_hints": ["adaptability_learning"]
+    "tags": ["adaptability_learning"]
   }},
   "technical_execution.code_quality": {{
     "score": 4.0,
     "notes": "Clean modular code structure.",
-    "profile_hints": ["technical_skills", "professionalism"]
+    "tags": ["technical_skills", "professionalism"]
   }}
 }}
 """

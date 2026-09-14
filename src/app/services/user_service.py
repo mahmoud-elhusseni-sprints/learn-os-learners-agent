@@ -1,10 +1,11 @@
 from sqlalchemy.orm import Session
 
+from src.app.models.user import User
 from src.app.repositories import user_repository
 from src.app.schemas.user import UserCreate
 
 
-def create_user(db: Session, user_data: UserCreate):
+def create_user(db: Session, user_data: UserCreate) -> User:
     existing_user = user_repository.get_user_by_email(
         db,
         user_data.email,
@@ -19,11 +20,11 @@ def create_user(db: Session, user_data: UserCreate):
     )
 
 
-def get_users(db: Session):
+def get_users(db: Session) -> list[User]:
     return user_repository.get_users(db)
 
 
-def get_user_by_id(db: Session, user_id: int):
+def get_user_by_id(db: Session, user_id: int) -> User | None:
     return user_repository.get_user_by_id(
         db,
         user_id,

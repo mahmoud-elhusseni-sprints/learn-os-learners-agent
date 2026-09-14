@@ -63,6 +63,9 @@ AI_MODEL = os.getenv("AI_MODEL")
 
 FALLBACK_CHAIN = [PRIMARY_MODEL, SECONDARY_MODEL, TERTIARY_MODEL]
 
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_IMAGE_MODEL = os.getenv("GOOGLE_IMAGE_MODEL")
+
 settings = SimpleNamespace(
     neo4j_uri=NEO4J_URI,
     neo4j_username=NEO4J_USERNAME,

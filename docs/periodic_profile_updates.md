@@ -81,9 +81,12 @@ optional `NEO4J_URI=bolt://localhost:7687 TASK14_NEO4J_TEST=1 pytest tests/test_
 creates and removes one uniquely named synthetic learner and card to validate atomic
 checkpointing; it does not call the AI or update real learner profiles.
 
-The full repository suite also requires the separate PostgreSQL application's
-`DATABASE_URL` and database setup. Missing PostgreSQL configuration is not a
-Task 14 broker/storage test failure.
+The shared test configuration supplies a temporary SQLite database for API tests.
+For live Neo4j tests, load the actual environment credentials before pytest starts;
+otherwise the shared configuration defaults to the test password. After merging
+main, 181 tests passed, one skipped, and six existing ingestion tests failed because
+`settings.graph_loader_batch_size` is missing from the shared configuration.
+The Task 10/14 tests pass, including the opt-in Neo4j persistence test.
 
 References: [Celery periodic tasks](https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html)
 and [task retries](https://docs.celeryq.dev/en/stable/userguide/tasks.html).
