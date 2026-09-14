@@ -2,7 +2,7 @@ import json as _json
 import re
 from typing import Any
 
-from src.app.core import BEHAVIOR_METRICS
+from src.app.core import TAXONOMY_TAG_DESCRIPTIONS
 from src.app.graph.connections import get_driver
 from src.app.models.models import ToolResult
 
@@ -201,13 +201,13 @@ def get_skill_proofs(learner_id: str, skill: str) -> ToolResult:
 
 
 def get_behavioral_context(learner_id: str) -> ToolResult:
-    metrics = list(BEHAVIOR_METRICS)
+    taxonomy_tags = list(TAXONOMY_TAG_DESCRIPTIONS)
     rows = _run(
         """
         MATCH (l:LearnerProfile {learner_id: $learner_id})
             -[:HAS_MEMORY_CARD]->(m:MemoryCard)
         OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
-        WHERE m.metric_key IN $metrics
+        WHERE any(tag IN coalesce(m.tags, []) WHERE tag IN $taxonomy_tags)
         RETURN
             m.card_id    AS evidence_id,
             m.metric_key AS metric_key,
@@ -225,7 +225,7 @@ def get_behavioral_context(learner_id: str) -> ToolResult:
         ORDER BY m.created_at DESC
         """,
         learner_id=learner_id,
-        metrics=metrics,
+        taxonomy_tags=taxonomy_tags,
     )
     evidence = [_card_row_to_evidence(r) for r in rows]
     if not evidence:
@@ -236,27 +236,32 @@ def get_behavioral_context(learner_id: str) -> ToolResult:
 
 
 def get_strengths_and_gaps(learner_id: str) -> ToolResult:
-    metrics = list(BEHAVIOR_METRICS)
+    taxonomy_tags = list(TAXONOMY_TAG_DESCRIPTIONS)
     rows = _run(
         """
         MATCH (l:LearnerProfile {learner_id: $learner_id})
             -[:HAS_MEMORY_CARD]->(m:MemoryCard)
-        WHERE m.metric_key IN $metrics
+        WHERE any(tag IN coalesce(m.tags, []) WHERE tag IN $taxonomy_tags)
         RETURN
             m.card_id    AS evidence_id,
             m.metric_key AS metric_key,
             m.content    AS observation,
+            m.tags       AS tags,
             m.created_at AS date,
             'memory_card' AS source_type
         """,
         learner_id=learner_id,
-        metrics=metrics,
+        taxonomy_tags=taxonomy_tags,
     )
 
     if not rows:
         jsonl_records = _load_jsonl("meeting_memory_cards.jsonl")
         for rec in jsonl_records:
-            if rec.get("learner_id") == learner_id and rec.get("metric_key") in metrics:
+            tags = rec.get("tags") or []
+            if (
+                rec.get("learner_id") == learner_id
+                and any(tag in TAXONOMY_TAG_DESCRIPTIONS for tag in tags)
+            ):
                 obs = (
                     rec.get("observation")
                     or rec.get("content")
@@ -271,6 +276,7 @@ def get_strengths_and_gaps(learner_id: str) -> ToolResult:
                         "evidence_id": rec.get("card_id") or rec.get("evidence_id"),
                         "metric_key": rec.get("metric_key"),
                         "observation": obs,
+                        "tags": tags,
                         "date": rec.get("date") or rec.get("created_at"),
                         "source_type": rec.get("source_type", "memory_card"),
                     }
@@ -297,24 +303,35 @@ def get_strengths_and_gaps(learner_id: str) -> ToolResult:
         if _POSITIVE.search(r.get("observation", ""))
         and not _NEGATIVE.search(r.get("observation", ""))
     ]
-    strengths = [
-        {
-            "area": r["metric_key"],
-            "evidence_ids": [r["evidence_id"]],
-            "most_recent_date": str(r["date"]) if r.get("date") else None,
-            "observation": r["observation"],
-            "source_type": r["source_type"],
-        }
-        for r in demonstrated
-    ]
-    present = {r["metric_key"] for r in rows}
+    strengths = []
+    present: set[str] = set()
+    for row in rows:
+        tags = row.get("tags") or []
+        for tag in tags:
+            if tag not in TAXONOMY_TAG_DESCRIPTIONS:
+                continue
+            present.add(tag)
+            if _POSITIVE.search(row.get("observation", "")) and not _NEGATIVE.search(
+                row.get("observation", "")
+            ):
+                strengths.append(
+                    {
+                        "area": tag,
+                        "evidence_ids": [row["evidence_id"]],
+                        "most_recent_date": (
+                            str(row["date"]) if row.get("date") else None
+                        ),
+                        "observation": row["observation"],
+                        "source_type": row["source_type"],
+                    }
+                )
     gaps = [
         {
             "area": area,
             "status": "insufficient_evidence",
             "reason": "No matching observation was found in the graph.",
         }
-        for area in sorted(BEHAVIOR_METRICS - present)
+        for area in sorted(set(TAXONOMY_TAG_DESCRIPTIONS) - present)
     ]
     return ToolResult("ok", {"strengths": strengths, "gaps": gaps}, "")
 
@@ -450,3 +467,6 @@ def suggest_next_steps(learner_id: str) -> ToolResult:
             }
         ]
     return ToolResult("ok", steps, "")
+
+
+

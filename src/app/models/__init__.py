@@ -1,3 +1,6 @@
+from src.app.models.conversation import ConversationSession
+from src.app.models.message import Message
+from src.app.models.user import User
 from src.app.models.models import (
     AssessmentAnswer,
     AssessmentPayload,
@@ -17,6 +20,9 @@ from src.app.models.models import (
 )
 
 __all__ = [
+    "User",
+    "ConversationSession",
+    "Message",
     "NonEmpty",
     "Confidence",
     "ToolResult",

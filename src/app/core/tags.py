@@ -14,20 +14,6 @@ TAXONOMY_TAG_DESCRIPTIONS: dict[str, str] = {
 ALLOWED_TAXONOMY_TAGS: list[str] = list(TAXONOMY_TAG_DESCRIPTIONS.keys())
 ALLOWED_TAXONOMY_SET: set[str] = set(TAXONOMY_TAG_DESCRIPTIONS.keys())
 
-BEHAVIOR_METRIC_TAG_MAP: dict[str, list[str]] = {
-    "behavioral_engagement.engagement": ["adaptability_learning", "professionalism"],
-    "behavioral_engagement.effort_signals": ["time_task_management", "professionalism"],
-    "behavioral_engagement.adaptability": ["adaptability_learning"],
-    "technical_execution.code_quality": ["technical_skills", "professionalism"],
-}
-
-BEHAVIOR_METRICS: set[str] = {
-    "behavioral_engagement.engagement",
-    "behavioral_engagement.effort_signals",
-    "behavioral_engagement.adaptability",
-}
-
-
 def build_taxonomy_prompt_block() -> str:
 
     lines = [f'- "{tag}": {desc}' for tag, desc in TAXONOMY_TAG_DESCRIPTIONS.items()]

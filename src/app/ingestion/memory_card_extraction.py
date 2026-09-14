@@ -4,7 +4,7 @@ import os
 import uuid
 from typing import Any, Dict, List, Sequence
 
-from src.app.core import ALLOWED_TAXONOMY_SET, BEHAVIOR_METRIC_TAG_MAP
+from src.app.core import ALLOWED_TAXONOMY_SET, TAXONOMY_TAG_DESCRIPTIONS
 from src.app.core.config import (
     LMS_ASSESSMENTS_OUTPUT_FILE,
     MEMORY_CARDS_OUTPUT_FILE,
@@ -32,7 +32,7 @@ def canonicalize_tags(
         )
         for tok in tokens:
             tag = str(tok).strip().lower()
-            if tag in ALLOWED_TAXONOMY_SET and tag not in matched_tags:
+            if tag in TAXONOMY_TAG_DESCRIPTIONS and tag not in matched_tags:
                 matched_tags.append(tag)
 
     if not matched_tags:
@@ -275,8 +275,8 @@ def extract_memory_cards_from_reviews(
                 )
                 content_str = f"Behavioral Observation [{metric_name}]: {notes}"
                 rationale_str = f"Qualitative score rating: {score}/5.0"
-                canonical_tags = BEHAVIOR_METRIC_TAG_MAP.get(
-                    metric_name, ["adaptability_learning"]
+                canonical_tags = canonicalize_tags(
+                    eval_info.get("tags", []), default_fallback="problem_solving"
                 )
 
                 if card_id not in cards_by_id:
