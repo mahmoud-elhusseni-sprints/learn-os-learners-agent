@@ -24,3 +24,36 @@ export interface Session {
   messages: Message[];
   candidateTag?: string;
 }
+
+// Backend REST API Models
+export interface BackendUser {
+  id: number;
+  name: string;
+  email: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface BackendConversation {
+  id: number;
+  user_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BackendMessage {
+  id: number;
+  conversation_id: number;
+  sender_role: string;
+  content: string;
+  timestamp?: string;
+  created_at?: string;
+}
+
+export interface ConnectionStatus {
+  isLiveApi: boolean;
+  serverUrl: string;
+  userId?: number;
+  userName?: string;
+  error?: string | null;
+}
