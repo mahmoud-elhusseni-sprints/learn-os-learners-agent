@@ -71,6 +71,8 @@ CORS_ORIGINS = [
     ).split(",")
     if origin.strip()
 ]
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_IMAGE_MODEL = os.getenv("GOOGLE_IMAGE_MODEL")
 
 settings = SimpleNamespace(
     neo4j_uri=NEO4J_URI,
