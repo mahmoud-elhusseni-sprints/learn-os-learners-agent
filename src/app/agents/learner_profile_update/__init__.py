@@ -1,6 +1,6 @@
 """Public Task 10 transformation API; import adapter only for live model use."""
 
-from src.app.models.models import LearnerProfile, MemoryCard, ProfileUpdateInput
+from src.app.schemas.models import LearnerProfile, MemoryCard, ProfileUpdateInput
 
 from .agent import LearnerProfileUpdateAgent, LLMMetricSynthesizer, ProfileUpdateError
 

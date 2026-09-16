@@ -8,7 +8,7 @@
 // relationship types: 3
 //
 // GENERATED FILE - produced by scripts/generate_constraints.py from
-// src/app/graph/schema.py. Do not hand-edit; change the models and
+// src/app/schemas/graph_schema.py. Do not hand-edit; change the models and
 // regenerate.
 //
 // Neo4j Community Edition (docker-compose.yml pins neo4j:5-community):

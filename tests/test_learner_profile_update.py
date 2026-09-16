@@ -13,7 +13,7 @@ from app.agents.learner_profile_update.agent import (
     ProfileUpdateError,
 )
 from app.agents.learner_profile_update.prompts import SYSTEM_PROMPT, build_metric_input
-from src.app.models.models import (
+from src.app.schemas.models import (
     LearnerProfile,
     MemoryCard,
     MetricDraft,

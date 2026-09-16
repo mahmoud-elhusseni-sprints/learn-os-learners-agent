@@ -2,7 +2,7 @@
 Neo4j constraints and indexes for the Professional Learner Graph (v2, minimal).
 
 GENERATED FILE - produced by ``scripts/generate_constraints.py`` from
-``src/app/graph/schema.py``. Do not hand-edit; change the models and
+``src/app/schemas/graph_schema.py``. Do not hand-edit; change the models and
 regenerate so the database rules cannot drift from the Python contract.
 
 3 node labels (DataSource, LearnerProfile, MemoryCard), Community Edition safe.
