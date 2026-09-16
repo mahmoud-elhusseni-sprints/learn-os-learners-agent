@@ -78,8 +78,8 @@ services:
       postgres:
         condition: service_healthy
 
-    # volumes:
-    #   - .:/app
+    volumes:
+      - .:/app
 
 
 volumes:

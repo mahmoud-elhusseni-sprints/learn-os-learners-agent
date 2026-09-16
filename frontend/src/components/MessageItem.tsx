@@ -167,9 +167,9 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
             <div className="flex items-center gap-1.5 font-medium text-slate-300">
               <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
               <span>Talent Intelligence Agent</span>
-              {message.metadata?.matchScore && (
-                <span className="ml-2 px-1.5 py-0.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 font-mono text-[10px]">
-                  {message.metadata.matchScore}% Match
+              {message.isSimulated && (
+                <span className="ml-2 px-2 py-0.5 rounded-md bg-amber-950/70 border border-amber-500/40 text-amber-300 font-sans text-[10px]">
+                  Simulated Response (Client Preview)
                 </span>
               )}
             </div>

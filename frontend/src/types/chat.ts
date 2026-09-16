@@ -13,6 +13,7 @@ export interface Message {
   content: string;
   timestamp: string;
   metadata?: CandidateMetadata;
+  isSimulated?: boolean;
 }
 
 export interface Session {

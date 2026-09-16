@@ -1,6 +1,6 @@
 /**
  * Unified API Client for LearnerOS Backend REST Endpoints.
- * Handles base URL configuration, auth headers, and robust error formatting.
+ * Handles base URL configuration, error normalization, and response parsing.
  */
 
 export const API_BASE_URL =
@@ -29,38 +29,6 @@ export class ApiError extends Error {
 }
 
 /**
- * Retrieves the stored JWT access token if available.
- */
-export function getAuthToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    return (
-      localStorage.getItem('learner_os_access_token') ||
-      sessionStorage.getItem('learner_os_access_token')
-    );
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Saves or clears the JWT access token.
- */
-export function setAuthToken(token: string | null): void {
-  if (typeof window === 'undefined') return;
-  try {
-    if (token) {
-      localStorage.setItem('learner_os_access_token', token);
-    } else {
-      localStorage.removeItem('learner_os_access_token');
-      sessionStorage.removeItem('learner_os_access_token');
-    }
-  } catch {
-    // Ignore storage errors in private browsing
-  }
-}
-
-/**
  * Core HTTP dispatch helper encapsulating fetch logic, headers, and error normalization.
  */
 export async function apiRequest<T>(
@@ -75,12 +43,6 @@ export async function apiRequest<T>(
     Accept: 'application/json',
     ...((options.headers as Record<string, string>) || {}),
   };
-
-  // Attach JWT Bearer token if present
-  const token = getAuthToken();
-  if (token && !headers['Authorization']) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
 
   let response: Response;
   try {

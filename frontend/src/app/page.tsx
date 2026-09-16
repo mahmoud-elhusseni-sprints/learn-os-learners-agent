@@ -30,7 +30,13 @@ export default function Home() {
       if (loadedSessions.length > 0) {
         const firstSession = loadedSessions[0];
         setActiveSessionId(firstSession.id);
-        setMessages(firstSession.messages || []);
+        try {
+          const initialMessages = await ChatService.getMessages(firstSession.id);
+          setMessages(initialMessages);
+          firstSession.messages = initialMessages;
+        } catch {
+          setMessages([]);
+        }
       } else {
         setActiveSessionId(null);
         setMessages([]);
@@ -68,7 +74,15 @@ export default function Home() {
         if (loadedSessions.length > 0) {
           const firstSession = loadedSessions[0];
           setActiveSessionId(firstSession.id);
-          setMessages(firstSession.messages || []);
+          try {
+            const initialMessages = await ChatService.getMessages(firstSession.id);
+            if (!ignore) {
+              setMessages(initialMessages);
+              firstSession.messages = initialMessages;
+            }
+          } catch {
+            if (!ignore) setMessages([]);
+          }
         } else {
           setActiveSessionId(null);
           setMessages([]);
@@ -208,10 +222,7 @@ export default function Home() {
               role: 'assistant' as const,
               content: simulatedResponse,
               timestamp: now,
-              metadata: {
-                candidateId: 'cand-8821',
-                matchScore: 94,
-              },
+              isSimulated: true,
             },
             updatedSession: {
               id: currentSessionId,
