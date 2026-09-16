@@ -25,7 +25,7 @@ class User(Base):
 
     password_hash: Mapped[str] = mapped_column(
         String(255),
-        nullable=False,
+        nullable=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

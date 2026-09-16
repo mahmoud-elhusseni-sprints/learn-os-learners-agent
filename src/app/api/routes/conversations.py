@@ -7,11 +7,16 @@ from src.app.models.conversation import ConversationSession
 from src.app.models.message import Message
 from src.app.models.user import User
 from src.app.schemas.conversation import (
+    ChatMessageCreate,
     ConversationResponse,
     MessageCreate,
     MessageResponse,
 )
 from src.app.services import conversation_service
+from src.app.services.agent_orchestration import (
+    AgentTimeoutError,
+    AgentUpstreamError,
+)
 
 router = APIRouter(
     tags=["Conversations"],
@@ -107,5 +112,41 @@ def get_messages(
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from exc
+
+
+@router.post(
+    "/conversations/{conversation_id}/chat",
+    response_model=MessageResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def chat(
+    conversation_id: int,
+    message_data: ChatMessageCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> Message:
+    try:
+        return conversation_service.chat(
+            db=db,
+            conversation_id=conversation_id,
+            current_user_id=current_user.id,
+            content=message_data.content,
+            learner_name_or_id=message_data.learner_name_or_id,
+        )
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from exc
+    except AgentTimeoutError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail=str(exc),
+        ) from exc
+    except AgentUpstreamError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
             detail=str(exc),
         ) from exc

@@ -14,7 +14,7 @@ from src.app.schemas.auth import SignupRequest
 def signup(
     db: Session,
     signup_data: SignupRequest,
-) -> User:
+)-> User:
     email = str(signup_data.email).lower()
 
     existing_user = user_repository.get_user_by_email(

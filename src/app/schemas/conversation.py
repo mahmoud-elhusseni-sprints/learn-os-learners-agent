@@ -29,3 +29,11 @@ class MessageResponse(BaseModel):
     sender_role: str
     content: str
     timestamp: datetime
+
+class ChatMessageCreate(BaseModel):
+    content: str = Field(min_length=1)
+    learner_name_or_id: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=255,
+    )

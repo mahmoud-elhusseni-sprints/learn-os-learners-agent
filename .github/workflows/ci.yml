@@ -12,7 +12,7 @@ jobs:
 
     env:
       NEO4J_PASSWORD: ${{ secrets.NEO4J_PASSWORD }}
-      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+      JWT_SECRET_KEY: ci-test-secret-not-for-production
       JWT_ACCESS_TOKEN_EXPIRE_MINUTES: 30
     steps:
       - name: Checkout repository

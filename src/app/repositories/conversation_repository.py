@@ -70,3 +70,19 @@ def get_conversation_messages(
     )
 
     return list(db.scalars(statement).all())
+
+
+
+def get_conversation_history(
+    db: Session,
+    conversation_id: int,
+) -> list[dict[str, str]]:
+    messages = get_conversation_messages(db, conversation_id)
+
+    return [
+        {
+            "role": message.sender_role,
+            "content": message.content,
+        }
+        for message in messages
+    ]
