@@ -18,17 +18,17 @@ from datetime import datetime, timezone
 
 import pytest
 
-from src.app.graph.schema import DataSourceName, EdgeType, LearnerGraph
+from src.app.schemas.graph_schema import DataSourceName, EdgeType, LearnerGraph
 from src.app.ingestion.build_graph import build_graph_from_pipeline_output
-from src.app.models.models import (
+from src.app.schemas.models import (
     DataSource as PipelineDataSource,
 )
-from src.app.models.models import (
+from src.app.schemas.models import (
     DataSourceType,
     ReviewPayload,
     RubricPointEvaluation,
 )
-from src.app.models.models import (
+from src.app.schemas.models import (
     MemoryCard as PipelineMemoryCard,
 )
 

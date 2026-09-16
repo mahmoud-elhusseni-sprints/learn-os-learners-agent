@@ -5,20 +5,12 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from src.app.agents.talent_intelligence import tools
-from src.app.models.models import ToolResult
+from src.app.agents.talent_intelligence.registry import TOOL_FUNCTIONS
+from src.app.schemas.models import ToolResult
 
 GraphCommand = Callable[..., ToolResult]
 
-COMMANDS: dict[str, GraphCommand] = {
-    "get_learner_profile": tools.get_learner_profile,
-    "get_skill_proofs": tools.get_skill_proofs,
-    "get_behavioral_context": tools.get_behavioral_context,
-    "get_strengths_and_gaps": tools.get_strengths_and_gaps,
-    "get_milestone_history": tools.get_milestone_history,
-    "investigate_employer": tools.investigate_employer,
-    "suggest_next_steps": tools.suggest_next_steps,
-}
+COMMANDS: dict[str, GraphCommand] = dict(TOOL_FUNCTIONS)
 
 
 def get_command(name: str) -> GraphCommand | None:

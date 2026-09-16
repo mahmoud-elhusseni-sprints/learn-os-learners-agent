@@ -16,84 +16,14 @@ from typing_extensions import Annotated, TypedDict
 
 from src.app.core.llm_client import get_chat_model
 
+from .registry import build_tool_schemas
+
 TOOL_LOOP_FAILURE = (
     "Unable to complete the investigation within the tool-call limit. "
     "Please retry or narrow the question. This does not mean evidence is missing."
 )
 
-TOOL_SCHEMAS: list[dict[str, Any]] = [
-    {
-        "type": "function",
-        "function": {
-            "name": "get_learner_profile",
-            "description": "Retrieve profile context for the active learner.",
-            "parameters": {"type": "object", "properties": {}},
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_skill_proofs",
-            "description": (
-                "Retrieve evidence for one named skill of the active learner."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {"skill": {"type": "string"}},
-                "required": ["skill"],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_behavioral_context",
-            "description": (
-                "Retrieve contextual behavioral observations for the active learner."
-            ),
-            "parameters": {"type": "object", "properties": {}},
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_strengths_and_gaps",
-            "description": (
-                "Retrieve observed areas and evidence gaps for the active learner."
-            ),
-            "parameters": {"type": "object", "properties": {}},
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_milestone_history",
-            "description": "Retrieve chronological learner milestones.",
-            "parameters": {"type": "object", "properties": {}},
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "investigate_employer",
-            "description": (
-                "Retrieve graph evidence relevant to an employer investigation."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {"focus": {"type": "string"}},
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "suggest_next_steps",
-            "description": "Suggest evidence-gathering next steps from coverage gaps.",
-            "parameters": {"type": "object", "properties": {}},
-        },
-    },
-]
+TOOL_SCHEMAS: list[dict[str, Any]] = build_tool_schemas()
 
 
 class ToolLoopState(TypedDict):

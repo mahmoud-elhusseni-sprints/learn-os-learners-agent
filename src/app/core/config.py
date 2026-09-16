@@ -72,4 +72,5 @@ settings = SimpleNamespace(
     neo4j_password=NEO4J_PASSWORD,
     neo4j_max_connection_pool_size=NEO4J_MAX_CONNECTION_POOL_SIZE,
     neo4j_connection_acquisition_timeout=NEO4J_CONNECTION_ACQUISITION_TIMEOUT,
+    graph_loader_batch_size=GRAPH_LOADER_BATCH_SIZE,
 )

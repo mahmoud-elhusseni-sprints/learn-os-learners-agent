@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import src.app.graph.schema as M
+import src.app.schemas.graph_schema as M
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_PY = ROOT / "src" / "app" / "graph" / "constraints.py"
@@ -90,7 +90,7 @@ def build() -> str:
         f"// relationship types: {len(list(M.EdgeType))}",
         "//",
         "// GENERATED FILE - produced by scripts/generate_constraints.py from",
-        "// src/app/graph/schema.py. Do not hand-edit; change the models and",
+        "// src/app/schemas/graph_schema.py. Do not hand-edit; change the models and",
         "// regenerate.",
         "//",
         "// Neo4j Community Edition (docker-compose.yml pins neo4j:5-community):",
@@ -228,7 +228,7 @@ def build_python() -> str:
 Neo4j constraints and indexes for the Professional Learner Graph (v2, minimal).
 
 GENERATED FILE - produced by ``scripts/generate_constraints.py`` from
-``src/app/graph/schema.py``. Do not hand-edit; change the models and
+``src/app/schemas/graph_schema.py``. Do not hand-edit; change the models and
 regenerate so the database rules cannot drift from the Python contract.
 
 3 node labels ({", ".join(labels)}), Community Edition safe.

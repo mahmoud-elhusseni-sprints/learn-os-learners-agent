@@ -183,7 +183,7 @@ Restarting or recreating the Neo4j container does not automatically remove the s
 
 3 node labels: `LearnerProfile`, `DataSource`, `MemoryCard`. `DataSource.payload`
 is an embedded, typed object rather than its own node - see
-`src/app/graph/schema.py`'s module docstring for the full rationale, and
+`src/app/schemas/graph_schema.py`'s module docstring for the full rationale, and
 `docs/data/ONTOLOGY.md` for the generated field-by-field reference.
 
 ### Schema Initialization

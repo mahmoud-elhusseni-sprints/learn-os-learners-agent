@@ -47,7 +47,7 @@ from src.app.graph.connections import (
     verify_connection,
 )
 from src.app.graph.constraints import ALL_STATEMENTS, initialize_schema
-from src.app.graph.schema import LearnerGraph
+from src.app.schemas.graph_schema import LearnerGraph
 from src.app.ingestion.build_graph import BuildResult, build_graph_from_files
 from src.app.ingestion.loader import load_graph, load_graph_atomic
 

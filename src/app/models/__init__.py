@@ -1,6 +1,6 @@
 from src.app.models.conversation import ConversationSession
 from src.app.models.message import Message
-from src.app.models.models import (
+from src.app.schemas.models import (
     AssessmentAnswer,
     AssessmentPayload,
     Confidence,

@@ -7,7 +7,7 @@ from src.app.core.config import (
     LMS_ASSESSMENTS_OUTPUT_FILE,
     RUBRICS_OUTPUT_FILE,
 )
-from src.app.models.models import (
+from src.app.schemas.models import (
     AssessmentAnswer,
     AssessmentPayload,
     DataSource,

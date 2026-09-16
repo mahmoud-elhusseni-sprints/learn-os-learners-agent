@@ -18,7 +18,7 @@ from enum import Enum
 from typing import Any
 from uuid import UUID
 
-from src.app.graph.schema import Edge, GraphNode, LearnerGraph
+from src.app.schemas.graph_schema import Edge, GraphNode, LearnerGraph
 
 __all__ = [
     "flatten_node",
