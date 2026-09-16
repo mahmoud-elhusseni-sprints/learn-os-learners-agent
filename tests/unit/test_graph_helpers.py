@@ -122,7 +122,17 @@ def test_agent_routes_new_evidence_tools():
     with patch.object(
         tools,
         "get_review_outcomes",
-        return_value=ToolResult("ok", [{"event_id": "review-1", "date": "2026-08-01", "task_headline": "API", "verdict": "passed"}]),
+        return_value=ToolResult(
+            "ok",
+            [
+                {
+                    "event_id": "review-1",
+                    "date": "2026-08-01",
+                    "task_headline": "API",
+                    "verdict": "passed",
+                }
+            ],
+        ),
     ) as get_reviews:
         answer = agent.respond("Show me the review outcomes")
 
@@ -198,7 +208,9 @@ def test_agent_extracts_skill_from_hiring_question():
         "find_learners_with_skill",
         return_value=ToolResult("insufficient_evidence", []),
     ) as find_learners:
-        agent.respond("Which should I employ for my company if I need a Python developer?")
+        agent.respond(
+            "Which should I employ for my company if I need a Python developer?"
+        )
 
     find_learners.assert_called_once_with("python")
 

@@ -76,11 +76,15 @@ TOOL_METADATA: dict[str, dict[str, Any]] = {
         },
     },
     "get_behavioral_context": {
-        "description": "Retrieve contextual behavioral observations for the active learner.",
+        "description": (
+            "Retrieve contextual behavioral observations for the active learner."
+        ),
         "parameters": {"type": "object", "properties": {}},
     },
     "get_strengths_and_gaps": {
-        "description": "Retrieve observed areas and evidence gaps for the active learner.",
+        "description": (
+            "Retrieve observed areas and evidence gaps for the active learner."
+        ),
         "parameters": {"type": "object", "properties": {}},
     },
     "get_milestone_history": {
@@ -121,26 +125,35 @@ def build_active_handlers(
             return lambda _: dict(MISSING_LEARNER)
         return lambda _: invoke(name, function, learner_id, *arguments)
 
+    def learner_args_handler(
+        name: str,
+        function: ToolFunction,
+        arguments: Callable[[dict[str, Any]], tuple[Any, ...]],
+    ) -> Callable[[dict[str, Any]], Any]:
+        if learner_id is None:
+            return lambda _: dict(MISSING_LEARNER)
+        return lambda args: invoke(name, function, learner_id, *arguments(args))
+
     return {
         "get_learner_profile": learner_handler(
             "get_learner_profile", TOOL_FUNCTIONS["get_learner_profile"]
         ),
-        "get_skill_proofs": lambda args: invoke(
+        "get_skill_proofs": learner_args_handler(
             "get_skill_proofs",
             TOOL_FUNCTIONS["get_skill_proofs"],
-            learner_id,
-            str(args.get("skill", "")),
-        ) if learner_id is not None else lambda _: dict(MISSING_LEARNER),
-        "search_evidence": lambda args: invoke(
+            lambda args: (str(args.get("skill", "")),),
+        ),
+        "search_evidence": learner_args_handler(
             "search_evidence",
             TOOL_FUNCTIONS["search_evidence"],
-            learner_id,
-            str(args.get("query", "")),
-            str(args.get("source_type", "")),
-            str(args.get("start_date", "")),
-            str(args.get("end_date", "")),
-            int(args.get("limit", 100)),
-        ) if learner_id is not None else lambda _: dict(MISSING_LEARNER),
+            lambda args: (
+                str(args.get("query", "")),
+                str(args.get("source_type", "")),
+                str(args.get("start_date", "")),
+                str(args.get("end_date", "")),
+                int(args.get("limit", 100)),
+            ),
+        ),
         "get_review_outcomes": learner_handler(
             "get_review_outcomes", TOOL_FUNCTIONS["get_review_outcomes"]
         ),
@@ -152,24 +165,23 @@ def build_active_handlers(
             TOOL_FUNCTIONS["find_learners_with_skill"],
             str(args.get("skill", "")),
         ),
-        "get_behavioral_context": lambda _: invoke(
-            "get_behavioral_context", TOOL_FUNCTIONS["get_behavioral_context"], learner_id
-        ) if learner_id is not None else lambda _: dict(MISSING_LEARNER),
-        "get_strengths_and_gaps": lambda _: invoke(
-            "get_strengths_and_gaps", TOOL_FUNCTIONS["get_strengths_and_gaps"], learner_id
-        ) if learner_id is not None else lambda _: dict(MISSING_LEARNER),
-        "get_milestone_history": lambda _: invoke(
-            "get_milestone_history", TOOL_FUNCTIONS["get_milestone_history"], learner_id
-        ) if learner_id is not None else lambda _: dict(MISSING_LEARNER),
-        "investigate_employer": lambda args: invoke(
+        "get_behavioral_context": learner_handler(
+            "get_behavioral_context", TOOL_FUNCTIONS["get_behavioral_context"]
+        ),
+        "get_strengths_and_gaps": learner_handler(
+            "get_strengths_and_gaps", TOOL_FUNCTIONS["get_strengths_and_gaps"]
+        ),
+        "get_milestone_history": learner_handler(
+            "get_milestone_history", TOOL_FUNCTIONS["get_milestone_history"]
+        ),
+        "investigate_employer": learner_args_handler(
             "investigate_employer",
             TOOL_FUNCTIONS["investigate_employer"],
-            learner_id,
-            str(args.get("focus", "")),
-        ) if learner_id is not None else lambda _: dict(MISSING_LEARNER),
-        "suggest_next_steps": lambda _: invoke(
-            "suggest_next_steps", TOOL_FUNCTIONS["suggest_next_steps"], learner_id
-        ) if learner_id is not None else lambda _: dict(MISSING_LEARNER),
+            lambda args: (str(args.get("focus", "")),),
+        ),
+        "suggest_next_steps": learner_handler(
+            "suggest_next_steps", TOOL_FUNCTIONS["suggest_next_steps"]
+        ),
     }
 
 

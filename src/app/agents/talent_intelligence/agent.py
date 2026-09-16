@@ -9,6 +9,7 @@ from .graph import TOOL_SCHEMAS, run_tool_loop
 from .prompts import SYSTEM_PROMPT
 from .registry import build_active_handlers
 
+
 class TalentIntelligenceAgent:
 
     system_prompt = SYSTEM_PROMPT
@@ -29,9 +30,7 @@ class TalentIntelligenceAgent:
         """Compatibility alias for the LLM-backed answer path."""
         return self._respond_with_llm(query, learner_name_or_id)
 
-    def _respond_with_llm(
-        self, query: str, learner_name_or_id: str | None
-    ) -> str:
+    def _respond_with_llm(self, query: str, learner_name_or_id: str | None) -> str:
         self.state.last_tool_calls = []
         failure = self._ensure_learner(query, learner_name_or_id, required=False)
         if failure is not None:

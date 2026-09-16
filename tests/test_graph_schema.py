@@ -34,8 +34,8 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-import src.app.schemas.graph_schema as M
 import src.app.graph.serialization as CE
+import src.app.schemas.graph_schema as M
 from scripts import generate_constraints as GS
 from src.app.graph.ids import SPRINTS_GRAPH_NAMESPACE, node_id
 

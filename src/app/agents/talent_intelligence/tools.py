@@ -235,7 +235,9 @@ def search_evidence(
     )
     evidence = [_card_row_to_evidence(row) for row in rows]
     if not evidence:
-        return ToolResult("insufficient_evidence", [], "No matching evidence was found.")
+        return ToolResult(
+            "insufficient_evidence", [], "No matching evidence was found."
+        )
     return ToolResult("ok", evidence, "")
 
 
