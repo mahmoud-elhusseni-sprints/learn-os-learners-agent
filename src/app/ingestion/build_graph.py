@@ -5,7 +5,7 @@ The missing link in the pipeline. ``src/app/ingestion/pipeline.py`` writes
 three JSON files (learner profiles, DataSource nodes, memory cards) built
 from the models in ``src/app/models/models.py``. The batch loader in
 ``src/app/ingestion/loader.py`` takes a ``LearnerGraph`` built from the
-models in ``src/app/graph/schema.py``. Nothing joined the two, so extraction
+models in ``src/app/schemas/graph_schema.py``. Nothing joined the two, so extraction
 output never reached Neo4j.
 
 This module is that join. It reads the pipeline's dicts and returns a
@@ -52,7 +52,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from src.app.graph.ids import node_id
-from src.app.graph.schema import (
+from src.app.schemas.graph_schema import (
     AssessmentAnswerItem,
     AssessmentPayload,
     DataSource,

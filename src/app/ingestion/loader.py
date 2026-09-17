@@ -32,8 +32,8 @@ from neo4j import Driver, ManagedTransaction
 
 from src.app.core.config import settings
 from src.app.graph import queries
-from src.app.graph.schema import GraphNode, LearnerGraph
 from src.app.graph.serialization import flatten_node
+from src.app.schemas.graph_schema import GraphNode, LearnerGraph
 
 logger = logging.getLogger(__name__)
 

@@ -31,7 +31,7 @@ from neo4j.exceptions import ClientError, ServiceUnavailable
 
 from src.app.graph import connections
 from src.app.graph.ids import node_id
-from src.app.graph.schema import (
+from src.app.schemas.graph_schema import (
     DataSource,
     DataSourceName,
     Edge,

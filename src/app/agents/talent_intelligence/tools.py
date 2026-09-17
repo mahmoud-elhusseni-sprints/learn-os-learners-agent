@@ -4,7 +4,7 @@ from typing import Any
 
 from src.app.core import TAXONOMY_TAG_DESCRIPTIONS
 from src.app.graph.connections import get_driver
-from src.app.models.models import ToolResult
+from src.app.schemas.models import ToolResult
 
 
 def _run(cypher: str, **params: Any) -> list[dict[str, Any]]:
@@ -14,10 +14,6 @@ def _run(cypher: str, **params: Any) -> list[dict[str, Any]]:
             return [dict(record) for record in result]
     except Exception:
         return []
-
-
-def _load_jsonl(name: str) -> tuple[dict[str, Any], ...]:
-    return ()
 
 
 def _find_learner(learner_query: str) -> dict[str, Any] | None:
@@ -42,32 +38,6 @@ def _find_learner(learner_query: str) -> dict[str, Any] | None:
         q=query,
     )
     return rows[0] if rows else None
-
-
-def _cards_for_learner(learner_id: str) -> list[dict[str, Any]]:
-    return _run(
-        """
-        MATCH (l:LearnerProfile {learner_id: $learner_id})
-            -[:HAS_MEMORY_CARD]->(m:MemoryCard)
-        OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
-        RETURN
-            m.card_id    AS evidence_id,
-            m.metric_key AS metric_key,
-            m.content    AS observation,
-            m.rationale  AS rationale,
-            m.tags       AS tags,
-            m.created_at AS date,
-            $learner_id  AS learner_id,
-            coalesce(
-                m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null
-            ) AS source_ref,
-            coalesce(
-                m.source_type, ds.datasource_name, 'meeting_transcript'
-            ) AS source_type
-        ORDER BY m.created_at DESC
-        """,
-        learner_id=learner_id,
-    )
 
 
 def _card_row_to_evidence(row: dict[str, Any]) -> dict[str, Any]:
@@ -112,6 +82,34 @@ def _card_row_to_evidence(row: dict[str, Any]) -> dict[str, Any]:
         "metric_key": row.get("metric_key"),
         "rationale": row.get("rationale", ""),
     }
+
+
+def _memory_card_rows(
+    learner_id: str, where_clause: str = "", **params: Any
+) -> list[dict[str, Any]]:
+    rows = _run(
+        f"""
+        MATCH (l:LearnerProfile {{learner_id: $learner_id}})
+            -[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
+        {where_clause}
+        RETURN
+            m.card_id    AS evidence_id,
+            m.metric_key AS metric_key,
+            m.content    AS observation,
+            m.rationale  AS rationale,
+            m.tags       AS tags,
+            m.created_at AS date,
+            $learner_id  AS learner_id,
+            coalesce(m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null)
+                AS source_ref,
+            coalesce(ds.datasource_name, 'meeting_transcript') AS source_type
+        ORDER BY m.created_at DESC
+        """,
+        learner_id=learner_id,
+        **params,
+    )
+    return rows
 
 
 def get_learner_profile(learner_query: str) -> ToolResult:
@@ -165,31 +163,13 @@ def get_learner_profile(learner_query: str) -> ToolResult:
 
 def get_skill_proofs(learner_id: str, skill: str) -> ToolResult:
     normalized = skill.strip().lower()
-    rows = _run(
+    rows = _memory_card_rows(
+        learner_id,
         """
-        MATCH (l:LearnerProfile {learner_id: $learner_id})
-            -[:HAS_MEMORY_CARD]->(m:MemoryCard)
-        OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
         WHERE (toLower(m.content) CONTAINS $skill
                OR toLower(m.metric_key) CONTAINS $skill)
           AND m.metric_key <> 'learning_goals.learner_tasks'
-        RETURN
-            m.card_id    AS evidence_id,
-            m.metric_key AS metric_key,
-            m.content    AS observation,
-            m.rationale  AS rationale,
-            m.tags       AS tags,
-            m.created_at AS date,
-            $learner_id  AS learner_id,
-            coalesce(
-                m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null
-            ) AS source_ref,
-            coalesce(
-                m.source_type, ds.datasource_name, 'meeting_transcript'
-            ) AS source_type
-        ORDER BY m.created_at DESC
         """,
-        learner_id=learner_id,
         skill=normalized,
     )
     evidence = [_card_row_to_evidence(r) for r in rows]
@@ -200,31 +180,219 @@ def get_skill_proofs(learner_id: str, skill: str) -> ToolResult:
     return ToolResult("ok", evidence, "")
 
 
-def get_behavioral_context(learner_id: str) -> ToolResult:
-    taxonomy_tags = list(TAXONOMY_TAG_DESCRIPTIONS)
+def search_evidence(
+    learner_id: str,
+    query: str = "",
+    source_type: str = "",
+    start_date: str = "",
+    end_date: str = "",
+    limit: int = 100,
+) -> ToolResult:
+    """Search attributable evidence with optional source and date filters."""
+    normalized_query = query.strip().lower()
+    normalized_source = source_type.strip().lower()
+    result_limit = max(1, min(limit, 100))
     rows = _run(
         """
         MATCH (l:LearnerProfile {learner_id: $learner_id})
-            -[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        OPTIONAL MATCH (l)-[:HAS_MEMORY_CARD]->(direct:MemoryCard)
+        OPTIONAL MATCH (l)-[:PRODUCED]->(:DataSource)-[:EXTRACTED_INTO]->
+            (derived:MemoryCard)
+        WITH collect(DISTINCT direct) + collect(DISTINCT derived) AS cards
+        UNWIND cards AS m
+        WITH DISTINCT m
         OPTIONAL MATCH (ds:DataSource)-[:EXTRACTED_INTO]->(m)
-        WHERE any(tag IN coalesce(m.tags, []) WHERE tag IN $taxonomy_tags)
+        WITH m, collect(ds.datasource_name) AS source_names,
+             collect(ds.datasource_id) AS source_ids
+        WHERE m IS NOT NULL
+          AND ($query = '' OR toLower(coalesce(m.content, '')) CONTAINS $query
+               OR toLower(coalesce(m.metric_key, '')) CONTAINS $query
+               OR any(tag IN coalesce(m.tags, []) WHERE toLower(tag) CONTAINS $query))
+            AND ($source_type = '' OR toLower(coalesce(
+                head(source_names), 'memory_card')) = $source_type)
+          AND ($start_date = '' OR toString(coalesce(m.created_at, '')) >= $start_date)
+          AND ($end_date = '' OR toString(coalesce(m.created_at, '')) <= $end_date)
         RETURN
-            m.card_id    AS evidence_id,
+            m.card_id AS evidence_id,
             m.metric_key AS metric_key,
-            m.content    AS observation,
-            m.rationale  AS rationale,
-            m.tags       AS tags,
+            m.content AS observation,
+            m.rationale AS rationale,
+            m.tags AS tags,
             m.created_at AS date,
-            $learner_id  AS learner_id,
-            coalesce(
-                m.source_ref, m.meeting_id, m.lx_id, ds.datasource_id, null
-            ) AS source_ref,
-            coalesce(
-                m.source_type, ds.datasource_name, 'meeting_transcript'
-            ) AS source_type
+            $learner_id AS learner_id,
+            coalesce(m.source_ref, m.meeting_id, m.lx_id, head(source_ids), null)
+                AS source_ref,
+            coalesce(head(source_names), 'memory_card') AS source_type
         ORDER BY m.created_at DESC
+        LIMIT $limit
         """,
         learner_id=learner_id,
+        query=normalized_query,
+        source_type=normalized_source,
+        start_date=start_date.strip(),
+        end_date=end_date.strip(),
+        limit=result_limit,
+    )
+    evidence = [_card_row_to_evidence(row) for row in rows]
+    if not evidence:
+        return ToolResult(
+            "insufficient_evidence", [], "No matching evidence was found."
+        )
+    return ToolResult("ok", evidence, "")
+
+
+def get_review_outcomes(learner_id: str) -> ToolResult:
+    """Retrieve learner submissions, verdicts, feedback, and rubric outcomes."""
+    rows = _run(
+        """
+        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:PRODUCED]->(ds:DataSource)
+        WHERE ds.datasource_name = 'review'
+        RETURN ds.datasource_id AS event_id, ds.timestamp AS date,
+               ds.payload_json AS payload_json
+        ORDER BY ds.timestamp DESC
+        """,
+        learner_id=learner_id,
+    )
+    outcomes: list[dict[str, Any]] = []
+    for row in rows:
+        payload = _parse_payload(row.get("payload_json"))
+        outcomes.append(
+            {
+                "event_id": row.get("event_id"),
+                "date": str(row["date"]) if row.get("date") else None,
+                "source_type": "review",
+                "lx_id": payload.get("lx_id"),
+                "task_headline": payload.get("task_headline"),
+                "attempt_number": payload.get("attempt_number"),
+                "verdict": payload.get("verdict"),
+                "submission_text": payload.get("submission_text"),
+                "feedback_summary": payload.get("feedback_summary"),
+                "mentor_reply": payload.get("mentor_reply"),
+                "detailed_rubric_evaluations": payload.get(
+                    "detailed_rubric_evaluations", []
+                ),
+            }
+        )
+    if not outcomes:
+        return ToolResult("insufficient_evidence", [], "No review outcomes were found.")
+    return ToolResult("ok", outcomes, "")
+
+
+def get_assessment_results(learner_id: str) -> ToolResult:
+    """Retrieve learner assessment scores and question-level results."""
+    rows = _run(
+        """
+        MATCH (l:LearnerProfile {learner_id: $learner_id})-[:PRODUCED]->(ds:DataSource)
+        WHERE ds.datasource_name IN ['assessments', 'assesments']
+        RETURN ds.datasource_id AS event_id, ds.timestamp AS date,
+               ds.payload_json AS payload_json
+        ORDER BY ds.timestamp DESC
+        """,
+        learner_id=learner_id,
+    )
+    assessments: list[dict[str, Any]] = []
+    for row in rows:
+        payload = _parse_payload(row.get("payload_json"))
+        assessments.append(
+            {
+                "event_id": row.get("event_id"),
+                "date": str(row["date"]) if row.get("date") else None,
+                "source_type": "assessment",
+                "lx_id": payload.get("lx_id"),
+                "assessment_type": payload.get("assessment_type"),
+                "topic_id": payload.get("topic_id"),
+                "score": payload.get("score"),
+                "max_score": payload.get("max_score"),
+                "answers": payload.get("answers", []),
+            }
+        )
+    if not assessments:
+        return ToolResult(
+            "insufficient_evidence", [], "No assessment results were found."
+        )
+    return ToolResult("ok", assessments, "")
+
+
+def _parse_payload(value: Any) -> dict[str, Any]:
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str):
+        try:
+            payload = _json.loads(value)
+        except (TypeError, ValueError):
+            return {}
+        return payload if isinstance(payload, dict) else {}
+    return {}
+
+
+def find_learners_with_skill(skill: str) -> ToolResult:
+    normalized = skill.strip().lower()
+    if not normalized:
+        return ToolResult("insufficient_evidence", [], "A skill is required.")
+
+    rows = _run(
+        """
+        MATCH (l:LearnerProfile)-[:HAS_MEMORY_CARD]->(m:MemoryCard)
+        WHERE toLower(m.content) CONTAINS $skill
+           OR toLower(m.metric_key) CONTAINS $skill
+        RETURN
+            l.learner_id AS learner_id,
+            l.name AS name,
+            m.card_id AS evidence_id,
+            m.metric_key AS metric_key,
+            m.content AS observation,
+            m.tags AS tags,
+            m.created_at AS date,
+            'memory_card' AS source_type
+        ORDER BY m.created_at DESC
+        LIMIT 500
+        """,
+        skill=normalized,
+    )
+    grouped: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        learner_id = row.get("learner_id")
+        if not learner_id:
+            continue
+        learner = grouped.setdefault(
+            learner_id,
+            {
+                "learner_id": learner_id,
+                "name": row.get("name"),
+                "evidence": [],
+            },
+        )
+        learner["evidence"].append(_card_row_to_evidence(row))
+
+    results = []
+    for learner in grouped.values():
+        evidence = learner["evidence"]
+        learner["evidence_count"] = len(evidence)
+        learner["most_recent_date"] = evidence[0].get("date")
+        results.append(learner)
+    results.sort(
+        key=lambda learner: (
+            -learner["evidence_count"],
+            learner["most_recent_date"] or "",
+            learner["name"] or "",
+        ),
+    )
+    if not results:
+        return ToolResult(
+            "insufficient_evidence",
+            [],
+            f"No learner evidence was found for {normalized}.",
+        )
+    return ToolResult("ok", results, "")
+
+
+def get_behavioral_context(learner_id: str) -> ToolResult:
+    taxonomy_tags = list(TAXONOMY_TAG_DESCRIPTIONS)
+    rows = _memory_card_rows(
+        learner_id,
+        """
+        WHERE any(tag IN coalesce(m.tags, []) WHERE tag IN $taxonomy_tags)
+        """,
         taxonomy_tags=taxonomy_tags,
     )
     evidence = [_card_row_to_evidence(r) for r in rows]
@@ -253,33 +421,6 @@ def get_strengths_and_gaps(learner_id: str) -> ToolResult:
         learner_id=learner_id,
         taxonomy_tags=taxonomy_tags,
     )
-
-    if not rows:
-        jsonl_records = _load_jsonl("meeting_memory_cards.jsonl")
-        for rec in jsonl_records:
-            tags = rec.get("tags") or []
-            if rec.get("learner_id") == learner_id and any(
-                tag in TAXONOMY_TAG_DESCRIPTIONS for tag in tags
-            ):
-                obs = (
-                    rec.get("observation")
-                    or rec.get("content")
-                    or (
-                        rec.get("normalized_payload", {}).get("content", "")
-                        if isinstance(rec.get("normalized_payload"), dict)
-                        else ""
-                    )
-                )
-                rows.append(
-                    {
-                        "evidence_id": rec.get("card_id") or rec.get("evidence_id"),
-                        "metric_key": rec.get("metric_key"),
-                        "observation": obs,
-                        "tags": tags,
-                        "date": rec.get("date") or rec.get("created_at"),
-                        "source_type": rec.get("source_type", "memory_card"),
-                    }
-                )
 
     if not rows:
         return ToolResult(
@@ -356,12 +497,7 @@ def get_milestone_history(learner_id: str) -> ToolResult:
 
     milestones: list[dict[str, Any]] = []
     for row in rows:
-        payload: dict[str, Any] = {}
-        if row.get("payload_json"):
-            try:
-                payload = _json.loads(row["payload_json"])
-            except Exception:
-                pass
+        payload = _parse_payload(row.get("payload_json"))
         verdict = payload.get("verdict", "")
         summary = (
             payload.get("task_headline")

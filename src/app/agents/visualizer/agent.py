@@ -11,7 +11,7 @@ import zlib
 from dataclasses import dataclass
 from typing import Any
 
-from src.app.models.visualizer import (
+from src.app.schemas.models import (
     Theme,
     VisualizationFormat,
     VisualizationRequest,

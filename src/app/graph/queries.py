@@ -7,7 +7,7 @@ this safe from injection. The one thing that genuinely cannot be a
 parameter is a node label or relationship type: Cypher has no syntax for
 parameterizing those, in any driver, for any database. The labels and
 types used here always come from a closed, validated set - ``NODE_CLASSES``
-and ``EdgeType`` in ``src/app/graph/schema.py`` - never from raw input, so
+and ``EdgeType`` in ``src/app/schemas/graph_schema.py`` - never from raw input, so
 interpolating them is the correct approach, not a shortcut around it.
 """
 

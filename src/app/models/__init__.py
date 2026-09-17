@@ -1,6 +1,7 @@
 from src.app.models.conversation import ConversationSession
 from src.app.models.message import Message
-from src.app.models.models import (
+from src.app.models.user import User
+from src.app.schemas.models import (
     AssessmentAnswer,
     AssessmentPayload,
     Confidence,
@@ -17,7 +18,6 @@ from src.app.models.models import (
     RubricPointEvaluation,
     ToolResult,
 )
-from src.app.models.user import User
 
 __all__ = [
     "User",

@@ -22,7 +22,7 @@ Proves three things the schema claims:
 
 There is no "Evidence-First" invariant check here, unlike v1: that
 invariant protected a graph of Evidence/SkillAssertion nodes which do not
-exist in this design. See src/app/graph/schema.py's module docstring for
+exist in this design. See src/app/schemas/graph_schema.py's module docstring for
 why this is a deliberate, flagged change rather than an oversight.
 
 Loading and schema init both go through the same production code paths
@@ -47,7 +47,7 @@ if str(ROOT) not in sys.path:
 
 from neo4j import GraphDatabase  # noqa: E402
 
-import src.app.graph.schema as M  # noqa: E402
+import src.app.schemas.graph_schema as M  # noqa: E402
 from src.app.graph.constraints import ALL_STATEMENTS, initialize_schema  # noqa: E402
 from src.app.ingestion.loader import load_graph  # noqa: E402
 

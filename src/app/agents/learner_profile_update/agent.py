@@ -12,7 +12,7 @@ from src.app.core.config import (
     PRIMARY_MODEL,
 )
 from src.app.core.llm_client import generate_structured_output
-from src.app.models.models import (
+from src.app.schemas.models import (
     LearnerProfile,
     MemoryCard,
     MetricDraft,

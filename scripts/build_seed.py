@@ -62,7 +62,7 @@ from pathlib import Path
 from typing import Any, Iterable
 from zoneinfo import ZoneInfo
 
-import src.app.graph.schema as M
+import src.app.schemas.graph_schema as M
 from src.app.graph.ids import node_id
 
 logger = logging.getLogger(__name__)

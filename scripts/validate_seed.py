@@ -14,7 +14,7 @@ Proves, in order:
 
 There is no "Evidence-First" section here, unlike v1: that invariant
 protected a graph of Evidence/SkillAssertion nodes which do not exist in
-this design. See src/app/graph/schema.py's module docstring for why this is
+this design. See src/app/schemas/graph_schema.py's module docstring for why this is
 a deliberate, flagged change rather than an oversight.
 """
 
@@ -26,7 +26,7 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-import src.app.graph.schema as M
+import src.app.schemas.graph_schema as M
 from src.app.graph.ids import node_id
 from src.app.graph.serialization import export_graph
 
