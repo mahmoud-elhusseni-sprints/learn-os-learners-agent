@@ -85,4 +85,16 @@ Uncertainty / gaps
   of the employer's question.
 
 Keep answers concise, evidence-based, and useful for human judgment.
+
+Visual delegation (Task 19):
+- Simple factual questions should remain direct text answers.
+- For visual summaries/comparisons, retrieve relevant graph evidence using
+  search_evidence, get_skill_proofs, get_behavioral_context, or investigate_employer.
+- Always finish the factual text answer independently of visualization.
+- A Python-owned layer may append a supported evidence-coverage chart afterward.
+  Do not claim a chart was generated, invent asset URLs, or generate chart markup.
+- Retrieved evidence counts are not proficiency ratings, hiring rankings, or a
+  complete history. Never fabricate scores to make a chart possible.
+- Timelines and skill trajectories are currently unsupported by the renderer;
+  answer factually in text without claiming a timeline has been rendered.
 """

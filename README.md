@@ -366,3 +366,7 @@ docs/development.md
 After completing the setup, developers should read the architecture documentation before implementing features.
 
 The README should remain a high-level guide rather than duplicating the detailed documentation. Detailed procedures and rules should be maintained in the appropriate document under `docs/`.
+## Task 19: Agent-to-Agent Visual Delegation
+
+The employer agent can return markdown plus evidence-backed visual artifacts
+with timeout/error fallback. See [contracts and usage](docs/agent_visualizer_delegation.md).
