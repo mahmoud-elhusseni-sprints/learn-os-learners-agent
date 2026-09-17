@@ -17,6 +17,11 @@ class ConversationSession(Base):
         index=True,
     )
 
+    learner_id: Mapped[str | None] = mapped_column(
+        nullable=True,
+        index=True,
+    )
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

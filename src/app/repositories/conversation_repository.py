@@ -40,11 +40,23 @@ def get_user_conversations(
     return list(db.scalars(statement).all())
 
 
+def set_conversation_learner(
+    db: Session,
+    conversation: ConversationSession,
+    learner_id: str,
+) -> ConversationSession:
+    conversation.learner_id = learner_id
+    db.flush()
+
+    return conversation
+
+
 def create_message(
     db: Session,
     conversation_id: int,
     sender_role: str,
     content: str,
+    commit: bool = True,
 ) -> Message:
     message = Message(
         conversation_id=conversation_id,
@@ -53,8 +65,12 @@ def create_message(
     )
 
     db.add(message)
-    db.commit()
-    db.refresh(message)
+
+    if commit:
+        db.commit()
+        db.refresh(message)
+    else:
+        db.flush()
 
     return message
 
@@ -70,7 +86,6 @@ def get_conversation_messages(
     )
 
     return list(db.scalars(statement).all())
-
 
 
 def get_conversation_history(

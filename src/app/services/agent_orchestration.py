@@ -25,7 +25,7 @@ class AgentOrchestrationAdapter:
 
     @staticmethod
     def format_history(history: Sequence[dict[str, str]]) -> str:
-        """Format persisted conversation history for the agent."""
+        """Format persisted conversation history for future agent use."""
 
         if not history:
             return ""
@@ -45,22 +45,11 @@ class AgentOrchestrationAdapter:
         history: Sequence[dict[str, str]] | None = None,
         learner_name_or_id: str | None = None,
     ) -> str:
-        """Run the Talent Intelligence Agent with conversation context."""
-
-        history = history or []
-        history_context = self.format_history(history)
-
-        if history_context:
-            agent_query = (
-                f"{history_context}\n\n"
-                f"Current user message:\n{message}"
-            )
-        else:
-            agent_query = message
+        """Run the Talent Intelligence Agent for the current message."""
 
         try:
             return self.agent.respond(
-                agent_query,
+                message,
                 learner_name_or_id=learner_name_or_id,
             )
         except TimeoutError as exc:
