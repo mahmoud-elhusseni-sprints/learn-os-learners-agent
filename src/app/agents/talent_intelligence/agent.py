@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import Any, Callable
 
+from src.app.schemas.agent_response import EmployerResponse, VisualOptions
 from src.app.schemas.models import ConversationState, ToolResult
 
 from . import tools
@@ -16,6 +18,19 @@ class TalentIntelligenceAgent:
 
     def __init__(self) -> None:
         self.state = ConversationState()
+        self._visual_evidence: list[dict[str, Any]] = []
+
+    def respond_structured(
+        self,
+        query: str,
+        learner_name_or_id: str | None = None,
+        visual_options: VisualOptions | None = None,
+    ) -> EmployerResponse:
+        """Return text plus optional artifacts; respond() stays text-only."""
+        from .visual_delegation import delegate
+
+        markdown = self.respond(query, learner_name_or_id)
+        return delegate(query, markdown, self._visual_evidence, visual_options)
 
     def reset_conversation(self) -> None:
         self.state = ConversationState()
@@ -32,6 +47,7 @@ class TalentIntelligenceAgent:
 
     def _respond_with_llm(self, query: str, learner_name_or_id: str | None) -> str:
         self.state.last_tool_calls = []
+        self._visual_evidence = []
         failure = self._ensure_learner(query, learner_name_or_id, required=False)
         if failure is not None:
             return failure
@@ -92,6 +108,15 @@ class TalentIntelligenceAgent:
                 "error", None, "Evidence retrieval failed. Please retry."
             )
         rows = result.data if isinstance(result.data, list) else []
+        if result.status == "ok" and name in {
+            "get_skill_proofs",
+            "search_evidence",
+            "get_behavioral_context",
+            "investigate_employer",
+        }:
+            self._visual_evidence.extend(
+                deepcopy(row) for row in rows if isinstance(row, dict)
+            )
         self.state.last_tool_calls.append(
             {
                 "tool": name,
