@@ -63,6 +63,14 @@ AI_MODEL = os.getenv("AI_MODEL")
 
 FALLBACK_CHAIN = [PRIMARY_MODEL, SECONDARY_MODEL, TERTIARY_MODEL]
 
+CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "CORS_ORIGINS",
+        "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001",
+    ).split(",")
+    if origin.strip()
+]
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_IMAGE_MODEL = os.getenv("GOOGLE_IMAGE_MODEL")
 
@@ -72,5 +80,6 @@ settings = SimpleNamespace(
     neo4j_password=NEO4J_PASSWORD,
     neo4j_max_connection_pool_size=NEO4J_MAX_CONNECTION_POOL_SIZE,
     neo4j_connection_acquisition_timeout=NEO4J_CONNECTION_ACQUISITION_TIMEOUT,
+    cors_origins=CORS_ORIGINS,
     graph_loader_batch_size=GRAPH_LOADER_BATCH_SIZE,
 )
