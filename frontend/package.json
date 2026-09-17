@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx src/tests/test_validation_and_api.ts"
+    "test": "tsx src/tests/test_validation_and_api.ts && tsx src/tests/test_auth_integration_and_artifacts.ts"
   },
   "dependencies": {
     "lucide-react": "^1.43.0",

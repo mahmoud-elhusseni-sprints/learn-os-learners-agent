@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Session } from '../types/chat';
+import type { AuthUser } from '../types/auth';
 import {
   Plus,
   MessageSquare,
@@ -15,6 +16,8 @@ import {
   UserPlus,
   RefreshCw,
   Server,
+  LogOut,
+  User,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -27,6 +30,10 @@ interface SidebarProps {
   isLoadingSessions?: boolean;
   isLiveApi?: boolean;
   onRetryConnection?: () => void;
+  /** Authenticated user — if null, shows sign in/up links */
+  user?: AuthUser | null;
+  /** Logout action from AuthContext */
+  onLogout?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -39,6 +46,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isLoadingSessions = false,
   isLiveApi = true,
   onRetryConnection,
+  user = null,
+  onLogout,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -239,23 +248,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
 
-        {/* Navigation to Standalone Auth Pages */}
-        <div className="px-3 py-2 border-t border-slate-800/60 bg-slate-950/60 flex items-center gap-1.5">
-          <Link
-            href="/signin"
-            className="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs transition-colors"
-          >
-            <LogIn className="w-3.5 h-3.5 text-blue-400" />
-            <span>Sign In</span>
-          </Link>
-          <Link
-            href="/signup"
-            className="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs transition-colors"
-          >
-            <UserPlus className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Sign Up</span>
-          </Link>
-        </div>
+        {/* User Account Section — shows auth state */}
+        {user ? (
+          /* Authenticated: user info + logout */
+          <div className="px-3 py-2 border-t border-slate-800/60 bg-slate-950/60">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-7 h-7 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 flex-shrink-0">
+                <User className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-slate-200 truncate">{user.name || user.email}</p>
+                <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
+              </div>
+            </div>
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="w-full flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/40 text-slate-400 hover:text-rose-300 text-xs transition-colors cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out</span>
+              </button>
+            )}
+          </div>
+        ) : (
+          /* Unauthenticated: navigation to auth pages */
+          <div className="px-3 py-2 border-t border-slate-800/60 bg-slate-950/60 flex items-center gap-1.5">
+            <Link
+              href="/signin"
+              className="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs transition-colors"
+            >
+              <LogIn className="w-3.5 h-3.5 text-blue-400" />
+              <span>Sign In</span>
+            </Link>
+            <Link
+              href="/signup"
+              className="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs transition-colors"
+            >
+              <UserPlus className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Sign Up</span>
+            </Link>
+          </div>
+        )}
 
         {/* Footer info: REST API Integration Indicator */}
         <div className="p-3 border-t border-slate-800/80 bg-slate-950/80 text-xs">
@@ -274,7 +308,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
           <p className="text-[10px] text-slate-400 flex items-center gap-1">
             <Database className="w-3 h-3 text-slate-400" />
-            Sessions & messages persisted via REST API
+            Sessions &amp; messages persisted via REST API
           </p>
         </div>
       </aside>
