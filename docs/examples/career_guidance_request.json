@@ -1,0 +1,60 @@
+{
+  "learner_id": "synthetic-ai-learner",
+  "target_role": "AI Engineer",
+  "skills": [
+    {"name": "Python", "kind": "technical", "level": "advanced", "evidence_ids": ["ev-rag-project"]},
+    {"name": "FastAPI", "kind": "technical", "level": "intermediate", "evidence_ids": ["ev-api-review"]},
+    {"name": "pytest", "kind": "technical", "level": "beginner", "evidence_ids": []}
+  ],
+  "behavioral_signals": [
+    {
+      "signal": "resubmitted without addressing review comments",
+      "competency": "feedback",
+      "polarity": "concern",
+      "description": "The second submission repeated two issues the mentor had flagged.",
+      "evidence_ids": ["ev-api-review"]
+    },
+    {
+      "signal": "shared task ownership in standups",
+      "competency": "collaboration",
+      "polarity": "positive",
+      "description": "Split the ingestion work with a teammate and reported progress daily.",
+      "evidence_ids": ["ev-team-sprint"]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "ev-rag-project",
+      "source_type": "project",
+      "title": "Document Q&A RAG prototype",
+      "summary": "Built a retrieval-augmented question answering service over internal docs.",
+      "competencies": ["python", "rag pipelines", "machine learning"],
+      "tags": ["technical_skills"],
+      "outcome": "passed"
+    },
+    {
+      "evidence_id": "ev-api-review",
+      "source_type": "review",
+      "title": "Ingestion API code review",
+      "summary": "FastAPI service reviewed by a mentor; passed after one revision.",
+      "competencies": ["apis", "python", "software engineering"],
+      "tags": ["technical_skills"],
+      "outcome": "passed"
+    },
+    {
+      "evidence_id": "ev-ml-assessment",
+      "source_type": "assessment",
+      "title": "Machine learning fundamentals assessment",
+      "summary": "Scored 84% on supervised learning and evaluation metrics.",
+      "competencies": ["machine learning"],
+      "outcome": "passed"
+    },
+    {
+      "evidence_id": "ev-team-sprint",
+      "source_type": "meeting",
+      "title": "Sprint 2 standups",
+      "summary": "Coordinated the ingestion pipeline work with one teammate.",
+      "tags": ["teamwork_collaboration"]
+    }
+  ]
+}
