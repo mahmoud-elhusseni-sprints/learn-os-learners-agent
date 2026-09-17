@@ -23,6 +23,15 @@ Creates or selectively updates profile metrics from tagged memory cards, with
 Pydantic validation, evidence-first prompts and no database operations.
 See [contracts, architecture, examples and tests](docs/learner_profile_update.md).
 
+## Task 22: Career Guidance Agent
+
+Compares a learner's evidence against a target role (AI Engineer, Product
+Manager), separates demonstrated, partially demonstrated and unevidenced
+competencies, and returns grounded `course`, `task` or `project`
+recommendations. Gap detection is deterministic; the optional LLM only words
+recommendations and its output is schema-validated with a safe fallback.
+See [contracts, architecture, examples and tests](docs/career_guidance.md).
+
 ## Task 12: Employer Chat Interface MVP (Next.js & React)
 
 A minimalist, responsive conversational AI chat interface for the Employer Talent Intelligence
