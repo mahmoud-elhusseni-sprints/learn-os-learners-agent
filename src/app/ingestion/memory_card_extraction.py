@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import uuid
+from datetime import date, datetime
 from typing import Any, Dict, List, Sequence
 
 from src.app.core import ALLOWED_TAXONOMY_SET, TAXONOMY_TAG_DESCRIPTIONS
@@ -16,6 +17,21 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+
+def _normalize_for_json(value: Any) -> Any:
+    """Recursively convert datetime-like values to JSON-safe ISO strings."""
+    if isinstance(value, (datetime, date)):
+        return value.isoformat()
+    if isinstance(value, dict):
+        return {str(key): _normalize_for_json(val) for key, val in value.items()}
+    if isinstance(value, list):
+        return [_normalize_for_json(item) for item in value]
+    if isinstance(value, tuple):
+        return [_normalize_for_json(item) for item in value]
+    if isinstance(value, set):
+        return [_normalize_for_json(item) for item in sorted(value, key=str)]
+    return value
 
 
 def canonicalize_tags(
@@ -101,7 +117,8 @@ def extract_memory_cards_from_assessments(
                     associated_learner_ids=associated_learners,
                     source_datasource_id=source_datasource_id,
                 )
-                cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
+                dumped = card_obj.model_dump(exclude={"meeting_id"})
+                cards_by_id[card_id] = _normalize_for_json(dumped)
             else:
                 existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                 if learner_id and learner_id not in existing_learners:
@@ -155,7 +172,8 @@ def extract_memory_cards_from_assessments(
                         associated_learner_ids=associated_learners,
                         source_datasource_id=source_datasource_id,
                     )
-                    cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
+                    dumped = card_obj.model_dump(exclude={"meeting_id"})
+                    cards_by_id[card_id] = _normalize_for_json(dumped)
                 else:
                     existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                     if learner_id and learner_id not in existing_learners:
@@ -215,7 +233,9 @@ def extract_memory_cards_from_reviews(
                     associated_learner_ids=associated_learners,
                     source_datasource_id=source_datasource_id,
                 )
-                cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
+                cards_by_id[card_id] = _normalize_for_json(
+                    card_obj.model_dump(exclude={"meeting_id"})
+                )
             else:
                 existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                 if learner_id and learner_id not in existing_learners:
@@ -258,7 +278,8 @@ def extract_memory_cards_from_reviews(
                         associated_learner_ids=associated_learners,
                         source_datasource_id=source_datasource_id,
                     )
-                    cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
+                    dumped = card_obj.model_dump(exclude={"meeting_id"})
+                    cards_by_id[card_id] = _normalize_for_json(dumped)
                 else:
                     existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                     if learner_id and learner_id not in existing_learners:
@@ -291,7 +312,8 @@ def extract_memory_cards_from_reviews(
                         associated_learner_ids=associated_learners,
                         source_datasource_id=source_datasource_id,
                     )
-                    cards_by_id[card_id] = card_obj.model_dump(exclude={"meeting_id"})
+                    dumped = card_obj.model_dump(exclude={"meeting_id"})
+                    cards_by_id[card_id] = _normalize_for_json(dumped)
                 else:
                     existing_learners = cards_by_id[card_id]["associated_learner_ids"]
                     if learner_id and learner_id not in existing_learners:
@@ -350,7 +372,9 @@ def generate_memory_card_nodes(
     else:
         logger.warning(f"Rubrics file not found: {rubrics_file}")
 
-    unified_cards = merge_memory_cards(assessment_cards, review_cards)
+    unified_cards = _normalize_for_json(
+        merge_memory_cards(assessment_cards, review_cards)
+    )
 
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(unified_cards, f, indent=2, ensure_ascii=False)
