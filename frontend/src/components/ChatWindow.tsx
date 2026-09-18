@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, KeyboardEvent } from 'react';
+import Link from 'next/link';
 import { Message, Session } from '../types/chat';
 import { MessageItem } from './MessageItem';
 import {
@@ -8,19 +9,26 @@ import {
   Menu,
   Sparkles,
   Bot,
-  
   Shield,
   Lightbulb,
   ArrowUpRight,
   Loader2,
+  AlertCircle,
+  LogIn,
+  UserPlus,
+  RefreshCw,
 } from 'lucide-react';
 
 interface ChatWindowProps {
   activeSession: Session | null;
   messages: Message[];
   isLoading: boolean;
+  isFetchingMessages?: boolean;
+  error?: string | null;
+  onClearError?: () => void;
   onSendMessage: (prompt: string) => void;
   onToggleSidebar?: () => void;
+  onRetry?: () => void;
 }
 
 const STARTER_PROMPTS = [
@@ -50,8 +58,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   activeSession,
   messages,
   isLoading,
+  isFetchingMessages = false,
+  error,
+  onClearError,
   onSendMessage,
   onToggleSidebar,
+  onRetry,
 }) => {
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -91,7 +103,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
           {onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 md:hidden"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 md:hidden cursor-pointer"
               aria-label="Toggle navigation sidebar"
             >
               <Menu className="w-5 h-5" />
@@ -99,15 +111,20 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
           )}
 
           <div className="min-w-0">
-            <h2 className="text-sm font-semibold text-slate-100 truncate">
-              {activeSession ? activeSession.title : 'New Investigation'}
+            <h2 className="text-sm font-semibold text-slate-100 truncate flex items-center gap-2">
+              <span>{activeSession ? activeSession.title : 'New Investigation'}</span>
+              {activeSession && (
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
+                  ID: #{activeSession.id}
+                </span>
+              )}
             </h2>
             <p className="text-[11px] text-slate-400 truncate flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
               LearnerOS Talent Intelligence Agent
               {activeSession?.candidateTag && (
                 <>
-                  <span>•</span>
+                  <span>&bull;</span>
                   <span className="text-blue-400">{activeSession.candidateTag}</span>
                 </>
               )}
@@ -115,17 +132,69 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
           </div>
         </div>
 
+        {/* Header Right Actions */}
         <div className="flex items-center gap-2">
           <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-[11px] text-slate-400">
             <Shield className="w-3.5 h-3.5 text-blue-400" />
-            <span>Verified Evidence</span>
+            <span>REST API Verified</span>
+          </div>
+
+          <div className="flex items-center gap-1.5 ml-1">
+            <Link
+              href="/signin"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-850 border border-slate-800 transition-colors"
+            >
+              <LogIn className="w-3.5 h-3.5 text-blue-400" />
+              <span className="hidden md:inline">Sign In</span>
+            </Link>
+            <Link
+              href="/signup"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-white bg-blue-600 hover:bg-blue-500 transition-colors shadow-xs"
+            >
+              <UserPlus className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Sign Up</span>
+            </Link>
           </div>
         </div>
       </header>
 
+      {/* Global Error Banner */}
+      {error && (
+        <div className="px-4 py-2.5 bg-rose-950/60 border-b border-rose-500/40 text-rose-200 text-xs flex items-center justify-between animate-fade-in flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+            <span className="truncate">{error}</span>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {onRetry && (
+              <button
+                onClick={onRetry}
+                className="flex items-center gap-1 px-2 py-0.5 bg-rose-900/60 hover:bg-rose-900 rounded text-[11px] text-rose-200 cursor-pointer transition-colors"
+              >
+                <RefreshCw className="w-3 h-3" />
+                <span>Retry</span>
+              </button>
+            )}
+            {onClearError && (
+              <button
+                onClick={onClearError}
+                className="text-rose-400 hover:text-rose-200 text-xs px-1 cursor-pointer"
+              >
+                &times;
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Messages Scroll Area */}
       <main className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-6 custom-scrollbar">
-        {messages.length === 0 ? (
+        {isFetchingMessages ? (
+          <div className="h-full flex flex-col items-center justify-center text-slate-400 py-16 space-y-3">
+            <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+            <p className="text-xs">Loading conversation history from backend REST API...</p>
+          </div>
+        ) : messages.length === 0 ? (
           /* Empty / New Chat State */
           <div className="max-w-2xl mx-auto h-full flex flex-col justify-center items-center text-center py-8">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white mb-4 shadow-lg shadow-blue-500/20">
@@ -137,7 +206,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
             </h3>
             <p className="text-sm text-slate-400 max-w-md mb-8 leading-relaxed">
               Investigate candidate skills, cross-reference verified project evidence, and benchmark
-              architectural competency backed by learner memory cards.
+              architectural competency backed by learner memory cards and persisted backend sessions.
             </p>
 
             {/* Suggested Starter Prompts */}
@@ -175,7 +244,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
                 </div>
                 <div className="bg-slate-900 border border-slate-800 rounded-2xl rounded-tl-none p-3.5 text-slate-400 text-xs flex items-center gap-3">
                   <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
-                  <span>Agent is analyzing candidate evidence & memory cards...</span>
+                  <span>Agent is analyzing candidate evidence & syncing with backend API...</span>
                 </div>
               </div>
             )}
@@ -213,9 +282,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 
           <div className="flex items-center justify-between px-2 pt-2 text-[11px] text-slate-400 select-none">
             <span>
-              Press <kbd className="font-mono bg-slate-800 px-1 py-0.5 rounded text-[10px] text-slate-400">Enter ↵</kbd> to submit, <kbd className="font-mono bg-slate-800 px-1 py-0.5 rounded text-[10px] text-slate-400">Shift + Enter</kbd> for newline
+              Press <kbd className="font-mono bg-slate-800 px-1 py-0.5 rounded text-[10px] text-slate-400">Enter &crarr;</kbd> to submit, <kbd className="font-mono bg-slate-800 px-1 py-0.5 rounded text-[10px] text-slate-400">Shift + Enter</kbd> for newline
             </span>
-            <span className="hidden sm:inline">Mock Data Layer Active</span>
+            <span className="hidden sm:inline">REST API Persistence Active</span>
           </div>
         </form>
       </footer>

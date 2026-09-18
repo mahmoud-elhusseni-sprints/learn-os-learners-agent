@@ -4,7 +4,7 @@ directly from the models, so the documentation cannot drift from the code.
 
 Rewritten alongside the schema redesign: 3 node types instead of 26, so the
 group/kind machinery the old generator needed is gone. Nothing here is
-hand-maintained content; every fact is pulled from ``src/app/graph/schema.py``.
+hand-maintained content; every fact is pulled from ``src/app/schemas/graph_schema.py``.
 
 Run:  python3 scripts/generate_docs.py
 """
@@ -18,7 +18,7 @@ import typing
 from datetime import datetime as _dt
 from pathlib import Path
 
-import src.app.graph.schema as M
+import src.app.schemas.graph_schema as M
 
 OUT = Path(__file__).resolve().parent.parent / "docs" / "data" / "ONTOLOGY.md"
 
@@ -107,14 +107,14 @@ def build() -> str:
         f"across **{len(M.EDGE_SPECS)}** legal endpoint pairs",
         "",
         "> **Generated file.** Produced by `scripts/generate_docs.py` from",
-        "> `src/app/graph/schema.py`. Edit the models and regenerate; do not",
+        "> `src/app/schemas/graph_schema.py`. Edit the models and regenerate; do not",
         "> hand-edit this file.",
         "",
         "This is the v2, minimal ontology: 3 node types "
         "(`LearnerProfile`, `DataSource`, `MemoryCard`), rewritten from a "
         "26-node design per the mentor's rejection of the previous schema "
         "and the architecture specified in the mentor-authored MD file. "
-        "See the module docstring in `src/app/graph/schema.py` for the full "
+        "See the module docstring in `src/app/schemas/graph_schema.py` for the full "
         "before/after rationale, including what was removed and why.",
         "",
         "---",

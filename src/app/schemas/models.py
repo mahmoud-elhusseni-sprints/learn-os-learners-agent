@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Annotated, Any, Dict, List, Optional, Union
 from uuid import UUID
 
@@ -17,6 +17,62 @@ from pydantic import (
 
 NonEmpty = Annotated[str, StringConstraints(min_length=1, pattern=r"\S")]
 Confidence = Annotated[float, Field(ge=0.0, le=1.0, allow_inf_nan=False, strict=True)]
+
+
+class VisualizationFormat(StrEnum):
+    SVG = "svg"
+    HTML = "html"
+    PNG = "png"
+
+
+HexColor = Annotated[str, Field(pattern=r"^#[0-9A-Fa-f]{6}$")]
+
+
+class Theme(BaseModel):
+
+    model_config = ConfigDict(extra="forbid")
+
+    primary: HexColor = "#004EFF"
+    secondary: HexColor = "#33D7D1"
+    accent: HexColor = "#33D7D1"
+    background: HexColor = "#FBFBFD"
+    text: HexColor = "#004EFF"
+
+
+SPRINTS_DEFAULT_THEME = Theme()
+
+
+class VisualizationRequest(BaseModel):
+
+    model_config = ConfigDict(extra="forbid")
+
+    data: Any
+    title: str | None = None
+    description: str | None = None
+    visualization_type: str = "bar"
+    format: VisualizationFormat | None = None
+    theme: Theme | None = None
+    width: int = Field(800, ge=320, le=2400)
+    height: int = Field(480, ge=240, le=1600)
+
+
+class VisualizationResponse(BaseModel):
+
+    model_config = ConfigDict(
+        extra="forbid", ser_json_bytes="base64", val_json_bytes="base64"
+    )
+
+    success: bool
+    format: VisualizationFormat
+    content: str | None = None
+    asset: bytes | None = None
+    commentary: str = ""
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    error: str | None = None
+
+
+def get_theme(theme: Theme | None) -> Theme:
+    return theme if theme is not None else SPRINTS_DEFAULT_THEME
 
 
 @dataclass
@@ -225,6 +281,12 @@ class DataSource(BaseModel):
 __all__ = [
     "NonEmpty",
     "Confidence",
+    "VisualizationFormat",
+    "Theme",
+    "SPRINTS_DEFAULT_THEME",
+    "VisualizationRequest",
+    "VisualizationResponse",
+    "get_theme",
     "ToolResult",
     "ConversationState",
     "MemoryCard",

@@ -1,6 +1,6 @@
 """Visualizer Agent exports."""
 
-from src.app.models.visualizer import (
+from src.app.schemas.models import (
     SPRINTS_DEFAULT_THEME,
     Theme,
     VisualizationFormat,

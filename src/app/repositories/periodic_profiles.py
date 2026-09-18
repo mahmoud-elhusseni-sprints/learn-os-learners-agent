@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from typing import Any
 
-from src.app.models.models import LearnerProfile, MemoryCard
+from src.app.schemas.models import LearnerProfile, MemoryCard
 from src.app.services.periodic_profiles import Snapshot
 
 ACTIVE = "coalesce(l.is_active, coalesce(l.status, l.learner_status) = 'active', false)"

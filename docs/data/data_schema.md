@@ -17,14 +17,14 @@ document**. This is that document.
 > rejected that design and it was replaced in PR #4. **None of those classes
 > or helpers exist any more** — code written against the old document will
 > not import. Everything below reflects what is actually in
-> `src/app/graph/schema.py` today.
+> `src/app/schemas/graph_schema.py` today.
 
 ---
 
 ## 1. The rule
 
 **Do not hand-roll dictionaries, and do not define your own copies of these
-models.** Build objects with the models in `src/app/graph/schema.py`.
+models.** Build objects with the models in `src/app/schemas/graph_schema.py`.
 
 ```python
 # no — a typo here surfaces in Neo4j days later
@@ -36,7 +36,7 @@ class MyLearnerProfile(BaseModel): ...
 
 
 # yes — raises immediately, naming the field
-from src.app.graph.schema import LearnerProfile, LearnerRole
+from src.app.schemas.graph_schema import LearnerProfile, LearnerRole
 
 profile = LearnerProfile(...)
 ```
@@ -269,7 +269,7 @@ from datetime import datetime, timezone
 
 from src.app.graph.connections import get_driver
 from src.app.graph.constraints import initialize_schema
-from src.app.graph.schema import (
+from src.app.schemas.graph_schema import (
     DataSource,
     DataSourceName,
     Edge,

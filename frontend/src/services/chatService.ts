@@ -1,189 +1,337 @@
-import { Message, Session } from '../types/chat';
+import { Message, Session, BackendConversation, BackendMessage, ConnectionStatus } from '../types/chat';
+import { apiRequest, ApiError, API_BASE_URL } from './apiClient';
 import { INITIAL_MOCK_SESSIONS } from '../data/mockConversations';
 
-// In-memory store initialized from mockConversations data
-let sessionStore: Session[] = JSON.parse(JSON.stringify(INITIAL_MOCK_SESSIONS));
+/**
+ * Demo User ID configured via environment variable (defaults to 1).
+ * Avoids indiscriminate GET /users dumping personal data.
+ */
+export const DEMO_USER_ID = Number(process.env.NEXT_PUBLIC_DEMO_USER_ID || 1);
 
 /**
- * Generates an intelligent, domain-tailored simulated agent response
- * for Employer Talent Intelligence queries.
+ * Generates an intelligent, domain-tailored assistant response
+ * for Employer Talent Intelligence client-side previews.
+ * Clearly labeled as simulation — NOT persisted to backend database.
  */
-function generateSimulatedResponse(prompt: string): string {
+export function generateSimulatedResponse(prompt: string): string {
   const lower = prompt.toLowerCase();
 
-  if (lower.includes('python') || lower.includes('backend') || lower.includes('neo4j') || lower.includes('fastapi') || lower.includes('database')) {
-    return `### Talent Intelligence Analysis: Backend & Graph Database Competencies
+  const SIMULATION_HEADER = `> ⚠️ **Simulated Intelligence Preview**  
+> *This response is generated on the client for demonstration purposes. Live agent endpoint integration is pending.*
+
+`;
+
+  if (
+    lower.includes('python') ||
+    lower.includes('backend') ||
+    lower.includes('neo4j') ||
+    lower.includes('fastapi') ||
+    lower.includes('database') ||
+    lower.includes('tariq')
+  ) {
+    return `${SIMULATION_HEADER}### Talent Intelligence Analysis: Backend & Graph Database Competencies
 
 **Focus Area:** Backend Architecture & Graph DB Optimization  
 **Data Sources:** Synthesized Git PRs, peer reviews, and automated test coverage records
 
-#### Key Verified Findings
-- **High-Concurrency Patterns:** Candidates evaluated in this domain consistently demonstrate async task execution using FastAPI and background worker queues.
-- **Graph Schema Integrity:** Proven implementation of deterministic constraints, idempotent \`MERGE\` patterns, and batched loading to maintain low transaction lock contention.
-- **Observability:** Integration of OpenTelemetry tracing and structured JSON logging across microservices.
+#### Verified Competencies
+- **High-Concurrency Patterns:** Candidates in this domain demonstrate async task execution using FastAPI and background worker queues.
+- **Graph Schema Integrity:** Implementation of deterministic constraints, idempotent \`MERGE\` patterns, and batched loading.
+- **Observability:** Integration of OpenTelemetry tracing and structured JSON logging across services.
 
 #### Suggested Follow-Up
-Would you like me to generate a structured 45-minute technical interview scorecard focusing on high-throughput database synchronization?`;
+Would you like to generate a structured technical interview scorecard focusing on high-throughput database synchronization?`;
   }
 
-  if (lower.includes('alex') || lower.includes('chen') || lower.includes('ai') || lower.includes('agent') || lower.includes('llm') || lower.includes('mlops')) {
-    return `### Candidate Drilldown: Alex Chen (\`cand-8821\`)
+  if (
+    lower.includes('alex') ||
+    lower.includes('chen') ||
+    lower.includes('ai') ||
+    lower.includes('agent') ||
+    lower.includes('llm') ||
+    lower.includes('mlops')
+  ) {
+    return `${SIMULATION_HEADER}### Candidate Overview: Autonomous Agent Architectures
 
-**Current Assessment Tier:** Tier 1 (Strong Hire Recommendation)  
 **Core Domain:** Autonomous Agent Architecture & LLM Orchestration
 
 #### Candidate Highlights
-1. **Tool-Calling Pipelines:** Built multi-agent communication protocols with robust error fallback mechanisms.
-2. **Deterministic Evaluation:** Authored regression suites enforcing zero schema hallucinations on Pydantic output models.
-3. **Latency Optimization:** Implemented parallel subagent dispatch reducing end-to-end task turnaround by 42%.
+1. **Tool-Calling Pipelines:** Multi-agent communication protocols with error fallback mechanisms.
+2. **Deterministic Evaluation:** Regression suites enforcing schema validation on output models.
+3. **Latency Optimization:** Parallel subagent dispatch and asynchronous execution flows.
 
-**Recommendation:** Proceed directly to technical architecture evaluation; profile demonstrates high autonomy and production engineering maturity.`;
+**Next Steps:** Proceed with technical architecture review to evaluate production readiness.`;
   }
 
-  if (lower.includes('react') || lower.includes('frontend') || lower.includes('next.js') || lower.includes('ui') || lower.includes('design')) {
-    return `### Talent Profile: Modern Frontend Engineering
+  if (
+    lower.includes('react') ||
+    lower.includes('frontend') ||
+    lower.includes('next.js') ||
+    lower.includes('ui') ||
+    lower.includes('design')
+  ) {
+    return `${SIMULATION_HEADER}### Talent Profile: Modern Frontend Engineering
 
 **Domain Evaluation:** React 19, Next.js App Router, Tailwind CSS, & State Decoupling
 
 #### Verified Competencies
 - **Component Architecture:** Strict decoupling between presentation components, state containers, and data services.
 - **Performance:** Optimized Core Web Vitals (LCP, INP, CLS) with server-side rendering and responsive viewport optimization.
-- **Design System Fidelity:** High attention to typography, accessible color contrast, and fluid transitions.
+- **Design System Fidelity:** Attention to typography, accessible color contrast, and fluid transitions.
 
-Would you like to review sample component implementations or schedule a portfolio walkthrough?`;
+Would you like to review sample component implementations?`;
   }
 
-  if (lower.includes('compare') || lower.includes('vs') || lower.includes('benchmark') || lower.includes('candidate')) {
-    return `### Candidate Comparative Benchmark
+  if (
+    lower.includes('compare') ||
+    lower.includes('vs') ||
+    lower.includes('benchmark') ||
+    lower.includes('candidate')
+  ) {
+    return `${SIMULATION_HEADER}### Candidate Comparative Benchmark
 
-Based on verified skill cards and code review turnaround metrics:
+Based on verified skill cards and review turnaround metrics:
 
-| Dimension | Primary Candidate | Secondary Benchmark |
+| Dimension | Primary Profile | Benchmark Profile |
 | :--- | :--- | :--- |
 | **Code Review Depth** | Identifies subtle race conditions and memory leaks | Focuses heavily on code style and test coverage |
-| **System Resiliency** | High (implements automated retry loops & circuit breakers) | Moderate (standard error boundary handling) |
-| **Documentation Quality** | Comprehensive architecture RFCs & sequence diagrams | Concise READMEs & API specifications |
+| **System Resiliency** | High (automated retry loops & circuit breakers) | Moderate (standard error boundary handling) |
+| **Documentation Quality** | Architecture RFCs & sequence diagrams | Concise READMEs & API specifications |
 
-**Key Takeaway:** The primary candidate demonstrates higher seniority in risk mitigation and fault-tolerant system design.`;
+**Summary:** The primary profile demonstrates strong risk mitigation and fault-tolerant system design.`;
   }
 
   // Default intelligent assistant response
-  return `### Talent Intelligence Synthesis
+  return `${SIMULATION_HEADER}### Talent Intelligence Synthesis
 
 Thank you for your prompt: *"_${prompt.trim()}_"*
 
-I have cross-referenced your query against our verified candidate graph and talent intelligence records:
+Cross-referencing against learner graph records:
 
-1. **Skill Verification:** Analyzed current learner memory cards, code contribution artifacts, and architectural review logs.
-2. **Alignment Score:** Candidate profiles in this category exhibit strong technical grounding and self-directed problem solving.
-3. **Actionable Recommendation:**
+1. **Skill Verification:** Analyzed learner memory cards, code contribution artifacts, and architectural review logs.
+2. **Alignment:** Profiles in this category exhibit strong technical grounding and self-directed problem solving.
+3. **Recommendation:**
    - Review relevant evidence artifacts linked in the candidate dossier.
-   - Use targeted behavioral questions regarding how they handled edge cases in previous sprint deliverables.
-
-Let me know if you would like me to drill into specific candidate IDs, project evidence, or generate targeted interview questions!`;
+   - Use targeted behavioral questions regarding how they handled edge cases in previous sprint deliverables.`;
 }
 
 /**
- * Service Layer for Talent Intelligence Chat Operations.
- * Fully decoupled from UI layer to allow swapping with live backend API.
+ * Maps a raw backend message object to frontend Message interface.
+ * Preserves canonical data without inventing fake candidate IDs or match scores.
+ */
+export function mapBackendMessage(msg: BackendMessage): Message {
+  const role =
+    msg.sender_role === 'assistant'
+      ? 'assistant'
+      : msg.sender_role === 'system'
+      ? 'system'
+      : 'user';
+
+  const timestamp =
+    msg.timestamp ||
+    msg.created_at ||
+    new Date().toISOString();
+
+  return {
+    id: String(msg.id),
+    role,
+    content: msg.content,
+    timestamp,
+  };
+}
+
+/**
+ * Main Service Layer for Talent Intelligence Chat Operations.
+ * Communicates directly with backend REST endpoints:
+ * - GET/POST /users/{user_id}/conversations
+ * - GET/POST /conversations/{conversation_id}/messages
  */
 export const ChatService = {
   /**
-   * Fetch all active sessions.
+   * Checks current connection status with the backend REST API.
    */
-  async getSessions(): Promise<Session[]> {
-    // Simulate brief network latency
-    await new Promise((resolve) => setTimeout(resolve, 80));
-    return JSON.parse(JSON.stringify(sessionStore));
+  async checkConnection(): Promise<ConnectionStatus> {
+    try {
+      await apiRequest<BackendConversation[]>(`/users/${DEMO_USER_ID}/conversations`);
+      return {
+        isLiveApi: true,
+        serverUrl: API_BASE_URL,
+        userId: DEMO_USER_ID,
+        userName: 'Demo Employer',
+        error: null,
+      };
+    } catch (err: unknown) {
+      const errorMsg =
+        err instanceof ApiError ? err.message : String(err);
+      return {
+        isLiveApi: false,
+        serverUrl: API_BASE_URL,
+        userId: DEMO_USER_ID,
+        userName: 'Demo Employer',
+        error: errorMsg,
+      };
+    }
   },
 
   /**
-   * Fetch a session by its ID.
+   * Fetch all conversation sessions for a given user from the backend REST API.
+   * Single-request operation: Does NOT issue N individual message requests.
+   * Endpoint: GET /users/{user_id}/conversations
+   */
+  async getSessions(userId?: number): Promise<Session[]> {
+    const effectiveUserId = userId || DEMO_USER_ID;
+
+    const rawConversations = await apiRequest<BackendConversation[]>(
+      `/users/${effectiveUserId}/conversations`
+    );
+
+    if (!Array.isArray(rawConversations) || rawConversations.length === 0) {
+      return [];
+    }
+
+    // Sort by updated_at descending (latest first)
+    const sortedConversations = [...rawConversations].sort((a, b) => {
+      const dateA = new Date(a.updated_at || a.created_at).getTime();
+      const dateB = new Date(b.updated_at || b.created_at).getTime();
+      return dateB - dateA;
+    });
+
+    // Efficient O(1) mapping without N+1 message requests
+    return sortedConversations.map((conv) => ({
+      id: String(conv.id),
+      title: `Investigation #${conv.id}`,
+      createdAt: conv.created_at,
+      updatedAt: conv.updated_at || conv.created_at,
+      preview: `Conversation #${conv.id}`,
+      messages: [],
+    }));
+  },
+
+  /**
+   * Fetch all messages for a specific conversation session on demand.
+   * Endpoint: GET /conversations/{conversation_id}/messages
+   */
+  async getMessages(conversationId: string | number): Promise<Message[]> {
+    const rawMessages = await apiRequest<BackendMessage[]>(
+      `/conversations/${conversationId}/messages`
+    );
+    return Array.isArray(rawMessages) ? rawMessages.map(mapBackendMessage) : [];
+  },
+
+  /**
+   * Fetch a single session by its ID with all hydrated messages.
    */
   async getSessionById(sessionId: string): Promise<Session | null> {
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    const found = sessionStore.find((s) => s.id === sessionId);
-    return found ? JSON.parse(JSON.stringify(found)) : null;
+    try {
+      const messages = await this.getMessages(sessionId);
+      const lastMsg = messages[messages.length - 1];
+
+      return {
+        id: sessionId,
+        title: `Investigation #${sessionId}`,
+        createdAt: messages[0]?.timestamp || new Date().toISOString(),
+        updatedAt: lastMsg?.timestamp || new Date().toISOString(),
+        preview: lastMsg ? lastMsg.content.slice(0, 70) : 'No messages',
+        messages,
+      };
+    } catch (err) {
+      console.error(`Failed to fetch session #${sessionId}:`, err);
+      return null;
+    }
   },
 
   /**
-   * Create a new chat session.
+   * Creates a new conversation session via backend REST API:
+   * Endpoint: POST /users/{user_id}/conversations
    */
-  async createSession(title?: string, initialPrompt?: string): Promise<Session> {
-    await new Promise((resolve) => setTimeout(resolve, 80));
-    const now = new Date().toISOString();
-    const id = `sess-${Date.now()}`;
-    const generatedTitle = title || (initialPrompt ? initialPrompt.slice(0, 36) + (initialPrompt.length > 36 ? '...' : '') : 'New Investigation');
+  async createSession(
+    userId?: number,
+    initialPrompt?: string
+  ): Promise<Session> {
+    const effectiveUserId = userId || DEMO_USER_ID;
 
-    const newSession: Session = {
-      id,
-      title: generatedTitle,
-      createdAt: now,
-      updatedAt: now,
-      preview: initialPrompt || 'New candidate investigation session...',
+    const rawConversation = await apiRequest<BackendConversation>(
+      `/users/${effectiveUserId}/conversations`,
+      {
+        method: 'POST',
+        body: JSON.stringify({}),
+      }
+    );
+
+    const sessionId = String(rawConversation.id);
+    const initialTitle = initialPrompt
+      ? initialPrompt.slice(0, 36) + (initialPrompt.length > 36 ? '...' : '')
+      : `Investigation #${rawConversation.id}`;
+
+    return {
+      id: sessionId,
+      title: initialTitle,
+      createdAt: rawConversation.created_at,
+      updatedAt: rawConversation.updated_at || rawConversation.created_at,
+      preview: initialPrompt || `Investigation #${rawConversation.id}`,
       messages: [],
     };
-
-    sessionStore.unshift(newSession);
-    return JSON.parse(JSON.stringify(newSession));
   },
 
   /**
-   * Dispatches a user prompt to a session, generates a simulated assistant response,
-   * updates the in-memory session store, and returns both messages.
+   * Dispatches user prompt to backend REST API.
+   * Generates a clearly labeled simulated assistant response in CLIENT memory only.
+   * Does NOT save simulated responses to the database.
    */
-  async sendMessage(sessionId: string, prompt: string): Promise<{ userMessage: Message; assistantResponse: Message; updatedSession: Session }> {
-    // 400ms simulated LLM thinking delay for realistic UX
-    await new Promise((resolve) => setTimeout(resolve, 400));
+  async sendMessage(
+    sessionId: string,
+    prompt: string
+  ): Promise<{
+    userMessage: Message;
+    assistantResponse: Message;
+    updatedSession: Session;
+  }> {
+    const convId = Number(sessionId);
 
-    let session = sessionStore.find((s) => s.id === sessionId);
+    // 1. Persist User Message to Backend REST API
+    const rawUserMsg = await apiRequest<BackendMessage>(
+      `/conversations/${convId}/messages`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          sender_role: 'user',
+          content: prompt.trim(),
+        }),
+      }
+    );
+    const userMessage = mapBackendMessage(rawUserMsg);
 
-    if (!session) {
-      // Create session on the fly if not found
-      session = await ChatService.createSession(undefined, prompt);
-    }
-
-    const timestamp = new Date().toISOString();
-    const userMessage: Message = {
-      id: `msg-${Date.now()}-user`,
-      role: 'user',
-      content: prompt.trim(),
-      timestamp,
-    };
-
-    const assistantContent = generateSimulatedResponse(prompt);
+    // 2. Generate simulated assistant response in CLIENT memory only
+    // Kept client-only with isSimulated flag per review instructions
+    const assistantText = generateSimulatedResponse(prompt);
     const assistantResponse: Message = {
-      id: `msg-${Date.now()}-assistant`,
+      id: `sim-${Date.now()}`,
       role: 'assistant',
-      content: assistantContent,
+      content: assistantText,
       timestamp: new Date().toISOString(),
-      metadata: {
-        candidateId: 'cand-' + Math.floor(100 + Math.random() * 900),
-        matchScore: 90 + Math.floor(Math.random() * 9),
-      },
+      isSimulated: true,
     };
 
-    session.messages.push(userMessage, assistantResponse);
-    session.updatedAt = assistantResponse.timestamp;
-    session.preview = prompt.trim();
-
-    // If the session was default-titled, give it a title from the prompt
-    if (session.title === 'New Investigation' || session.title.startsWith('New Chat')) {
-      session.title = prompt.slice(0, 36).trim() + (prompt.length > 36 ? '...' : '');
-    }
+    const updatedSession: Session = {
+      id: sessionId,
+      title: prompt.slice(0, 36).trim() + (prompt.length > 36 ? '...' : ''),
+      createdAt: userMessage.timestamp,
+      updatedAt: assistantResponse.timestamp,
+      preview: prompt.trim().slice(0, 70),
+      messages: [userMessage, assistantResponse],
+    };
 
     return {
       userMessage,
       assistantResponse,
-      updatedSession: JSON.parse(JSON.stringify(session)),
+      updatedSession,
     };
   },
 
   /**
-   * Clear or reset all sessions back to initial mock state (for testing / demo reset).
+   * Offline fallback helper when backend server is not running or during local tests.
    */
-  async resetSessions(): Promise<Session[]> {
-    sessionStore = JSON.parse(JSON.stringify(INITIAL_MOCK_SESSIONS));
-    return JSON.parse(JSON.stringify(sessionStore));
+  getMockSessions(): Session[] {
+    return JSON.parse(JSON.stringify(INITIAL_MOCK_SESSIONS));
   },
 };

@@ -13,7 +13,7 @@ import urllib.request
 from typing import Any
 
 from src.app.core.config import GOOGLE_API_KEY, GOOGLE_IMAGE_MODEL
-from src.app.models.visualizer import (
+from src.app.schemas.models import (
     Theme,
     VisualizationFormat,
     VisualizationResponse,

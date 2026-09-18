@@ -79,7 +79,7 @@ Data lives in the `neo4j_data` volume. `docker compose down` keeps it;
 ### 2. Initialize the schema
 
 Constraints and indexes are in `db/schema_init.cypher` (generated from
-`src/app/graph/schema.py` by `scripts/generate_constraints.py` — do not
+`src/app/schemas/graph_schema.py` by `scripts/generate_constraints.py` — do not
 hand-edit). Applying them is idempotent: every statement is
 `IF NOT EXISTS`, so re-running is a no-op rather than an error.
 
@@ -370,3 +370,8 @@ The README should remain a high-level guide rather than duplicating the detailed
 
 Weekly Celery Beat updates, isolated per learner, with Redis and atomic Neo4j
 profile/checkpoint persistence. See [setup, contracts and tests](docs/periodic_profile_updates.md).
+
+## Task 19: Agent-to-Agent Visual Delegation
+
+The employer agent can return markdown plus evidence-backed visual artifacts
+with timeout/error fallback. See [contracts and usage](docs/agent_visualizer_delegation.md).

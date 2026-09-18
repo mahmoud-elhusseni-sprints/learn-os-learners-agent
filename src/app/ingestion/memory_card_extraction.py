@@ -10,7 +10,7 @@ from src.app.core.config import (
     MEMORY_CARDS_OUTPUT_FILE,
     RUBRICS_OUTPUT_FILE,
 )
-from src.app.models.models import DataSource, MemoryCard
+from src.app.schemas.models import DataSource, MemoryCard
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"

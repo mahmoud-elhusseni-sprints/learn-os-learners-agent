@@ -3,7 +3,7 @@
 from importlib import import_module
 from typing import Any
 
-from src.app.models.models import (
+from src.app.schemas.models import (
     AssessmentAnswer,
     AssessmentPayload,
     Confidence,

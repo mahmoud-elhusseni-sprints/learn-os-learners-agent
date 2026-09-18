@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any, Protocol
 
-from src.app.models.models import LearnerProfile, MemoryCard, ProfileUpdateInput
+from src.app.schemas.models import LearnerProfile, MemoryCard, ProfileUpdateInput
 
 
 @dataclass

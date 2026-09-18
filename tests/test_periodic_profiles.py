@@ -9,7 +9,12 @@ from zoneinfo import ZoneInfo
 import pytest
 
 from src.app.agents.learner_profile_update.agent import LearnerProfileUpdateAgent
-from src.app.models.models import LearnerProfile, MemoryCard, MetricDraft, ProfileMetric
+from src.app.schemas.models import (
+    LearnerProfile,
+    MemoryCard,
+    MetricDraft,
+    ProfileMetric,
+)
 from src.app.services.periodic_profiles import Snapshot, update_learner
 from src.app.workers import profile_updates as tasks
 from src.app.workers.celery_app import app

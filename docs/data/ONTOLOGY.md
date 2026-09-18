@@ -6,10 +6,10 @@
 - relationship types: **3** across **3** legal endpoint pairs
 
 > **Generated file.** Produced by `scripts/generate_docs.py` from
-> `src/app/graph/schema.py`. Edit the models and regenerate; do not
+> `src/app/schemas/graph_schema.py`. Edit the models and regenerate; do not
 > hand-edit this file.
 
-This is the v2, minimal ontology: 3 node types (`LearnerProfile`, `DataSource`, `MemoryCard`), rewritten from a 26-node design per the mentor's rejection of the previous schema and the architecture specified in the mentor-authored MD file. See the module docstring in `src/app/graph/schema.py` for the full before/after rationale, including what was removed and why.
+This is the v2, minimal ontology: 3 node types (`LearnerProfile`, `DataSource`, `MemoryCard`), rewritten from a 26-node design per the mentor's rejection of the previous schema and the architecture specified in the mentor-authored MD file. See the module docstring in `src/app/schemas/graph_schema.py` for the full before/after rationale, including what was removed and why.
 
 ---
 

@@ -7,11 +7,11 @@ from uuid import uuid4
 
 import pytest
 
-from src.app.models.models import LearnerProfile, MetricDraft
 from src.app.repositories.periodic_profiles import (
     ConcurrentProfileUpdate,
     Neo4jProfileStorage,
 )
+from src.app.schemas.models import LearnerProfile, MetricDraft
 from src.app.services.periodic_profiles import Snapshot
 
 
