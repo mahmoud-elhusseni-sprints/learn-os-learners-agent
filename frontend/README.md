@@ -100,14 +100,47 @@ To run ESLint:
 npm run lint
 ```
 
+```
+
+To run ESLint:
+
+```bash
+npm run lint
+```
+
+To run the automated verification test suite:
+
+```bash
+npm test
+```
+
 ---
 
-## Decoupled Architecture & Live API Integration
+## Environment Variables
 
-The application follows strict architectural separation:
+The frontend is configured via environment variables with sensible defaults:
 
-- **Presentation (`src/components/`):** React components are pure view layers receiving data and firing callbacks.
-- **State Management (`src/app/page.tsx`):** Coordinates sessions and message threads without embedding mock data logic.
-- **Service Layer (`src/services/chatService.ts`):** Exposes `getSessions()`, `getSessionById()`, `createSession()`, and `sendMessage()`.
+| Variable | Description | Default |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_API_URL` | Base URL of the LearnerOS FastAPI backend REST service | `http://localhost:8010` |
+| `NEXT_PUBLIC_DEMO_USER_ID` | Fallback user ID for unauthenticated / offline evaluation previews | `1` |
 
-When the backend conversation endpoints (e.g. FastAPI / Neo4j agent endpoints) are ready, simply replace the internal logic in `chatService.ts` with standard `fetch()` or `axios` HTTP calls matching the same TypeScript interface contracts.
+To override, create `.env.local` in `frontend/`:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8010
+NEXT_PUBLIC_DEMO_USER_ID=1
+```
+
+---
+
+## Authentication & Live Agent Chat Integration (Task 21)
+
+The frontend integrates client authentication and connects the chat interface to live backend services:
+
+- **Auth Service (`src/services/authService.ts`):** Decoupled service managing `POST /auth/signup` and `POST /auth/signin`.
+- **JWT State Management (`src/contexts/AuthContext.tsx`):** Centralized `AuthProvider` that persists access tokens across sessions (`sessionStorage` / `localStorage`), decodes user credentials, and triggers automatic sign-out on HTTP 401 Unauthorized responses.
+- **Route Protection (`src/middleware.ts` & client guards):** Edge middleware and client-side guards redirect unauthenticated visits to `/` to `/signin`, and redirect authenticated visits to `/signin` and `/signup` back to `/`.
+- **User-Scoped Conversations:** The sidebar and chat window query `GET /users/{user_id}/conversations` and `POST /users/{user_id}/conversations` using the authenticated user's ID with `Authorization: Bearer <access_token>` headers.
+- **Live Agent Message Dispatch:** Dispatches prompts to `POST /conversations/{conversation_id}/chat` with Bearer authentication, seamlessly falling back to `POST /conversations/{conversation_id}/messages` and labeled previews if the live agent is offline.
+- **Visual Artifact Rendering (`src/components/VisualArtifactRenderer.tsx`):** Renders SVGs, image cards, and visual containers returned in agent payloads cleanly alongside text responses, featuring interactive SVG preview/source toggling, responsive auto-scaling, and clipboard copy.
+

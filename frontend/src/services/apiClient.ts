@@ -120,3 +120,31 @@ export async function apiRequest<T>(
     );
   }
 }
+
+/**
+ * Convenience wrapper that injects a Bearer Authorization header.
+ * Use for all endpoints that require JWT authentication
+ * (currently: GET /users/{user_id}/conversations).
+ *
+ * Per backend spec (Task 17), the token is sent in the HTTP header:
+ *   Authorization: Bearer <access_token>
+ * and never as a query parameter.
+ *
+ * @param endpoint   API path (e.g. '/users/1/conversations')
+ * @param token      JWT access_token from AuthContext
+ * @param options    Standard RequestInit options (method, body, etc.)
+ */
+export async function authenticatedRequest<T>(
+  endpoint: string,
+  token: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const existingHeaders = (options.headers as Record<string, string>) || {};
+  return apiRequest<T>(endpoint, {
+    ...options,
+    headers: {
+      ...existingHeaders,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}

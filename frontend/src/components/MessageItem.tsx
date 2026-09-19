@@ -1,8 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Message } from '../types/chat';
+import { Message, VisualArtifact } from '../types/chat';
 import { User, Sparkles, Copy, Check, ShieldCheck, Tag } from 'lucide-react';
+import {
+  VisualArtifactRenderer,
+  extractArtifactsFromContent,
+} from './VisualArtifactRenderer';
 
 interface MessageItemProps {
   message: Message;
@@ -140,6 +144,16 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
     });
   };
 
+  // Extract any visual artifacts (SVGs, image cards, containers) embedded in message content
+  const { cleanContent, extractedArtifacts } = !isUser
+    ? extractArtifactsFromContent(message.content)
+    : { cleanContent: message.content, extractedArtifacts: [] };
+
+  const allArtifacts: VisualArtifact[] = [
+    ...(message.artifacts || []),
+    ...extractedArtifacts,
+  ];
+
   return (
     <div
       className={`flex w-full gap-3 transition-opacity duration-200 ${
@@ -198,7 +212,16 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
         {isUser ? (
           <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
         ) : (
-          renderFormattedContent(message.content)
+          renderFormattedContent(cleanContent || message.content)
+        )}
+
+        {/* Visual Artifacts */}
+        {!isUser && allArtifacts.length > 0 && (
+          <div className="mt-3 pt-2 border-t border-slate-800/80 space-y-2">
+            {allArtifacts.map((artifact, aIdx) => (
+              <VisualArtifactRenderer key={artifact.id || aIdx} artifact={artifact} />
+            ))}
+          </div>
         )}
 
         {/* Metadata Badges if present */}

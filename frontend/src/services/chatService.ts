@@ -1,10 +1,11 @@
 import { Message, Session, BackendConversation, BackendMessage, ConnectionStatus } from '../types/chat';
-import { apiRequest, ApiError, API_BASE_URL } from './apiClient';
+import { apiRequest, authenticatedRequest, ApiError, API_BASE_URL } from './apiClient';
 import { INITIAL_MOCK_SESSIONS } from '../data/mockConversations';
 
 /**
- * Demo User ID configured via environment variable (defaults to 1).
- * Avoids indiscriminate GET /users dumping personal data.
+ * Fallback demo user ID used only when running without authentication
+ * (e.g. in offline / mock mode). Authenticated flows use the user ID
+ * returned by the backend after sign-in.
  */
 export const DEMO_USER_ID = Number(process.env.NEXT_PUBLIC_DEMO_USER_ID || 1);
 
@@ -149,15 +150,24 @@ export function mapBackendMessage(msg: BackendMessage): Message {
 export const ChatService = {
   /**
    * Checks current connection status with the backend REST API.
+   * Requires a valid JWT token since GET /users/{id}/conversations is protected.
    */
-  async checkConnection(): Promise<ConnectionStatus> {
+  async checkConnection(userId?: number, token?: string): Promise<ConnectionStatus> {
+    const effectiveUserId = userId || DEMO_USER_ID;
     try {
-      await apiRequest<BackendConversation[]>(`/users/${DEMO_USER_ID}/conversations`);
+      if (token) {
+        await authenticatedRequest<BackendConversation[]>(
+          `/users/${effectiveUserId}/conversations`,
+          token
+        );
+      } else {
+        await apiRequest<BackendConversation[]>(`/users/${effectiveUserId}/conversations`);
+      }
       return {
         isLiveApi: true,
         serverUrl: API_BASE_URL,
-        userId: DEMO_USER_ID,
-        userName: 'Demo Employer',
+        userId: effectiveUserId,
+        userName: 'Authenticated Employer',
         error: null,
       };
     } catch (err: unknown) {
@@ -166,7 +176,7 @@ export const ChatService = {
       return {
         isLiveApi: false,
         serverUrl: API_BASE_URL,
-        userId: DEMO_USER_ID,
+        userId: effectiveUserId,
         userName: 'Demo Employer',
         error: errorMsg,
       };
@@ -177,13 +187,26 @@ export const ChatService = {
    * Fetch all conversation sessions for a given user from the backend REST API.
    * Single-request operation: Does NOT issue N individual message requests.
    * Endpoint: GET /users/{user_id}/conversations
+   *
+   * This endpoint is JWT-protected. Pass the access_token from AuthContext.
    */
-  async getSessions(userId?: number): Promise<Session[]> {
+  async getSessions(userId?: number, token?: string): Promise<Session[]> {
     const effectiveUserId = userId || DEMO_USER_ID;
 
-    const rawConversations = await apiRequest<BackendConversation[]>(
-      `/users/${effectiveUserId}/conversations`
-    );
+    let rawConversations: BackendConversation[];
+
+    if (token) {
+      // Authenticated request — sends Authorization: Bearer <token>
+      rawConversations = await authenticatedRequest<BackendConversation[]>(
+        `/users/${effectiveUserId}/conversations`,
+        token
+      );
+    } else {
+      // Unauthenticated fallback (offline / demo mode)
+      rawConversations = await apiRequest<BackendConversation[]>(
+        `/users/${effectiveUserId}/conversations`
+      );
+    }
 
     if (!Array.isArray(rawConversations) || rawConversations.length === 0) {
       return [];
@@ -210,20 +233,35 @@ export const ChatService = {
   /**
    * Fetch all messages for a specific conversation session on demand.
    * Endpoint: GET /conversations/{conversation_id}/messages
+   * Supports optional JWT authentication header.
    */
-  async getMessages(conversationId: string | number): Promise<Message[]> {
-    const rawMessages = await apiRequest<BackendMessage[]>(
-      `/conversations/${conversationId}/messages`
-    );
+  async getMessages(
+    conversationId: string | number,
+    token?: string
+  ): Promise<Message[]> {
+    let rawMessages: BackendMessage[];
+    if (token) {
+      rawMessages = await authenticatedRequest<BackendMessage[]>(
+        `/conversations/${conversationId}/messages`,
+        token
+      );
+    } else {
+      rawMessages = await apiRequest<BackendMessage[]>(
+        `/conversations/${conversationId}/messages`
+      );
+    }
     return Array.isArray(rawMessages) ? rawMessages.map(mapBackendMessage) : [];
   },
 
   /**
    * Fetch a single session by its ID with all hydrated messages.
    */
-  async getSessionById(sessionId: string): Promise<Session | null> {
+  async getSessionById(
+    sessionId: string,
+    token?: string
+  ): Promise<Session | null> {
     try {
-      const messages = await this.getMessages(sessionId);
+      const messages = await this.getMessages(sessionId, token);
       const lastMsg = messages[messages.length - 1];
 
       return {
@@ -241,26 +279,59 @@ export const ChatService = {
   },
 
   /**
-   * Creates a new conversation session via backend REST API:
+   * Creates a new conversation session via backend REST API.
    * Endpoint: POST /users/{user_id}/conversations
+   *
+   * Supports both:
+   * - createSession(userId, prompt)
+   * - createSession(userId, token, prompt)
    */
   async createSession(
     userId?: number,
+    tokenOrPrompt?: string,
     initialPrompt?: string
   ): Promise<Session> {
     const effectiveUserId = userId || DEMO_USER_ID;
 
-    const rawConversation = await apiRequest<BackendConversation>(
-      `/users/${effectiveUserId}/conversations`,
-      {
-        method: 'POST',
-        body: JSON.stringify({}),
+    let token: string | undefined;
+    let prompt: string | undefined;
+
+    if (initialPrompt !== undefined) {
+      token = tokenOrPrompt;
+      prompt = initialPrompt;
+    } else {
+      if (tokenOrPrompt && tokenOrPrompt.startsWith('eyJ')) {
+        token = tokenOrPrompt;
+        prompt = undefined;
+      } else {
+        token = undefined;
+        prompt = tokenOrPrompt;
       }
-    );
+    }
+
+    let rawConversation: BackendConversation;
+    if (token) {
+      rawConversation = await authenticatedRequest<BackendConversation>(
+        `/users/${effectiveUserId}/conversations`,
+        token,
+        {
+          method: 'POST',
+          body: JSON.stringify({}),
+        }
+      );
+    } else {
+      rawConversation = await apiRequest<BackendConversation>(
+        `/users/${effectiveUserId}/conversations`,
+        {
+          method: 'POST',
+          body: JSON.stringify({}),
+        }
+      );
+    }
 
     const sessionId = String(rawConversation.id);
-    const initialTitle = initialPrompt
-      ? initialPrompt.slice(0, 36) + (initialPrompt.length > 36 ? '...' : '')
+    const initialTitle = prompt
+      ? prompt.slice(0, 36) + (prompt.length > 36 ? '...' : '')
       : `Investigation #${rawConversation.id}`;
 
     return {
@@ -268,41 +339,124 @@ export const ChatService = {
       title: initialTitle,
       createdAt: rawConversation.created_at,
       updatedAt: rawConversation.updated_at || rawConversation.created_at,
-      preview: initialPrompt || `Investigation #${rawConversation.id}`,
+      preview: prompt || `Investigation #${rawConversation.id}`,
       messages: [],
     };
   },
 
   /**
    * Dispatches user prompt to backend REST API.
-   * Generates a clearly labeled simulated assistant response in CLIENT memory only.
-   * Does NOT save simulated responses to the database.
+   * Priority:
+   * 1. If authenticated with token, calls Mariam's live agent chat endpoint:
+   *    POST /conversations/{conversation_id}/chat
+   *    Payload: { content: prompt, learner_name_or_id?: string }
+   *    Bearer Authorization header included.
+   * 2. If /chat returns 404 (endpoint not present in current backend build) or no token:
+   *    Falls back to POST /conversations/{conversation_id}/messages to record the
+   *    user message and generates a labeled client-side preview for the assistant.
    */
   async sendMessage(
     sessionId: string,
-    prompt: string
+    prompt: string,
+    token?: string,
+    learnerNameOrId?: string
   ): Promise<{
     userMessage: Message;
     assistantResponse: Message;
     updatedSession: Session;
   }> {
     const convId = Number(sessionId);
+    const now = new Date().toISOString();
 
-    // 1. Persist User Message to Backend REST API
-    const rawUserMsg = await apiRequest<BackendMessage>(
-      `/conversations/${convId}/messages`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          sender_role: 'user',
-          content: prompt.trim(),
-        }),
+    const localUserMessage: Message = {
+      id: `msg-${Date.now()}-user`,
+      role: 'user',
+      content: prompt.trim(),
+      timestamp: now,
+    };
+
+    // Attempt 1: Call live backend agent chat endpoint (Task 20)
+    if (token) {
+      try {
+        const agentResponseMsg = await authenticatedRequest<BackendMessage>(
+          `/conversations/${convId}/chat`,
+          token,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              content: prompt.trim(),
+              ...(learnerNameOrId ? { learner_name_or_id: learnerNameOrId } : {}),
+            }),
+          }
+        );
+
+        const assistantResponse = mapBackendMessage(agentResponseMsg);
+        assistantResponse.isSimulated = false;
+
+        const updatedSession: Session = {
+          id: sessionId,
+          title: prompt.slice(0, 36).trim() + (prompt.length > 36 ? '...' : ''),
+          createdAt: localUserMessage.timestamp,
+          updatedAt: assistantResponse.timestamp,
+          preview: prompt.trim().slice(0, 70),
+          messages: [localUserMessage, assistantResponse],
+        };
+
+        return {
+          userMessage: localUserMessage,
+          assistantResponse,
+          updatedSession,
+        };
+      } catch (err: unknown) {
+        // If it's a 404, the backend build doesn't have /chat yet; fall through to /messages fallback.
+        // For 401 Unauthorized, rethrow immediately to trigger auth redirection.
+        if (err instanceof ApiError && err.status === 401) {
+          throw err;
+        }
+        if (!(err instanceof ApiError && err.status === 404)) {
+          // If it's another error (502 bad gateway, 504 timeout, etc.), rethrow
+          throw err;
+        }
+        console.warn(
+          'Live agent /chat endpoint returned 404; falling back to standard /messages endpoint.'
+        );
       }
-    );
-    const userMessage = mapBackendMessage(rawUserMsg);
+    }
 
-    // 2. Generate simulated assistant response in CLIENT memory only
-    // Kept client-only with isSimulated flag per review instructions
+    // Attempt 2 / Fallback: Persist user message to POST /conversations/{id}/messages
+    let userMessage = localUserMessage;
+    try {
+      const rawUserMsg = token
+        ? await authenticatedRequest<BackendMessage>(
+            `/conversations/${convId}/messages`,
+            token,
+            {
+              method: 'POST',
+              body: JSON.stringify({
+                sender_role: 'user',
+                content: prompt.trim(),
+              }),
+            }
+          )
+        : await apiRequest<BackendMessage>(
+            `/conversations/${convId}/messages`,
+            {
+              method: 'POST',
+              body: JSON.stringify({
+                sender_role: 'user',
+                content: prompt.trim(),
+              }),
+            }
+          );
+      userMessage = mapBackendMessage(rawUserMsg);
+    } catch (err: unknown) {
+      if (err instanceof ApiError && err.status === 401) {
+        throw err;
+      }
+      console.warn('Failed to persist user message to /messages, using local copy:', err);
+    }
+
+    // Generate simulated assistant preview
     const assistantText = generateSimulatedResponse(prompt);
     const assistantResponse: Message = {
       id: `sim-${Date.now()}`,
