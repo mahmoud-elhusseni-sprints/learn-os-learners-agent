@@ -41,7 +41,7 @@ const PROTECTED_PATHS = ['/'];
 /** Routes that redirect authenticated users away (already signed in) */
 const AUTH_ONLY_PATHS = ['/signin', '/signup'];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasAuthCookie = Boolean(request.cookies.get(AUTH_COOKIE)?.value);
 

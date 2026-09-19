@@ -97,7 +97,16 @@ export default function SignInPage() {
           }
         }
       } catch {
-        // Fallback: userId 0 handled gracefully by chat service
+        // Will be rejected by the validation check below
+      }
+
+      // Treat a JWT without a usable subject user ID as a failed sign-in
+      if (!userId || isNaN(userId) || userId <= 0) {
+        throw new ApiError(
+          'Authentication failed: Invalid token payload received from server (missing user ID).',
+          401,
+          'Invalid Token'
+        );
       }
 
       // Persist token + user into AuthContext (writes storage + cookie)

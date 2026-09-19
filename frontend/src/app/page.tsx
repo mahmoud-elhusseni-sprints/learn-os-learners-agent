@@ -1,16 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { Session, Message } from '../types/chat';
 import { ChatService } from '../services/chatService';
 import { Sidebar } from '../components/Sidebar';
 import { ChatWindow } from '../components/ChatWindow';
 import { useAuth } from '../contexts/AuthContext';
-import { ApiError } from '../services/apiClient';
+import { ApiError, API_BASE_URL } from '../services/apiClient';
 
 export default function Home() {
-  const router = useRouter();
   const { user, accessToken, isLoading: isAuthLoading, isAuthenticated, signOut } = useAuth();
 
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -25,7 +23,8 @@ export default function Home() {
 
   /**
    * Defensive 401 handler — clears invalid token and redirects to /signin.
-   * Called from any async operation that may return 401 Unauthorized.
+   * Uses signOut() rather than router.push so the stale cookie is also cleared,
+   * preventing the middleware <-> page redirect loop.
    */
   const handle401 = useCallback(() => {
     signOut();
@@ -34,6 +33,10 @@ export default function Home() {
   /**
    * Load conversation sessions scoped to the authenticated user.
    * Uses GET /users/{user_id}/conversations with Bearer token.
+   *
+   * Only falls back to offline/mock sessions on genuine network failures
+   * (err.isNetworkError). HTTP error responses (403, 500, etc.) are shown
+   * as real errors rather than silently entering offline mode.
    */
   const loadSessions = useCallback(async () => {
     if (!isAuthenticated || !user || !accessToken) return;
@@ -65,66 +68,11 @@ export default function Home() {
         handle401();
         return;
       }
-      console.warn('Backend REST endpoint not reachable or returned an error:', err);
-      setIsLiveApi(false);
-      const fallbackSessions = ChatService.getMockSessions();
-      setSessions(fallbackSessions);
-      if (fallbackSessions.length > 0) {
-        setActiveSessionId(fallbackSessions[0].id);
-        setMessages(fallbackSessions[0].messages || []);
-      }
-      setErrorMessage(
-        'Notice: Backend REST server at http://localhost:8010 is currently offline. Showing local sessions. Once docker-compose or backend is running, click Retry to connect.'
-      );
-    } finally {
-      setIsFetchingSessions(false);
-    }
-  }, [isAuthenticated, user, accessToken, handle401]);
 
-  // Redirect unauthenticated users to /signin (client-side guard to complement middleware)
-  useEffect(() => {
-    if (!isAuthLoading && !isAuthenticated) {
-      router.push('/signin');
-    }
-  }, [isAuthLoading, isAuthenticated, router]);
-
-  // Load sessions after auth is confirmed
-  useEffect(() => {
-    if (isAuthLoading || !isAuthenticated) return;
-
-    let ignore = false;
-    async function fetchInitial() {
-      if (!user || !accessToken) return;
-
-      try {
-        const loadedSessions = await ChatService.getSessions(user.id, accessToken);
-        if (ignore) return;
-        setSessions(loadedSessions);
-        setIsLiveApi(true);
-
-        if (loadedSessions.length > 0) {
-          const firstSession = loadedSessions[0];
-          setActiveSessionId(firstSession.id);
-          try {
-            const initialMessages = await ChatService.getMessages(firstSession.id, accessToken);
-            if (!ignore) {
-              setMessages(initialMessages);
-              firstSession.messages = initialMessages;
-            }
-          } catch {
-            if (!ignore) setMessages([]);
-          }
-        } else {
-          setActiveSessionId(null);
-          setMessages([]);
-        }
-      } catch (err: unknown) {
-        if (ignore) return;
-        if (err instanceof ApiError && err.status === 401) {
-          handle401();
-          return;
-        }
-        console.warn('Backend REST endpoint not reachable or returned an error:', err);
+      // Only fall back to offline mock sessions when the network is actually down.
+      // For real HTTP errors (403, 500, etc.), show the actual error instead.
+      if (err instanceof ApiError && err.isNetworkError) {
+        console.warn('Backend not reachable (network error):', err);
         setIsLiveApi(false);
         const fallbackSessions = ChatService.getMockSessions();
         setSessions(fallbackSessions);
@@ -133,20 +81,43 @@ export default function Home() {
           setMessages(fallbackSessions[0].messages || []);
         }
         setErrorMessage(
-          'Notice: Backend REST server at http://localhost:8010 is currently offline. Showing local sessions. Once docker-compose or backend is running, click Retry to connect.'
+          `Notice: Backend REST server at ${API_BASE_URL} is currently offline. ` +
+            `Showing local preview sessions. Once the backend is running, click Retry to connect.`
         );
-      } finally {
-        if (!ignore) {
-          setIsFetchingSessions(false);
-        }
+      } else {
+        console.error('Failed to load sessions:', err);
+        const msg = err instanceof ApiError ? err.message : String(err);
+        setErrorMessage(`Failed to load your conversations: ${msg}`);
       }
+    } finally {
+      setIsFetchingSessions(false);
     }
+  }, [isAuthenticated, user, accessToken, handle401]);
 
-    fetchInitial();
+  // Redirect unauthenticated users to /signin (client-side guard to complement proxy middleware).
+  // Calls signOut() instead of router.push so any stale presence cookie is cleared first,
+  // preventing an infinite redirect loop when sessionStorage is empty but the cookie is still set.
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      signOut();
+    }
+  }, [isAuthLoading, isAuthenticated, signOut]);
+
+  // Load sessions after auth is confirmed — delegates to loadSessions (single code path).
+  useEffect(() => {
+    if (isAuthLoading || !isAuthenticated) return;
+
+    let cancelled = false;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadSessions().finally(() => {
+      if (cancelled) return;
+    });
+
     return () => {
-      ignore = true;
+      cancelled = true;
     };
-  }, [isAuthLoading, isAuthenticated, user, accessToken, handle401]);
+  }, [isAuthLoading, isAuthenticated, loadSessions]);
 
   // Update active messages when selected session changes
   const handleSelectSession = useCallback(

@@ -26,6 +26,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -93,15 +94,23 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
-  const [accessToken, setAccessToken] = useState<string | null>(() => {
-    if (typeof window === 'undefined') return null;
-    return readStorage().token;
-  });
-  const [user, setUser] = useState<AuthUser | null>(() => {
-    if (typeof window === 'undefined') return null;
-    return readStorage().user;
-  });
-  const isLoading = false;
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Hydrate auth state after mount to prevent SSR/client hydration mismatch
+  useEffect(() => {
+    const { token, user: storedUser } = readStorage();
+    if (!token) {
+      // Drop any stale presence cookie to prevent middleware <-> page redirect loops
+      document.cookie = `${AUTH_COOKIE}=; path=/; max-age=0`;
+    } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setAccessToken(token);
+      setUser(storedUser);
+    }
+    setIsLoading(false);
+  }, []);
 
   /**
    * Persist the JWT and user record received from POST /auth/signin.

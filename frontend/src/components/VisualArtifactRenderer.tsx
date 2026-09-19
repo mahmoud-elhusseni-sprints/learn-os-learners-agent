@@ -118,9 +118,12 @@ export const VisualArtifactRenderer: React.FC<VisualArtifactRendererProps> = ({
         {/* Content Area */}
         {viewMode === 'preview' ? (
           <div className="p-4 flex flex-col items-center justify-center bg-slate-900/30 overflow-x-auto min-h-[160px]">
-            <div
-              className="w-full flex justify-center [&>svg]:max-w-full [&>svg]:h-auto [&>svg]:rounded-lg"
-              dangerouslySetInnerHTML={{ __html: artifact.content }}
+            {/* Rendered as sandboxed image data-URI to prevent XSS script execution from untrusted assistant SVG output */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(artifact.content)}`}
+              alt={artifact.title || 'Visual Graphic (SVG)'}
+              className="max-w-full h-auto rounded-lg shadow-sm"
             />
             {artifact.caption && (
               <p className="mt-2 text-[11px] text-slate-400 text-center italic">
