@@ -40,22 +40,26 @@ class AgentOrchestrationAdapter:
         return "\n".join(lines)
     
     def respond(
-        self,
-        message: str,
-        history: Sequence[dict[str, str]] | None = None,
-        learner_name_or_id: str | None = None,
+    self,
+    message: str,
+    history: Sequence[dict[str, str]] | None = None,
+    learner_name_or_id: str | None = None,
     ) -> EmployerResponse:
-        """Run the Talent Intelligence Agent and return its structured response."""
-    
+
         try:
+            formatted_history = self.format_history(history or [])
+    
             return self.agent.respond_structured(
                 message,
+                history=formatted_history,
                 learner_name_or_id=learner_name_or_id,
             )
+    
         except TimeoutError as exc:
             raise AgentTimeoutError(
                 "The Talent Intelligence Agent timed out."
             ) from exc
+    
         except Exception as exc:
             raise AgentUpstreamError(
                 "The Talent Intelligence Agent could not process the request."
