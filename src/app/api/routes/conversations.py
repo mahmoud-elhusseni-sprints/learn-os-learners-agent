@@ -8,6 +8,7 @@ from src.app.models.message import Message
 from src.app.models.user import User
 from src.app.schemas.conversation import (
     ChatMessageCreate,
+    ChatResponse,
     ConversationResponse,
     MessageCreate,
     MessageResponse,
@@ -17,6 +18,7 @@ from src.app.services.agent_orchestration import (
     AgentTimeoutError,
     AgentUpstreamError,
 )
+
 
 router = APIRouter(
     tags=["Conversations"],
@@ -118,7 +120,7 @@ def get_messages(
 
 @router.post(
     "/conversations/{conversation_id}/chat",
-    response_model=MessageResponse,
+    response_model=ChatResponse,
     status_code=status.HTTP_201_CREATED,
 )
 def chat(
@@ -126,14 +128,19 @@ def chat(
     message_data: ChatMessageCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Message:
+) -> ChatResponse:
     try:
-        return conversation_service.chat(
+        message, response = conversation_service.chat(
             db=db,
             conversation_id=conversation_id,
             current_user_id=current_user.id,
             content=message_data.content,
             learner_name_or_id=message_data.learner_name_or_id,
+        )
+        
+        return ChatResponse(
+            message=message,
+            response=response,
         )
     except ValueError as exc:
         raise HTTPException(

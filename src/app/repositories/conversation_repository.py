@@ -40,16 +40,6 @@ def get_user_conversations(
     return list(db.scalars(statement).all())
 
 
-def set_conversation_learner(
-    db: Session,
-    conversation: ConversationSession,
-    learner_id: str,
-) -> ConversationSession:
-    conversation.learner_id = learner_id
-    db.flush()
-
-    return conversation
-
 
 def create_message(
     db: Session,

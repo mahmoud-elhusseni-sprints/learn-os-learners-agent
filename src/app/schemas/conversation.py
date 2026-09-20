@@ -2,6 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from src.app.schemas.agent_response import EmployerResponse
+
 
 class ConversationCreate(BaseModel):
     pass
@@ -30,6 +32,13 @@ class MessageResponse(BaseModel):
     content: str
     timestamp: datetime
 
+
+class ChatResponse(BaseModel):
+    message: MessageResponse
+    response: EmployerResponse
+
+
+    
 class ChatMessageCreate(BaseModel):
     content: str = Field(min_length=1)
     learner_name_or_id: str | None = Field(

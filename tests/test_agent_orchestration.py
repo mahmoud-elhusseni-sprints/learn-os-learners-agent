@@ -2,6 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
+from src.app.schemas.agent_response import EmployerResponse
 from src.app.services.agent_orchestration import (
     AgentOrchestrationAdapter,
     AgentTimeoutError,
@@ -9,11 +10,22 @@ from src.app.services.agent_orchestration import (
 )
 
 
+def make_response(markdown: str = "Agent response") -> EmployerResponse:
+    return EmployerResponse(
+        markdown=markdown,
+        artifacts=[],
+        fallback=None,
+    )
+
+
 def test_format_history():
     history = [
         {"role": "user", "content": "Hello"},
         {"role": "assistant", "content": "Hello! How can I help?"},
-        {"role": "user", "content": "Tell me about Python experience."},
+        {
+            "role": "user",
+            "content": "Tell me about Python experience.",
+        },
     ]
 
     formatted = AgentOrchestrationAdapter.format_history(history)
@@ -30,15 +42,21 @@ def test_format_empty_history():
     assert result == ""
 
 
-def test_respond_calls_agent_with_message_and_history():
+def test_respond_passes_current_message_separately():
     mock_agent = Mock()
-    mock_agent.respond.return_value = "Agent response"
+    mock_agent.respond_structured.return_value = make_response()
 
     adapter = AgentOrchestrationAdapter(agent=mock_agent)
 
     history = [
-        {"role": "user", "content": "Previous question"},
-        {"role": "assistant", "content": "Previous answer"},
+        {
+            "role": "user",
+            "content": "Previous question",
+        },
+        {
+            "role": "assistant",
+            "content": "Previous answer",
+        },
     ]
 
     result = adapter.respond(
@@ -47,50 +65,98 @@ def test_respond_calls_agent_with_message_and_history():
         learner_name_or_id="L001",
     )
 
-    assert result == "Agent response"
+    assert result == make_response()
 
-    mock_agent.respond.assert_called_once()
+    mock_agent.respond_structured.assert_called_once_with(
+        "Current question",
+        learner_name_or_id="L001",
+    )
 
-    call_args, call_kwargs = mock_agent.respond.call_args
 
-    assert "Previous conversation:" in call_args[0]
-    assert "User: Previous question" in call_args[0]
-    assert "Assistant: Previous answer" in call_args[0]
-    assert "Current user message:" in call_args[0]
-    assert "Current question" in call_args[0]
+def test_respond_does_not_prepend_history_to_current_message():
+    mock_agent = Mock()
+    mock_agent.respond_structured.return_value = make_response()
+
+    adapter = AgentOrchestrationAdapter(agent=mock_agent)
+
+    history = [
+        {
+            "role": "user",
+            "content": "Tell me about Python.",
+        },
+        {
+            "role": "assistant",
+            "content": "Python evidence was found.",
+        },
+    ]
+
+    adapter.respond(
+        "What about the recent evidence?",
+        history=history,
+        learner_name_or_id="L001",
+    )
+
+    call_args, call_kwargs = mock_agent.respond_structured.call_args
+
+    assert call_args[0] == "What about the recent evidence?"
+    assert "Previous conversation:" not in call_args[0]
+    assert "Tell me about Python." not in call_args[0]
+    assert "Python evidence was found." not in call_args[0]
 
     assert call_kwargs["learner_name_or_id"] == "L001"
 
 
 def test_respond_without_history():
     mock_agent = Mock()
-    mock_agent.respond.return_value = "Agent response"
+    mock_agent.respond_structured.return_value = make_response()
 
     adapter = AgentOrchestrationAdapter(agent=mock_agent)
 
     result = adapter.respond("Hello")
 
-    assert result == "Agent response"
+    assert result == make_response()
 
-    mock_agent.respond.assert_called_once_with(
+    mock_agent.respond_structured.assert_called_once_with(
         "Hello",
+        learner_name_or_id=None,
+    )
+
+
+def test_respond_without_learner():
+    mock_agent = Mock()
+    mock_agent.respond_structured.return_value = make_response()
+
+    adapter = AgentOrchestrationAdapter(agent=mock_agent)
+
+    adapter.respond(
+        "Compare the learners based on Python experience.",
+        history=[],
+    )
+
+    mock_agent.respond_structured.assert_called_once_with(
+        "Compare the learners based on Python experience.",
         learner_name_or_id=None,
     )
 
 
 def test_timeout_is_converted_to_agent_timeout_error():
     mock_agent = Mock()
-    mock_agent.respond.side_effect = TimeoutError()
+    mock_agent.respond_structured.side_effect = TimeoutError()
 
     adapter = AgentOrchestrationAdapter(agent=mock_agent)
 
-    with pytest.raises(AgentTimeoutError, match="timed out"):
+    with pytest.raises(
+        AgentTimeoutError,
+        match="timed out",
+    ):
         adapter.respond("Hello")
 
 
 def test_agent_failure_is_converted_to_upstream_error():
     mock_agent = Mock()
-    mock_agent.respond.side_effect = RuntimeError("Neo4j unavailable")
+    mock_agent.respond_structured.side_effect = RuntimeError(
+        "Neo4j unavailable"
+    )
 
     adapter = AgentOrchestrationAdapter(agent=mock_agent)
 

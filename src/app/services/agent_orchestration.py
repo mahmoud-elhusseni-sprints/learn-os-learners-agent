@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from src.app.agents.talent_intelligence.agent import TalentIntelligenceAgent
-
+from src.app.schemas.agent_response import EmployerResponse
 
 class AgentOrchestrationError(Exception):
     """Base exception for agent orchestration failures."""
@@ -38,17 +38,17 @@ class AgentOrchestrationAdapter:
             lines.append(f"{role}: {content}")
 
         return "\n".join(lines)
-
+    
     def respond(
         self,
         message: str,
         history: Sequence[dict[str, str]] | None = None,
         learner_name_or_id: str | None = None,
-    ) -> str:
-        """Run the Talent Intelligence Agent for the current message."""
-
+    ) -> EmployerResponse:
+        """Run the Talent Intelligence Agent and return its structured response."""
+    
         try:
-            return self.agent.respond(
+            return self.agent.respond_structured(
                 message,
                 learner_name_or_id=learner_name_or_id,
             )
