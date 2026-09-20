@@ -5,6 +5,7 @@ from collections.abc import Sequence
 from src.app.agents.talent_intelligence.agent import TalentIntelligenceAgent
 from src.app.schemas.agent_response import EmployerResponse
 
+
 class AgentOrchestrationError(Exception):
     """Base exception for agent orchestration failures."""
 
