@@ -73,6 +73,11 @@ CORS_ORIGINS = [
 ]
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_IMAGE_MODEL = os.getenv("GOOGLE_IMAGE_MODEL")
+LANGSMITH_TRACING = os.getenv("LANGSMITH_TRACING", "false").lower() == "true"
+LANGSMITH_ENDPOINT = os.getenv("LANGSMITH_ENDPOINT")
+LANGSMITH_API_KEY = os.getenv("LANGSMITH_API_KEY")
+LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT")
+
 
 settings = SimpleNamespace(
     neo4j_uri=NEO4J_URI,
@@ -82,4 +87,8 @@ settings = SimpleNamespace(
     neo4j_connection_acquisition_timeout=NEO4J_CONNECTION_ACQUISITION_TIMEOUT,
     cors_origins=CORS_ORIGINS,
     graph_loader_batch_size=GRAPH_LOADER_BATCH_SIZE,
+    langsmith_tracing=LANGSMITH_TRACING,
+    langsmith_endpoint=LANGSMITH_ENDPOINT,
+    langsmith_api_key=LANGSMITH_API_KEY,
+    langsmith_project=LANGSMITH_PROJECT,
 )

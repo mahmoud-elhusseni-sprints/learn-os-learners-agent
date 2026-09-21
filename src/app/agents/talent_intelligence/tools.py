@@ -161,6 +161,73 @@ def get_learner_profile(learner_query: str) -> ToolResult:
     return ToolResult("ok", profile, "")
 
 
+def compare_learners(
+    first_learner_query: str,
+    second_learner_query: str,
+    focus: str = "",
+) -> ToolResult:
+    """Compare two learners using evidence coverage, never a suitability score."""
+    queries = [first_learner_query.strip(), second_learner_query.strip()]
+    if not all(queries):
+        return ToolResult(
+            "insufficient_evidence",
+            [],
+            "Two learner names or IDs are required for comparison.",
+        )
+
+    learners = [_find_learner(query) for query in queries]
+    missing = [
+        query
+        for query, learner in zip(queries, learners, strict=True)
+        if learner is None
+    ]
+    if missing:
+        return ToolResult(
+            "not_found",
+            [],
+            f"Learner not found: {', '.join(missing)}.",
+        )
+
+    compared: list[dict[str, Any]] = []
+    normalized_focus = focus.strip()
+    for learner in learners:
+        assert learner is not None
+        learner_id = str(learner["learner_id"])
+        profile = get_learner_profile(learner_id)
+        evidence = search_evidence(
+            learner_id,
+            query=normalized_focus,
+            limit=20,
+        )
+        compared.append(
+            {
+                "learner_id": learner_id,
+                "name": learner.get("name"),
+                "role": learner.get("role"),
+                "evidence_coverage": (
+                    profile.data.get("evidence_coverage", {})
+                    if profile.status == "ok" and isinstance(profile.data, dict)
+                    else {}
+                ),
+                "evidence_status": evidence.status,
+                "evidence": evidence.data if isinstance(evidence.data, list) else [],
+            }
+        )
+
+    return ToolResult(
+        "ok",
+        {
+            "focus": normalized_focus or "all available evidence",
+            "learners": compared,
+            "limitations": [
+                "Evidence coverage is not a proficiency score or hiring ranking.",
+                "Missing evidence does not mean the learner lacks the skill.",
+            ],
+        },
+        "",
+    )
+
+
 def get_skill_proofs(learner_id: str, skill: str) -> ToolResult:
     normalized = skill.strip().lower()
     rows = _memory_card_rows(

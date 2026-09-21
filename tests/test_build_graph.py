@@ -14,11 +14,13 @@ itself when none is reachable, matching tests/test_batch_loader.py.
 
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
 
 import pytest
 
 from src.app.ingestion.build_graph import build_graph_from_pipeline_output
+from src.app.ingestion.memory_card_extraction import generate_memory_card_nodes
 from src.app.schemas.graph_schema import DataSourceName, EdgeType, LearnerGraph
 from src.app.schemas.models import (
     DataSource as PipelineDataSource,
@@ -36,6 +38,46 @@ NOW = datetime(2026, 9, 8, 12, 0, tzinfo=timezone.utc)
 
 LEARNER_A = "127c834c-f7ce-4cc7-9a73-c8f93c8648aa"
 LEARNER_B = "9a1e29a3-b6f8-43cc-b4a7-6fcfb72bd201"
+
+
+def test_generate_memory_card_nodes_serializes_datetime_values(tmp_path) -> None:
+    assessments_path = tmp_path / "assessments.json"
+    reviews_path = tmp_path / "reviews.json"
+    output_path = tmp_path / "memory_cards.json"
+
+    assessments_path.write_text(
+        json.dumps(
+            [
+                {
+                    "learner_id": LEARNER_A,
+                    "lx_id": "lx-1",
+                    "terminated_at": "2026-08-01T00:00:00Z",
+                    "mastery_memory_cards": [
+                        {
+                            "card_id": "card-1",
+                            "metric_key": "python",
+                            "content": "Python skills",
+                            "tags": ["technical_skills"],
+                            "created_at": "2026-08-01T12:00:00+00:00",
+                        }
+                    ],
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    reviews_path.write_text("[]", encoding="utf-8")
+
+    cards = generate_memory_card_nodes(
+        assessments_file=str(assessments_path),
+        rubrics_file=str(reviews_path),
+        output_file=str(output_path),
+    )
+
+    assert cards[0]["created_at"] == "2026-08-01T12:00:00+00:00"
+    assert json.loads(output_path.read_text(encoding="utf-8"))[0]["created_at"] == (
+        "2026-08-01T12:00:00+00:00"
+    )
 
 
 def _profile(learner_id: str, name: str) -> dict:

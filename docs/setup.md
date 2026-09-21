@@ -82,6 +82,20 @@ NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=...
 ```
 
+LangSmith tracing is optional. To trace the LangChain/LangGraph agent loop,
+add a LangSmith API key and enable tracing:
+
+```env
+LANGSMITH_TRACING=true
+LANGSMITH_ENDPOINT=https://api.smith.langchain.com
+LANGSMITH_API_KEY=lsv2_...
+LANGSMITH_PROJECT="Hiring Agent"
+```
+
+The API records the agent tool loop as a named trace and automatically captures
+the nested LangChain model and tool runs. Keep the API key private and do not
+commit `.env`.
+
 The `.env` file is local to your machine and must not be committed to Git.
 
 Never commit:

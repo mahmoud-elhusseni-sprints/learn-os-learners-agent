@@ -41,4 +41,3 @@ jobs:
       - name: Run Pytest
         run: |
           docker compose run --rm --no-deps api pytest
-
