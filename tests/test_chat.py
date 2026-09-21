@@ -134,16 +134,10 @@ def test_chat_persists_user_and_assistant_messages():
     assert len(messages) == 2
 
     assert messages[0]["sender_role"] == "user"
-    assert (
-        messages[0]["content"]
-        == "What evidence do we have for Python?"
-    )
+    assert messages[0]["content"] == "What evidence do we have for Python?"
 
     assert messages[1]["sender_role"] == "assistant"
-    assert (
-        messages[1]["content"]
-        == "Python evidence was found in the learner records."
-    )
+    assert messages[1]["content"] == "Python evidence was found in the learner records."
 
 
 def test_chat_passes_previous_history_separately_from_current_message():
@@ -157,9 +151,7 @@ def test_chat_passes_previous_history_separately_from_current_message():
     with patch(
         "src.app.services.conversation_service.AgentOrchestrationAdapter"
     ) as mock_adapter:
-        mock_adapter.return_value.respond.return_value = make_response(
-            "First answer"
-        )
+        mock_adapter.return_value.respond.return_value = make_response("First answer")
 
         first_response = client.post(
             f"/conversations/{conversation_id}/chat",
@@ -172,9 +164,7 @@ def test_chat_passes_previous_history_separately_from_current_message():
 
         assert first_response.status_code == 201
 
-        mock_adapter.return_value.respond.return_value = make_response(
-            "Second answer"
-        )
+        mock_adapter.return_value.respond.return_value = make_response("Second answer")
 
         second_response = client.post(
             f"/conversations/{conversation_id}/chat",
@@ -220,9 +210,7 @@ def test_first_chat_has_empty_history():
     with patch(
         "src.app.services.conversation_service.AgentOrchestrationAdapter"
     ) as mock_adapter:
-        mock_adapter.return_value.respond.return_value = make_response(
-            "First answer"
-        )
+        mock_adapter.return_value.respond.return_value = make_response("First answer")
 
         response = client.post(
             f"/conversations/{conversation_id}/chat",

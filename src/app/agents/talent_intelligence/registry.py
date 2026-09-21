@@ -17,6 +17,7 @@ MISSING_LEARNER = {
 
 TOOL_FUNCTIONS: dict[str, ToolFunction] = {
     "get_learner_profile": tools.get_learner_profile,
+    "compare_learners": tools.compare_learners,
     "get_skill_proofs": tools.get_skill_proofs,
     "search_evidence": tools.search_evidence,
     "get_review_outcomes": tools.get_review_outcomes,
@@ -33,6 +34,21 @@ TOOL_METADATA: dict[str, dict[str, Any]] = {
     "get_learner_profile": {
         "description": "Retrieve profile context for the active learner.",
         "parameters": {"type": "object", "properties": {}},
+    },
+    "compare_learners": {
+        "description": (
+            "Compare two named learners by evidence coverage and cited records. "
+            "Do not rank suitability or infer skill from missing evidence."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "first_learner": {"type": "string"},
+                "second_learner": {"type": "string"},
+                "focus": {"type": "string"},
+            },
+            "required": ["first_learner", "second_learner"],
+        },
     },
     "get_skill_proofs": {
         "description": "Retrieve evidence for one named skill of the active learner.",
@@ -137,6 +153,13 @@ def build_active_handlers(
     return {
         "get_learner_profile": learner_handler(
             "get_learner_profile", TOOL_FUNCTIONS["get_learner_profile"]
+        ),
+        "compare_learners": lambda args: invoke(
+            "compare_learners",
+            TOOL_FUNCTIONS["compare_learners"],
+            str(args.get("first_learner", "")),
+            str(args.get("second_learner", "")),
+            str(args.get("focus", "")),
         ),
         "get_skill_proofs": learner_args_handler(
             "get_skill_proofs",

@@ -95,7 +95,15 @@ def run_tool_loop(
                 HumanMessage(content=question),
             ],
             "steps": 0,
-        }
+        },
+        config={
+            "run_name": "talent_intelligence_tool_loop",
+            "metadata": {
+                "agent": "talent_intelligence",
+                "max_steps": max_steps,
+            },
+            "tags": ["talent-intelligence", "tool-loop"],
+        },
     )
     final = result["messages"][-1]
     if isinstance(final, AIMessage) and final.content:

@@ -136,9 +136,9 @@ def chat(
             content=message_data.content,
             learner_name_or_id=message_data.learner_name_or_id,
         )
-        
+
         return ChatResponse(
-            message=message,
+            message=MessageResponse.model_validate(message),
             response=response,
         )
     except ValueError as exc:

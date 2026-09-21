@@ -168,9 +168,7 @@ def test_timeout_is_converted_to_agent_timeout_error():
 
 def test_agent_failure_is_converted_to_upstream_error():
     mock_agent = Mock()
-    mock_agent.respond_structured.side_effect = RuntimeError(
-        "Neo4j unavailable"
-    )
+    mock_agent.respond_structured.side_effect = RuntimeError("Neo4j unavailable")
 
     adapter = AgentOrchestrationAdapter(agent=mock_agent)
 

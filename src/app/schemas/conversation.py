@@ -38,7 +38,6 @@ class ChatResponse(BaseModel):
     response: EmployerResponse
 
 
-    
 class ChatMessageCreate(BaseModel):
     content: str = Field(min_length=1)
     learner_name_or_id: str | None = Field(
