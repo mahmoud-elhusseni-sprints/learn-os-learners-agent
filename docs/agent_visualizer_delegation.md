@@ -71,6 +71,23 @@ while waiting on a live model call. Those tests mock tool functions but not the
 current model loop; the full suite is not claimed green.
 # Conversation history integration
 
+Before deploying this change, run `alembic upgrade head` against the configured
+application database. Revision `c182fa0439be` adds nullable
+`conversation_sessions.learner_name_or_id`. No production migration is run by
+the tests. Existing conversations start without a saved selection.
+
+The chat service remembers an explicitly supplied learner selector in the same
+transaction as the messages. Omitting it on follow-ups reuses that conversation's
+selection; supplying another replaces it. Exceptions roll back both messages
+and selection. Names are re-resolved by the existing retrieval tools on each
+request; use stable learner IDs when possible. A new conversation has no inherited
+selection. This is not an automatic inference of names from prose.
+
+The endpoint regression in `tests/test_chat.py` exercises two real API requests,
+SQLite persistence, the real adapter, LangGraph, and SVG renderer. Only LLM and
+Neo4j retrieval are mocked; live model quality and frontend display remain to
+be verified jointly.
+
 The chat adapter passes persisted `user`/`assistant` messages as a structured
 list to `respond_structured(history=...)`. The LangGraph input preserves those
 roles and appends the current question once. History supplies conversational
