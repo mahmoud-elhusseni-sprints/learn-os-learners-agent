@@ -7,6 +7,16 @@ export interface CandidateMetadata {
   evidenceIds?: string[];
 }
 
+export interface VisualArtifact {
+  id?: string;
+  type: 'svg' | 'image' | 'card' | 'chart' | 'container';
+  title?: string;
+  content?: string; // Raw SVG or XML/HTML markup
+  url?: string; // Image URL / base64 src
+  caption?: string;
+  metadata?: Record<string, unknown>;
+}
+
 export interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
@@ -14,6 +24,7 @@ export interface Message {
   timestamp: string;
   metadata?: CandidateMetadata;
   isSimulated?: boolean;
+  artifacts?: VisualArtifact[];
 }
 
 export interface Session {

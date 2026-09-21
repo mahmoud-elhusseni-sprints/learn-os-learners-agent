@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { Message, Session } from '../types/chat';
+import type { AuthUser } from '../types/auth';
 import { MessageItem } from './MessageItem';
 import {
   Send,
@@ -17,6 +18,8 @@ import {
   LogIn,
   UserPlus,
   RefreshCw,
+  LogOut,
+  User,
 } from 'lucide-react';
 
 interface ChatWindowProps {
@@ -29,6 +32,10 @@ interface ChatWindowProps {
   onSendMessage: (prompt: string) => void;
   onToggleSidebar?: () => void;
   onRetry?: () => void;
+  /** Authenticated user — if null, shows sign in/up links */
+  user?: AuthUser | null;
+  /** Logout action from AuthContext */
+  onLogout?: () => void;
 }
 
 const STARTER_PROMPTS = [
@@ -64,6 +71,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   onSendMessage,
   onToggleSidebar,
   onRetry,
+  user = null,
+  onLogout,
 }) => {
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -140,20 +149,43 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 ml-1">
-            <Link
-              href="/signin"
-              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-850 border border-slate-800 transition-colors"
-            >
-              <LogIn className="w-3.5 h-3.5 text-blue-400" />
-              <span className="hidden md:inline">Sign In</span>
-            </Link>
-            <Link
-              href="/signup"
-              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-white bg-blue-600 hover:bg-blue-500 transition-colors shadow-xs"
-            >
-              <UserPlus className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Sign Up</span>
-            </Link>
+            {user ? (
+              /* Authenticated: user name + logout */
+              <>
+                <span className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs text-slate-300 bg-slate-900 border border-slate-800">
+                  <User className="w-3.5 h-3.5 text-blue-400" />
+                  <span className="max-w-[120px] truncate">{user.name || user.email}</span>
+                </span>
+                {onLogout && (
+                  <button
+                    onClick={onLogout}
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-slate-300 hover:text-rose-300 bg-slate-900 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/40 transition-colors cursor-pointer"
+                    title="Sign out"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span className="hidden md:inline">Sign Out</span>
+                  </button>
+                )}
+              </>
+            ) : (
+              /* Unauthenticated: sign in / sign up links */
+              <>
+                <Link
+                  href="/signin"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-850 border border-slate-800 transition-colors"
+                >
+                  <LogIn className="w-3.5 h-3.5 text-blue-400" />
+                  <span className="hidden md:inline">Sign In</span>
+                </Link>
+                <Link
+                  href="/signup"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-white bg-blue-600 hover:bg-blue-500 transition-colors shadow-xs"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span className="hidden md:inline">Sign Up</span>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
