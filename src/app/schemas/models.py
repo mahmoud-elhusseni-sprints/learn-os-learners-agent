@@ -25,6 +25,40 @@ class VisualizationFormat(StrEnum):
     PNG = "png"
 
 
+class ChartType(StrEnum):
+    """Chart shape, independent of output format; AUTO lets the agent choose."""
+
+    AUTO = "auto"
+    BAR = "bar"
+    HORIZONTAL_BAR = "horizontal_bar"
+    LINE = "line"
+    AREA = "area"
+    PIE = "pie"
+    DONUT = "donut"
+    RADAR = "radar"
+    GROUPED_BAR = "grouped_bar"
+    STACKED_BAR = "stacked_bar"
+    PROGRESS = "progress"
+
+
+class DataKind(StrEnum):
+    COMPARISON = "comparison"
+    COMPOSITION = "composition"
+    TIME_SERIES = "time_series"
+    PROFILE = "profile"
+    KPI = "kpi"
+
+
+class VisualizationContext(BaseModel):
+    """Caller hints; ``kind`` is what makes composition charts safe to pick."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    kind: DataKind | None = None
+    subject: str | None = None
+    period: str | None = None
+
+
 HexColor = Annotated[str, Field(pattern=r"^#[0-9A-Fa-f]{6}$")]
 
 
@@ -51,6 +85,8 @@ class VisualizationRequest(BaseModel):
     description: str | None = None
     visualization_type: str = "bar"
     format: VisualizationFormat | None = None
+    chart_type: ChartType = ChartType.AUTO
+    context: VisualizationContext | None = None
     theme: Theme | None = None
     width: int = Field(800, ge=320, le=2400)
     height: int = Field(480, ge=240, le=1600)
@@ -282,6 +318,9 @@ __all__ = [
     "NonEmpty",
     "Confidence",
     "VisualizationFormat",
+    "ChartType",
+    "DataKind",
+    "VisualizationContext",
     "Theme",
     "SPRINTS_DEFAULT_THEME",
     "VisualizationRequest",
