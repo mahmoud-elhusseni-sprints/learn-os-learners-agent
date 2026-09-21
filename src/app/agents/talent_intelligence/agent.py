@@ -61,6 +61,7 @@ class TalentIntelligenceAgent:
             SYSTEM_PROMPT,
             TOOL_SCHEMAS,
             handlers,
+            8,
         )
         return self._remember(query, answer)
 
