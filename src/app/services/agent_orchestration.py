@@ -48,11 +48,9 @@ class AgentOrchestrationAdapter:
     ) -> EmployerResponse:
 
         try:
-            formatted_history = self.format_history(history or [])
-
             return self.agent.respond_structured(
                 message,
-                history=formatted_history,
+                history=list(history or []),
                 learner_name_or_id=learner_name_or_id,
             )
 

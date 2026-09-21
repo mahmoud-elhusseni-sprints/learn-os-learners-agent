@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Sequence
 from typing import Any, Callable
 
 from langchain_core.messages import (
@@ -40,9 +41,25 @@ def run_tool_loop(
     tool_schemas: list[dict[str, Any]],
     handlers: dict[str, ToolHandler],
     max_steps: int = 3,
+    history: Sequence[dict[str, str]] | str | None = None,
 ) -> str:
     """Run the Talent Intelligence tool graph with Python-owned handlers."""
     model = get_chat_model().bind_tools(tool_schemas)
+    previous: list[BaseMessage] = []
+    if isinstance(history, str):
+        # Compatibility for older callers; never interpret embedded role labels.
+        if history:
+            previous.append(HumanMessage(content=history))
+    else:
+        for message in history or []:
+            role, content = message["role"], message["content"]
+            if role not in {"user", "assistant"}:
+                raise ValueError("History must contain only user and assistant roles")
+            previous.append(
+                HumanMessage(content=content)
+                if role == "user"
+                else AIMessage(content=content)
+            )
 
     def call_model(state: ToolLoopState) -> dict[str, Any]:
         response = model.invoke(state["messages"])
@@ -92,6 +109,7 @@ def run_tool_loop(
         {
             "messages": [
                 SystemMessage(content=system_prompt),
+                *previous,
                 HumanMessage(content=question),
             ],
             "steps": 0,

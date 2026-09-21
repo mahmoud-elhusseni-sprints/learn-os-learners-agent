@@ -69,3 +69,23 @@ and MyPy passed. A broader run reached 176 passes and three failures in existing
 `tests/unit/test_graph_helpers.py` routing assertions before it was interrupted
 while waiting on a live model call. Those tests mock tool functions but not the
 current model loop; the full suite is not claimed green.
+# Conversation history integration
+
+The chat adapter passes persisted `user`/`assistant` messages as a structured
+list to `respond_structured(history=...)`. The LangGraph input preserves those
+roles and appends the current question once. History supplies conversational
+context, not verified evidence. Other history roles are rejected. Legacy string
+history remains accepted as a single user-context message.
+
+An explicit history list (including an empty list) resets local learner/turn
+state so a reused adapter cannot carry another conversation's context forward.
+Direct `respond()` calls without persisted history use their local prior turns.
+Visual intent is evaluated only on the current question. Charts still require
+successful retrieval records from the current turn.
+
+Offline integration checks: `pytest tests/test_talent_history.py
+tests/test_agent_orchestration.py tests/test_visual_delegation.py
+tests/test_visualizer_agent.py`. These use a fake LLM/retrieval boundary with the
+real LangGraph and chart renderer; they do not certify live LLM behavior or the
+frontend. The frontend must map `ChatResponse.message` and
+`ChatResponse.response.artifacts`; frontend changes are outside this patch.

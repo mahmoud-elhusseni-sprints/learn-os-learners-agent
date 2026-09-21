@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from copy import deepcopy
 from typing import Any, Callable
 
@@ -25,14 +26,17 @@ class TalentIntelligenceAgent:
         query: str,
         learner_name_or_id: str | None = None,
         visual_options: VisualOptions | None = None,
-        history: str | None = None,
+        history: Sequence[dict[str, str]] | str | None = None,
     ) -> EmployerResponse:
         """Return text plus optional artifacts; respond() stays text-only."""
         from .visual_delegation import delegate
 
-        if history:
-            query = f"{history}\n\nCurrent question:\n{query}"
-        markdown = self.respond(query, learner_name_or_id)
+        if history is not None:
+            # Persisted history is authoritative for this conversation, even if empty.
+            self.reset_conversation()
+            markdown = self._respond_with_llm(query, learner_name_or_id, history)
+        else:
+            markdown = self.respond(query, learner_name_or_id)
         return delegate(query, markdown, self._visual_evidence, visual_options)
 
     def reset_conversation(self) -> None:
@@ -48,7 +52,18 @@ class TalentIntelligenceAgent:
         """Compatibility alias for the LLM-backed answer path."""
         return self._respond_with_llm(query, learner_name_or_id)
 
-    def _respond_with_llm(self, query: str, learner_name_or_id: str | None) -> str:
+    def _respond_with_llm(
+        self,
+        query: str,
+        learner_name_or_id: str | None,
+        history: Sequence[dict[str, str]] | str | None = None,
+    ) -> str:
+        if history is None:
+            history = [
+                {"role": role, "content": turn[key]}
+                for turn in self.state.turns
+                for role, key in (("user", "user"), ("assistant", "assistant"))
+            ]
         self.state.last_tool_calls = []
         self._visual_evidence = []
         failure = self._ensure_learner(query, learner_name_or_id, required=False)
@@ -62,6 +77,7 @@ class TalentIntelligenceAgent:
             TOOL_SCHEMAS,
             handlers,
             8,
+            history=history,
         )
         return self._remember(query, answer)
 

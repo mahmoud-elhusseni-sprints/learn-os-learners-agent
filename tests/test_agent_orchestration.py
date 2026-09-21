@@ -69,11 +69,7 @@ def test_respond_passes_current_message_and_formatted_history():
 
     mock_agent.respond_structured.assert_called_once_with(
         "Current question",
-        history=(
-            "Previous conversation:\n"
-            "User: Previous question\n"
-            "Assistant: Previous answer"
-        ),
+        history=history,
         learner_name_or_id="L001",
     )
 
@@ -109,11 +105,7 @@ def test_respond_does_not_prepend_history_to_current_message():
     assert "Tell me about Python." not in call_args[0]
     assert "Python evidence was found." not in call_args[0]
 
-    assert call_kwargs["history"] == (
-        "Previous conversation:\n"
-        "User: Tell me about Python.\n"
-        "Assistant: Python evidence was found."
-    )
+    assert call_kwargs["history"] == history
 
     assert call_kwargs["learner_name_or_id"] == "L001"
 
@@ -130,7 +122,7 @@ def test_respond_without_history():
 
     mock_agent.respond_structured.assert_called_once_with(
         "Hello",
-        history="",
+        history=[],
         learner_name_or_id=None,
     )
 
@@ -148,7 +140,7 @@ def test_respond_without_learner():
 
     mock_agent.respond_structured.assert_called_once_with(
         "Compare the learners based on Python experience.",
-        history="",
+        history=[],
         learner_name_or_id=None,
     )
 

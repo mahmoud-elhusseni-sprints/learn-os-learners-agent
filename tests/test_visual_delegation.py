@@ -111,7 +111,7 @@ def test_invalid_options():
 def test_agent_captures_only_current_successful_evidence():
     agent = TalentIntelligenceAgent()
 
-    def loop(*args):
+    def loop(*args, **kwargs):
         agent._call("search_evidence", lambda: ToolResult("ok", [RECORD]))
         return "Verified text"
 
