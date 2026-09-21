@@ -2,13 +2,18 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from src.app.models.user import User
-from src.app.schemas.user import UserCreate
 
 
-def create_user(db: Session, user_data: UserCreate) -> User:
+def create_auth_user(
+    db: Session,
+    name: str,
+    email: str,
+    password_hash: str,
+) -> User:
     user = User(
-        name=user_data.name,
-        email=user_data.email,
+        name=name,
+        email=email,
+        password_hash=password_hash,
     )
 
     db.add(user)
@@ -17,10 +22,6 @@ def create_user(db: Session, user_data: UserCreate) -> User:
 
     return user
 
-
-def get_users(db: Session) -> list[User]:
-    statement = select(User).order_by(User.id)
-    return list(db.scalars(statement).all())
 
 
 def get_user_by_id(db: Session, user_id: int) -> User | None:

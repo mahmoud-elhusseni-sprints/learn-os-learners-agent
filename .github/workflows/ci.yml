@@ -12,7 +12,8 @@ jobs:
 
     env:
       NEO4J_PASSWORD: ${{ secrets.NEO4J_PASSWORD }}
-
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+      JWT_ACCESS_TOKEN_EXPIRE_MINUTES: 30
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

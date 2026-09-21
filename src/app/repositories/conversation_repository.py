@@ -40,11 +40,13 @@ def get_user_conversations(
     return list(db.scalars(statement).all())
 
 
+
 def create_message(
     db: Session,
     conversation_id: int,
     sender_role: str,
     content: str,
+    commit: bool = True,
 ) -> Message:
     message = Message(
         conversation_id=conversation_id,
@@ -53,8 +55,12 @@ def create_message(
     )
 
     db.add(message)
-    db.commit()
-    db.refresh(message)
+
+    if commit:
+        db.commit()
+        db.refresh(message)
+    else:
+        db.flush()
 
     return message
 
@@ -70,3 +76,18 @@ def get_conversation_messages(
     )
 
     return list(db.scalars(statement).all())
+
+
+def get_conversation_history(
+    db: Session,
+    conversation_id: int,
+) -> list[dict[str, str]]:
+    messages = get_conversation_messages(db, conversation_id)
+
+    return [
+        {
+            "role": message.sender_role,
+            "content": message.content,
+        }
+        for message in messages
+    ]

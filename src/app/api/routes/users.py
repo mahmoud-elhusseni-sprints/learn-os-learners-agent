@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from src.app.api.dependencies.auth import get_current_user
 from src.app.database.connection import get_db
 from src.app.models.user import User
-from src.app.schemas.user import UserCreate, UserResponse
+from src.app.schemas.user import UserResponse
 from src.app.services import user_service
 
 router = APIRouter(
@@ -12,42 +13,21 @@ router = APIRouter(
 )
 
 
-@router.post(
-    "",
-    response_model=UserResponse,
-    status_code=status.HTTP_201_CREATED,
-)
-def create_user(
-    user_data: UserCreate,
-    db: Session = Depends(get_db),  # noqa: B008
-) -> User:
-    try:
-        return user_service.create_user(db, user_data)
-    except ValueError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(exc),
-        ) from exc
-
-
-@router.get(
-    "",
-    response_model=list[UserResponse],
-)
-def get_users(
-    db: Session = Depends(get_db),  # noqa: B008
-) -> list[User]:
-    return user_service.get_users(db)
-
-
 @router.get(
     "/{user_id}",
     response_model=UserResponse,
 )
 def get_user(
     user_id: int,
-    db: Session = Depends(get_db),  # noqa: B008
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> User:
+    if user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
     user = user_service.get_user_by_id(db, user_id)
 
     if user is None:

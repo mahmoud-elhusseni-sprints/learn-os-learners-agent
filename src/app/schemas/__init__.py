@@ -4,10 +4,9 @@ from src.app.schemas.conversation import (
     MessageCreate,
     MessageResponse,
 )
-from src.app.schemas.user import UserCreate, UserResponse
+from src.app.schemas.user import UserResponse
 
 __all__ = [
-    "UserCreate",
     "UserResponse",
     "ConversationCreate",
     "ConversationResponse",
