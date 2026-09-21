@@ -212,7 +212,7 @@ once - every statement is `IF NOT EXISTS`.
 `src/app/ingestion/loader.py` writes a validated `LearnerGraph` into Neo4j:
 
 ```bash
-docker compose run --rm api python3 scripts/verify_neo4j.py --reset
+docker compose run --rm api python3 testing/verify_neo4j.py --reset
 ```
 
 Loading is idempotent (ids are deterministic UUIDv5s, every write is a

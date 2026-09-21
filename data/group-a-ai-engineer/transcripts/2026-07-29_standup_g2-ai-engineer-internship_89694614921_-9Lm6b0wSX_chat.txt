@@ -1,0 +1,45 @@
+00:07:38	Learner A4:	لو كوتا Gemini مأثرة عليك وموقفاك، تقدر تسويتش بسهولة لبدائل open-source أو حاجات مجانية عشان تكمّل شغل الـ visual assets بتوع Week 3 وما تتعطلش.
+عشان الـ image generation، جرب الـ Hugging Face Inference API (أو local Hugging Face Diffusers مع Stable Diffusion أو FLUX لو عندك GPU)، أو endpoints مجانية وخفيفة زي Pollinations.ai و Cloudflare Workers AI. ولو كنت بتستخدم Gemini في الـ multimodal أو الـ vision parsing، عندك Groq أو إنك تشغّل Ollama لوكال، دول حلول ممتازة وببلاش.
+نقي اختيار open-source من دول عشان تتفادى الـ rate limit، واعمل الـ asset variations اللي ناقصة، وابعتلي sample output أو visual quality comparison أول ما تجرّب.
+00:09:55	Learner A4:	لو كوتا Gemini مأثرة عليك وموقفاك، تقدر تسويتش بسهولة لبدائل open-source أو حاجات مجانية عشان تكمّل شغل الـ visual assets بتوع Week 3 وما تتعطلش.
+عشان الـ image generation، جرب الـ Hugging Face Inference API (أو local Hugging Face Diffusers مع Stable Diffusion أو FLUX لو عندك GPU)، أو endpoints مجانية وخفيفة زي Pollinations.ai و Cloudflare Workers AI. ولو كنت بتستخدم Gemini في الـ multimodal أو الـ vision parsing، عندك Groq أو إنك تشغّل Ollama لوكال، دول حلول ممتازة وببلاش.
+نقي اختيار open-source من دول عشان تتفادى الـ rate limit، واعمل الـ asset variations اللي ناقصة، وابعتلي sample output أو visual quality comparison أول ما تجرّب.
+00:10:14	Learner A4:	groq
+00:45:21	Learner A4:	{
+  "assets": [
+    {
+      "url": "https://image.pollinations.ai/prompt/Illustration%20showing%3A%20Cartoon%20of%20a%20simple%20computer%20with%20glowing%20light%20switches%20labeled%200%20and%201",
+      "type": "image",
+      "cue_id": "1",
+      "source": "generated",
+      "license": "open-source",
+      "asset_id": "image_1",
+      "scene_id": "1"
+    },
+    {
+      "url": "https://image.pollinations.ai/prompt/Illustration%20showing%3A%20Spinning%20coin%20that%20is%20both%20heads%20and%20tails%20floating",
+      "type": "image",
+      "cue_id": "2",
+      "source": "generated",
+      "license": "open-source",
+      "asset_id": "image_2",
+      "scene_id": "2"
+    },
+    {
+      "url": "https://image.pollinations.ai/prompt/Illustration%20showing%3A%20Dice%20with%20all%20faces%20glowing%20at%20once",
+      "type": "image",
+      "cue_id": "3",
+      "source": "generated",
+      "license": "open-source",
+      "asset_id": "image_3",
+      "scene_id": "3"
+    },
+    {
+      "url": "https://image.pollination
+01:16:46	Learner A4:	'm currently working on the HTML to MP4 conversion task, which is the final stage of the Video Generation pipeline. I wanted to understand the output from the Assets Collection stage so I can make sure my workflow integrates smoothly with the rest of the pipeline.
+If possible, could you share:
+A sample HTML output (or the expected HTML structure)
+The generated assets (images, CSS, JS if applicable)
+Any documentation or notes about how the visuals are generated
+This will help me build the HTML-to-MP4 workflow without making incorrect assumptions about the input.
+Thanks in advance!

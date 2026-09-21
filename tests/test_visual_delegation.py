@@ -9,6 +9,7 @@ import pytest
 from pydantic import ValidationError
 
 from src.app.agents.talent_intelligence.agent import TalentIntelligenceAgent
+from src.app.agents.talent_intelligence import tools
 from src.app.agents.talent_intelligence.visual_delegation import delegate, visual_intent
 from src.app.schemas.agent_response import EmployerResponse, VisualOptions
 from src.app.schemas.models import ToolResult, VisualizationFormat
@@ -127,6 +128,34 @@ def test_agent_captures_only_current_successful_evidence():
         result = agent.respond_structured("chart")
     assert not result.artifacts
     assert result.fallback.code == "insufficient_evidence"
+
+
+def test_graph_failure_is_not_reported_as_missing_evidence():
+    agent = TalentIntelligenceAgent()
+
+    result = agent._call(
+        "get_skill_proofs",
+        lambda learner_id, skill: (_ for _ in ()).throw(
+            RuntimeError("Neo4j unavailable")
+        ),
+        "learner-1",
+        "python",
+    )
+
+    assert result.status == "error"
+    assert result.data is None
+    assert "Evidence retrieval failed" in result.message
+
+
+def test_empty_graph_result_is_still_insufficient_evidence():
+    with patch(
+        "src.app.agents.talent_intelligence.tools._run",
+        return_value=[],
+    ):
+        result = tools.get_skill_proofs("learner-1", "python")
+
+    assert result.status == "insufficient_evidence"
+    assert result.data == []
 
 
 def test_failed_tool_not_charted():

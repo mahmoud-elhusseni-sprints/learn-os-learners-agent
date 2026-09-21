@@ -1,0 +1,2088 @@
+[
+  {
+    "assessment_id": "asm_pre_eb774358",
+    "learner_id": "eb774358-ef46-4fa3-b89a-7a6f80541b31",
+    "lx_id": "lx-pre-eb774358",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: Product Management Track",
+    "topic_id": "product_management_baseline_assessment",
+    "topic_title": "Product Management Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 43.0,
+    "max_score": 100.0,
+    "score_percentage": 43.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Initial baseline response from Learner B1 on Product Vision & Strategy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Initial baseline response from Learner B1 on User Research & Personas. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Initial baseline response from Learner B1 on PRD & Functional Specs. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Initial baseline response from Learner B1 on Metrics & KPI Taxonomy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Initial baseline response from Learner B1 on Backlog Prioritization. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Initial baseline response from Learner B1 on Wireframing & UX Design. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "beba18f3-66d9-5775-a0b9-95cb7bf7fcaa",
+        "meeting_id": "b0334d2c-e7ca-5ab9-a879-e088c21f29dc",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B1 completed baseline pre-course evaluation for Product Vision & Strategy.",
+        "rationale": "Entry assessment identified growth areas in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "6d8bf619-46d1-5c9d-8366-dd602d40ba16",
+        "meeting_id": "b0334d2c-e7ca-5ab9-a879-e088c21f29dc",
+        "metric_key": "user_research_personas",
+        "content": "Learner B1 completed baseline pre-course evaluation for User Research & Personas.",
+        "rationale": "Entry assessment identified growth areas in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "8c90e066-4bac-5272-985d-df0c3f8dd1b9",
+        "meeting_id": "b0334d2c-e7ca-5ab9-a879-e088c21f29dc",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B1 completed baseline pre-course evaluation for PRD & Functional Specs.",
+        "rationale": "Entry assessment identified growth areas in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "b7369c34-f289-5e1c-bd85-ebb29c1450b2",
+        "meeting_id": "b0334d2c-e7ca-5ab9-a879-e088c21f29dc",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B1 completed baseline pre-course evaluation for Metrics & KPI Taxonomy.",
+        "rationale": "Entry assessment identified growth areas in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "f7cb6d96-42ba-546a-aeeb-0283d5c36895",
+        "meeting_id": "b0334d2c-e7ca-5ab9-a879-e088c21f29dc",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B1 completed baseline pre-course evaluation for Backlog Prioritization.",
+        "rationale": "Entry assessment identified growth areas in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "0b95b888-e45c-550c-8ee3-a6dc39fee29c",
+        "meeting_id": "b0334d2c-e7ca-5ab9-a879-e088c21f29dc",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B1 completed baseline pre-course evaluation for Wireframing & UX Design.",
+        "rationale": "Entry assessment identified growth areas in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_eb774358",
+    "learner_id": "eb774358-ef46-4fa3-b89a-7a6f80541b31",
+    "lx_id": "lx-post-eb774358",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: Product Management Track",
+    "topic_id": "product_management_final_assessment",
+    "topic_title": "Product Management Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 90.0,
+    "max_score": 100.0,
+    "score_percentage": 90.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Comprehensive post-course final response from Learner B1 on Product Vision & Strategy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Comprehensive post-course final response from Learner B1 on User Research & Personas. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Comprehensive post-course final response from Learner B1 on PRD & Functional Specs. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Comprehensive post-course final response from Learner B1 on Metrics & KPI Taxonomy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner B1 on Backlog Prioritization. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Comprehensive post-course final response from Learner B1 on Wireframing & UX Design. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "62b18f67-88f2-5111-a251-1162417adcbf",
+        "meeting_id": "72d264eb-b648-5a3f-984f-c897bee329bc",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B1 achieved advanced mastery in Product Vision & Strategy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "2dbf64b6-c995-563b-8e6e-cdba25bcd9ac",
+        "meeting_id": "72d264eb-b648-5a3f-984f-c897bee329bc",
+        "metric_key": "user_research_personas",
+        "content": "Learner B1 achieved advanced mastery in User Research & Personas.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "3c38269b-8a2d-54ea-807f-2d00587a7612",
+        "meeting_id": "72d264eb-b648-5a3f-984f-c897bee329bc",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B1 achieved advanced mastery in PRD & Functional Specs.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "f3cd3986-0abb-5a4a-a8df-f2cdec1a2b84",
+        "meeting_id": "72d264eb-b648-5a3f-984f-c897bee329bc",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B1 achieved advanced mastery in Metrics & KPI Taxonomy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "b47b8103-1100-5bd3-9727-e36817ea2e77",
+        "meeting_id": "72d264eb-b648-5a3f-984f-c897bee329bc",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B1 achieved advanced mastery in Backlog Prioritization.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "b1247687-e485-56d1-a308-bc9b9cbc4fdd",
+        "meeting_id": "72d264eb-b648-5a3f-984f-c897bee329bc",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B1 achieved advanced mastery in Wireframing & UX Design.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_10cafecf",
+    "learner_id": "10cafecf-ab1c-438d-b979-4a56be2714fd",
+    "lx_id": "lx-pre-10cafecf",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: Product Management Track",
+    "topic_id": "product_management_baseline_assessment",
+    "topic_title": "Product Management Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 50.0,
+    "max_score": 100.0,
+    "score_percentage": 50.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Initial baseline response from Learner B2 on Product Vision & Strategy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Initial baseline response from Learner B2 on User Research & Personas. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Initial baseline response from Learner B2 on PRD & Functional Specs. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Initial baseline response from Learner B2 on Metrics & KPI Taxonomy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Initial baseline response from Learner B2 on Backlog Prioritization. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Initial baseline response from Learner B2 on Wireframing & UX Design. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "26354642-adc9-5210-b950-a45ea8d064cf",
+        "meeting_id": "e8be3bd0-6d2d-53e9-b045-3aca0a91fe56",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B2 completed baseline pre-course evaluation for Product Vision & Strategy.",
+        "rationale": "Entry assessment identified growth areas in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "1955f695-e5d5-57a5-a50b-b76cb453858f",
+        "meeting_id": "e8be3bd0-6d2d-53e9-b045-3aca0a91fe56",
+        "metric_key": "user_research_personas",
+        "content": "Learner B2 completed baseline pre-course evaluation for User Research & Personas.",
+        "rationale": "Entry assessment identified growth areas in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "0d1fbcfd-13b9-5e62-9705-cced9295f04a",
+        "meeting_id": "e8be3bd0-6d2d-53e9-b045-3aca0a91fe56",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B2 completed baseline pre-course evaluation for PRD & Functional Specs.",
+        "rationale": "Entry assessment identified growth areas in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "0eac5c14-86da-5513-8116-f6d3e35a85f5",
+        "meeting_id": "e8be3bd0-6d2d-53e9-b045-3aca0a91fe56",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B2 completed baseline pre-course evaluation for Metrics & KPI Taxonomy.",
+        "rationale": "Entry assessment identified growth areas in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "0d2b1fb7-3d08-5484-8105-0f9d026f21ca",
+        "meeting_id": "e8be3bd0-6d2d-53e9-b045-3aca0a91fe56",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B2 completed baseline pre-course evaluation for Backlog Prioritization.",
+        "rationale": "Entry assessment identified growth areas in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "58dc579c-4d01-5b52-8845-ea25c6dd4354",
+        "meeting_id": "e8be3bd0-6d2d-53e9-b045-3aca0a91fe56",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B2 completed baseline pre-course evaluation for Wireframing & UX Design.",
+        "rationale": "Entry assessment identified growth areas in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_10cafecf",
+    "learner_id": "10cafecf-ab1c-438d-b979-4a56be2714fd",
+    "lx_id": "lx-post-10cafecf",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: Product Management Track",
+    "topic_id": "product_management_final_assessment",
+    "topic_title": "Product Management Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 93.0,
+    "max_score": 100.0,
+    "score_percentage": 93.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Comprehensive post-course final response from Learner B2 on Product Vision & Strategy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Comprehensive post-course final response from Learner B2 on User Research & Personas. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Comprehensive post-course final response from Learner B2 on PRD & Functional Specs. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Comprehensive post-course final response from Learner B2 on Metrics & KPI Taxonomy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner B2 on Backlog Prioritization. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Comprehensive post-course final response from Learner B2 on Wireframing & UX Design. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "734023f6-f080-59e9-8e2b-00d9beb0be25",
+        "meeting_id": "f10d167b-2b92-5ac5-9c91-325bdfd89de5",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B2 achieved advanced mastery in Product Vision & Strategy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "a2de4a09-3cd2-576e-b53b-d4b56a3d5152",
+        "meeting_id": "f10d167b-2b92-5ac5-9c91-325bdfd89de5",
+        "metric_key": "user_research_personas",
+        "content": "Learner B2 achieved advanced mastery in User Research & Personas.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "ff8b227a-c047-5674-86e2-ba55f41a5f4b",
+        "meeting_id": "f10d167b-2b92-5ac5-9c91-325bdfd89de5",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B2 achieved advanced mastery in PRD & Functional Specs.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "a3a0c482-c922-555e-90ce-6b0e8e2bf0fa",
+        "meeting_id": "f10d167b-2b92-5ac5-9c91-325bdfd89de5",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B2 achieved advanced mastery in Metrics & KPI Taxonomy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "4281e762-510a-5ddf-9f3c-c0d0ad3a5ff3",
+        "meeting_id": "f10d167b-2b92-5ac5-9c91-325bdfd89de5",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B2 achieved advanced mastery in Backlog Prioritization.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "44331bed-d70b-5955-a0f6-617c4e96c631",
+        "meeting_id": "f10d167b-2b92-5ac5-9c91-325bdfd89de5",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B2 achieved advanced mastery in Wireframing & UX Design.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_6527792d",
+    "learner_id": "6527792d-f3c3-4ba0-a2a5-0e0fc35e976c",
+    "lx_id": "lx-pre-6527792d",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: Product Management Track",
+    "topic_id": "product_management_baseline_assessment",
+    "topic_title": "Product Management Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 57.0,
+    "max_score": 100.0,
+    "score_percentage": 57.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Initial baseline response from Learner B3 on Product Vision & Strategy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Initial baseline response from Learner B3 on User Research & Personas. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Initial baseline response from Learner B3 on PRD & Functional Specs. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Initial baseline response from Learner B3 on Metrics & KPI Taxonomy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Initial baseline response from Learner B3 on Backlog Prioritization. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Initial baseline response from Learner B3 on Wireframing & UX Design. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "bdd56b4f-ed3f-51c4-bb08-29936908500e",
+        "meeting_id": "ba3bd655-3f99-5208-b71f-484f74432c05",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B3 completed baseline pre-course evaluation for Product Vision & Strategy.",
+        "rationale": "Entry assessment identified growth areas in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "9a0e202b-b834-598a-adce-d834ce0b8aeb",
+        "meeting_id": "ba3bd655-3f99-5208-b71f-484f74432c05",
+        "metric_key": "user_research_personas",
+        "content": "Learner B3 completed baseline pre-course evaluation for User Research & Personas.",
+        "rationale": "Entry assessment identified growth areas in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "b2dc8764-fba0-5169-be50-5875bf3ae446",
+        "meeting_id": "ba3bd655-3f99-5208-b71f-484f74432c05",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B3 completed baseline pre-course evaluation for PRD & Functional Specs.",
+        "rationale": "Entry assessment identified growth areas in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "ba0ccca1-e6b2-58f9-b6c6-9dd3223a3644",
+        "meeting_id": "ba3bd655-3f99-5208-b71f-484f74432c05",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B3 completed baseline pre-course evaluation for Metrics & KPI Taxonomy.",
+        "rationale": "Entry assessment identified growth areas in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "837fbd26-0992-57ec-8214-46a322a53de0",
+        "meeting_id": "ba3bd655-3f99-5208-b71f-484f74432c05",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B3 completed baseline pre-course evaluation for Backlog Prioritization.",
+        "rationale": "Entry assessment identified growth areas in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "e13ee4b1-d98f-5483-acb9-1ce81e1f8da4",
+        "meeting_id": "ba3bd655-3f99-5208-b71f-484f74432c05",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B3 completed baseline pre-course evaluation for Wireframing & UX Design.",
+        "rationale": "Entry assessment identified growth areas in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_6527792d",
+    "learner_id": "6527792d-f3c3-4ba0-a2a5-0e0fc35e976c",
+    "lx_id": "lx-post-6527792d",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: Product Management Track",
+    "topic_id": "product_management_final_assessment",
+    "topic_title": "Product Management Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 96.0,
+    "max_score": 100.0,
+    "score_percentage": 96.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Comprehensive post-course final response from Learner B3 on Product Vision & Strategy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Comprehensive post-course final response from Learner B3 on User Research & Personas. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Comprehensive post-course final response from Learner B3 on PRD & Functional Specs. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Comprehensive post-course final response from Learner B3 on Metrics & KPI Taxonomy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner B3 on Backlog Prioritization. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Comprehensive post-course final response from Learner B3 on Wireframing & UX Design. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "d2359b2d-0740-5906-bc94-9c43c1b2a26d",
+        "meeting_id": "846e1e3d-65e7-549e-9d5b-683275069e5c",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B3 achieved advanced mastery in Product Vision & Strategy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "0c63ce5f-4e52-5d07-85f7-74bb2d3b325c",
+        "meeting_id": "846e1e3d-65e7-549e-9d5b-683275069e5c",
+        "metric_key": "user_research_personas",
+        "content": "Learner B3 achieved advanced mastery in User Research & Personas.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "f1adc320-682a-5a82-b159-c582b5f8cbcb",
+        "meeting_id": "846e1e3d-65e7-549e-9d5b-683275069e5c",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B3 achieved advanced mastery in PRD & Functional Specs.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "6667cec8-80ef-5775-af1f-767c4685f188",
+        "meeting_id": "846e1e3d-65e7-549e-9d5b-683275069e5c",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B3 achieved advanced mastery in Metrics & KPI Taxonomy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "f8b93c24-a070-5871-9fea-5dd6268b7539",
+        "meeting_id": "846e1e3d-65e7-549e-9d5b-683275069e5c",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B3 achieved advanced mastery in Backlog Prioritization.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "df9b8298-eaba-53d9-960a-53ecb2265a5b",
+        "meeting_id": "846e1e3d-65e7-549e-9d5b-683275069e5c",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B3 achieved advanced mastery in Wireframing & UX Design.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_6c045b73",
+    "learner_id": "6c045b73-3d65-4e33-8dd4-448d54d19525",
+    "lx_id": "lx-pre-6c045b73",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: Product Management Track",
+    "topic_id": "product_management_baseline_assessment",
+    "topic_title": "Product Management Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 64.0,
+    "max_score": 100.0,
+    "score_percentage": 64.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Initial baseline response from Learner B4 on Product Vision & Strategy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Initial baseline response from Learner B4 on User Research & Personas. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Initial baseline response from Learner B4 on PRD & Functional Specs. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Initial baseline response from Learner B4 on Metrics & KPI Taxonomy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Initial baseline response from Learner B4 on Backlog Prioritization. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Initial baseline response from Learner B4 on Wireframing & UX Design. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "f33e38c1-bad7-572f-afcc-9342c01874bc",
+        "meeting_id": "5d08ce6d-d7d8-5bb1-8a13-22f323a70475",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B4 completed baseline pre-course evaluation for Product Vision & Strategy.",
+        "rationale": "Entry assessment identified growth areas in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "d03b58d1-14f1-5784-aad9-032835d174cd",
+        "meeting_id": "5d08ce6d-d7d8-5bb1-8a13-22f323a70475",
+        "metric_key": "user_research_personas",
+        "content": "Learner B4 completed baseline pre-course evaluation for User Research & Personas.",
+        "rationale": "Entry assessment identified growth areas in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "db4d83d5-d418-5316-adb6-6dc1cbc9f951",
+        "meeting_id": "5d08ce6d-d7d8-5bb1-8a13-22f323a70475",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B4 completed baseline pre-course evaluation for PRD & Functional Specs.",
+        "rationale": "Entry assessment identified growth areas in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "157ae1d7-9660-5185-8da4-229c0fc34aa3",
+        "meeting_id": "5d08ce6d-d7d8-5bb1-8a13-22f323a70475",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B4 completed baseline pre-course evaluation for Metrics & KPI Taxonomy.",
+        "rationale": "Entry assessment identified growth areas in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "00a67c5f-09df-507a-afe8-0003f2c93a71",
+        "meeting_id": "5d08ce6d-d7d8-5bb1-8a13-22f323a70475",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B4 completed baseline pre-course evaluation for Backlog Prioritization.",
+        "rationale": "Entry assessment identified growth areas in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "b0a99700-644d-5546-a7dc-194114a906b7",
+        "meeting_id": "5d08ce6d-d7d8-5bb1-8a13-22f323a70475",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B4 completed baseline pre-course evaluation for Wireframing & UX Design.",
+        "rationale": "Entry assessment identified growth areas in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_6c045b73",
+    "learner_id": "6c045b73-3d65-4e33-8dd4-448d54d19525",
+    "lx_id": "lx-post-6c045b73",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: Product Management Track",
+    "topic_id": "product_management_final_assessment",
+    "topic_title": "Product Management Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 99.0,
+    "max_score": 100.0,
+    "score_percentage": 99.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Comprehensive post-course final response from Learner B4 on Product Vision & Strategy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Comprehensive post-course final response from Learner B4 on User Research & Personas. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Comprehensive post-course final response from Learner B4 on PRD & Functional Specs. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Comprehensive post-course final response from Learner B4 on Metrics & KPI Taxonomy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner B4 on Backlog Prioritization. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Comprehensive post-course final response from Learner B4 on Wireframing & UX Design. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "2f459a95-149a-5b78-9d09-ba4b8f660b6f",
+        "meeting_id": "ade995e0-d36e-5fd8-9b94-a2d7818f8655",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B4 achieved advanced mastery in Product Vision & Strategy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "5f424608-e120-5072-ab3c-3adfa8044523",
+        "meeting_id": "ade995e0-d36e-5fd8-9b94-a2d7818f8655",
+        "metric_key": "user_research_personas",
+        "content": "Learner B4 achieved advanced mastery in User Research & Personas.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "2dee6bc3-a120-5413-9264-b1005da920c6",
+        "meeting_id": "ade995e0-d36e-5fd8-9b94-a2d7818f8655",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B4 achieved advanced mastery in PRD & Functional Specs.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "6896d3a0-233d-5653-9e45-daddb867edf9",
+        "meeting_id": "ade995e0-d36e-5fd8-9b94-a2d7818f8655",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B4 achieved advanced mastery in Metrics & KPI Taxonomy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "2d01967b-dd94-5cac-bd7f-57052c160fea",
+        "meeting_id": "ade995e0-d36e-5fd8-9b94-a2d7818f8655",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B4 achieved advanced mastery in Backlog Prioritization.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "85379f8a-3055-56d5-b8e1-522559e2bf01",
+        "meeting_id": "ade995e0-d36e-5fd8-9b94-a2d7818f8655",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B4 achieved advanced mastery in Wireframing & UX Design.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_4836094e",
+    "learner_id": "4836094e-829f-4859-845c-26332aeb9986",
+    "lx_id": "lx-pre-4836094e",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: Product Management Track",
+    "topic_id": "product_management_baseline_assessment",
+    "topic_title": "Product Management Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 46.0,
+    "max_score": 100.0,
+    "score_percentage": 46.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Initial baseline response from Learner B5 on Product Vision & Strategy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Initial baseline response from Learner B5 on User Research & Personas. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Initial baseline response from Learner B5 on PRD & Functional Specs. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Initial baseline response from Learner B5 on Metrics & KPI Taxonomy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Initial baseline response from Learner B5 on Backlog Prioritization. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Initial baseline response from Learner B5 on Wireframing & UX Design. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "5a063db8-da7f-5141-9523-7cbf14a4f28e",
+        "meeting_id": "70fa3e37-64e0-5d63-a3ba-1ca52b4e7fdb",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B5 completed baseline pre-course evaluation for Product Vision & Strategy.",
+        "rationale": "Entry assessment identified growth areas in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "976bd45d-ae66-5724-aae9-613cdf6d4db1",
+        "meeting_id": "70fa3e37-64e0-5d63-a3ba-1ca52b4e7fdb",
+        "metric_key": "user_research_personas",
+        "content": "Learner B5 completed baseline pre-course evaluation for User Research & Personas.",
+        "rationale": "Entry assessment identified growth areas in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "85161539-c08a-59a9-b644-cf80c0e579a8",
+        "meeting_id": "70fa3e37-64e0-5d63-a3ba-1ca52b4e7fdb",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B5 completed baseline pre-course evaluation for PRD & Functional Specs.",
+        "rationale": "Entry assessment identified growth areas in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "1ddfb3bf-4859-5708-b48c-86be2a90d803",
+        "meeting_id": "70fa3e37-64e0-5d63-a3ba-1ca52b4e7fdb",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B5 completed baseline pre-course evaluation for Metrics & KPI Taxonomy.",
+        "rationale": "Entry assessment identified growth areas in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "db037394-5950-5efc-94d7-10469c7d081e",
+        "meeting_id": "70fa3e37-64e0-5d63-a3ba-1ca52b4e7fdb",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B5 completed baseline pre-course evaluation for Backlog Prioritization.",
+        "rationale": "Entry assessment identified growth areas in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "9694f150-b2e3-58cc-b47a-9d6da4352702",
+        "meeting_id": "70fa3e37-64e0-5d63-a3ba-1ca52b4e7fdb",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B5 completed baseline pre-course evaluation for Wireframing & UX Design.",
+        "rationale": "Entry assessment identified growth areas in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_4836094e",
+    "learner_id": "4836094e-829f-4859-845c-26332aeb9986",
+    "lx_id": "lx-post-4836094e",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: Product Management Track",
+    "topic_id": "product_management_final_assessment",
+    "topic_title": "Product Management Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 87.0,
+    "max_score": 100.0,
+    "score_percentage": 87.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Comprehensive post-course final response from Learner B5 on Product Vision & Strategy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Comprehensive post-course final response from Learner B5 on User Research & Personas. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Comprehensive post-course final response from Learner B5 on PRD & Functional Specs. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Comprehensive post-course final response from Learner B5 on Metrics & KPI Taxonomy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner B5 on Backlog Prioritization. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Comprehensive post-course final response from Learner B5 on Wireframing & UX Design. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "a6603294-7c4d-5caa-a12c-f6397e4a51e9",
+        "meeting_id": "527e2528-2efe-5b51-a105-7b0fc1e8df9c",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B5 achieved advanced mastery in Product Vision & Strategy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "2b240c67-6778-5031-931b-e799c9d7b071",
+        "meeting_id": "527e2528-2efe-5b51-a105-7b0fc1e8df9c",
+        "metric_key": "user_research_personas",
+        "content": "Learner B5 achieved advanced mastery in User Research & Personas.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "d4688436-e3d7-5325-aaea-fd8b19e12ba5",
+        "meeting_id": "527e2528-2efe-5b51-a105-7b0fc1e8df9c",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B5 achieved advanced mastery in PRD & Functional Specs.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "5215229f-9a43-5792-9e43-7d052cc06c72",
+        "meeting_id": "527e2528-2efe-5b51-a105-7b0fc1e8df9c",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B5 achieved advanced mastery in Metrics & KPI Taxonomy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "93e51494-f764-59a0-9cf1-fa14dcb3bff5",
+        "meeting_id": "527e2528-2efe-5b51-a105-7b0fc1e8df9c",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B5 achieved advanced mastery in Backlog Prioritization.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "bb76de64-8520-53a3-8d10-ce42c19e5af6",
+        "meeting_id": "527e2528-2efe-5b51-a105-7b0fc1e8df9c",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B5 achieved advanced mastery in Wireframing & UX Design.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_1807399a",
+    "learner_id": "1807399a-309d-4d2d-b68a-ef31a2545867",
+    "lx_id": "lx-pre-1807399a",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: Product Management Track",
+    "topic_id": "product_management_baseline_assessment",
+    "topic_title": "Product Management Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 53.0,
+    "max_score": 100.0,
+    "score_percentage": 53.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Initial baseline response from Learner B6 on Product Vision & Strategy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Initial baseline response from Learner B6 on User Research & Personas. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Initial baseline response from Learner B6 on PRD & Functional Specs. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Initial baseline response from Learner B6 on Metrics & KPI Taxonomy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Initial baseline response from Learner B6 on Backlog Prioritization. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Initial baseline response from Learner B6 on Wireframing & UX Design. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "6ca2aa80-4af8-5d48-b438-9fd4ba812944",
+        "meeting_id": "81c604e6-b4da-59a3-a47d-7f5da79a5e5d",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B6 completed baseline pre-course evaluation for Product Vision & Strategy.",
+        "rationale": "Entry assessment identified growth areas in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "2ea44a62-f0ac-5f87-8017-01ec737cdb91",
+        "meeting_id": "81c604e6-b4da-59a3-a47d-7f5da79a5e5d",
+        "metric_key": "user_research_personas",
+        "content": "Learner B6 completed baseline pre-course evaluation for User Research & Personas.",
+        "rationale": "Entry assessment identified growth areas in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "b9ffc87f-954b-554d-9a0a-150562e7dcb2",
+        "meeting_id": "81c604e6-b4da-59a3-a47d-7f5da79a5e5d",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B6 completed baseline pre-course evaluation for PRD & Functional Specs.",
+        "rationale": "Entry assessment identified growth areas in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "6dd70cef-891a-5e58-b0f8-2b8285230c45",
+        "meeting_id": "81c604e6-b4da-59a3-a47d-7f5da79a5e5d",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B6 completed baseline pre-course evaluation for Metrics & KPI Taxonomy.",
+        "rationale": "Entry assessment identified growth areas in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "06d8e262-9994-5dfb-952c-d2032dc9377e",
+        "meeting_id": "81c604e6-b4da-59a3-a47d-7f5da79a5e5d",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B6 completed baseline pre-course evaluation for Backlog Prioritization.",
+        "rationale": "Entry assessment identified growth areas in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "0aed88c1-2cae-5dae-9e11-a2e76403cda1",
+        "meeting_id": "81c604e6-b4da-59a3-a47d-7f5da79a5e5d",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B6 completed baseline pre-course evaluation for Wireframing & UX Design.",
+        "rationale": "Entry assessment identified growth areas in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_1807399a",
+    "learner_id": "1807399a-309d-4d2d-b68a-ef31a2545867",
+    "lx_id": "lx-post-1807399a",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: Product Management Track",
+    "topic_id": "product_management_final_assessment",
+    "topic_title": "Product Management Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 90.0,
+    "max_score": 100.0,
+    "score_percentage": 90.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Comprehensive post-course final response from Learner B6 on Product Vision & Strategy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Comprehensive post-course final response from Learner B6 on User Research & Personas. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Comprehensive post-course final response from Learner B6 on PRD & Functional Specs. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Comprehensive post-course final response from Learner B6 on Metrics & KPI Taxonomy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner B6 on Backlog Prioritization. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Comprehensive post-course final response from Learner B6 on Wireframing & UX Design. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "196fea88-76e4-5a80-bc5b-c47b2c5447ce",
+        "meeting_id": "286f508d-92a8-5ff3-97a8-60f2a35778eb",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B6 achieved advanced mastery in Product Vision & Strategy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "00da27ea-2809-56a2-b446-c46aeee947bb",
+        "meeting_id": "286f508d-92a8-5ff3-97a8-60f2a35778eb",
+        "metric_key": "user_research_personas",
+        "content": "Learner B6 achieved advanced mastery in User Research & Personas.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "625aa679-6886-5de8-870e-15d681e1a6d6",
+        "meeting_id": "286f508d-92a8-5ff3-97a8-60f2a35778eb",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B6 achieved advanced mastery in PRD & Functional Specs.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "b9160021-c2ed-58b6-8cf3-c0bc9bcb6892",
+        "meeting_id": "286f508d-92a8-5ff3-97a8-60f2a35778eb",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B6 achieved advanced mastery in Metrics & KPI Taxonomy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "69ab0e2d-6910-556e-8bd7-12466cbc277f",
+        "meeting_id": "286f508d-92a8-5ff3-97a8-60f2a35778eb",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B6 achieved advanced mastery in Backlog Prioritization.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "3c0ef767-4fb6-5867-83b8-ea1a245566b7",
+        "meeting_id": "286f508d-92a8-5ff3-97a8-60f2a35778eb",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B6 achieved advanced mastery in Wireframing & UX Design.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_45efcc16",
+    "learner_id": "45efcc16-b34f-43f4-b06d-f522760c1a44",
+    "lx_id": "lx-pre-45efcc16",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: Product Management Track",
+    "topic_id": "product_management_baseline_assessment",
+    "topic_title": "Product Management Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 60.0,
+    "max_score": 100.0,
+    "score_percentage": 60.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Initial baseline response from Learner B7 on Product Vision & Strategy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Initial baseline response from Learner B7 on User Research & Personas. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Initial baseline response from Learner B7 on PRD & Functional Specs. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Initial baseline response from Learner B7 on Metrics & KPI Taxonomy. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Initial baseline response from Learner B7 on Backlog Prioritization. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Initial baseline response from Learner B7 on Wireframing & UX Design. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "aafe33ad-d1b6-5581-96da-f999574db792",
+        "meeting_id": "07015f4a-b90d-59bc-b669-9ae688d7811b",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B7 completed baseline pre-course evaluation for Product Vision & Strategy.",
+        "rationale": "Entry assessment identified growth areas in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "c2a8940a-70d7-5b7c-a115-c2e26d4d1ef4",
+        "meeting_id": "07015f4a-b90d-59bc-b669-9ae688d7811b",
+        "metric_key": "user_research_personas",
+        "content": "Learner B7 completed baseline pre-course evaluation for User Research & Personas.",
+        "rationale": "Entry assessment identified growth areas in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "9017dfed-b430-505e-9621-83b8bdc6a073",
+        "meeting_id": "07015f4a-b90d-59bc-b669-9ae688d7811b",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B7 completed baseline pre-course evaluation for PRD & Functional Specs.",
+        "rationale": "Entry assessment identified growth areas in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "2091a5df-c581-5c5c-aae5-42ef0d751628",
+        "meeting_id": "07015f4a-b90d-59bc-b669-9ae688d7811b",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B7 completed baseline pre-course evaluation for Metrics & KPI Taxonomy.",
+        "rationale": "Entry assessment identified growth areas in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "b7db101c-f0b7-53ba-8330-afa640aeedc9",
+        "meeting_id": "07015f4a-b90d-59bc-b669-9ae688d7811b",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B7 completed baseline pre-course evaluation for Backlog Prioritization.",
+        "rationale": "Entry assessment identified growth areas in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "a39e4ab5-24c0-5044-a4b2-0fed598f24ee",
+        "meeting_id": "07015f4a-b90d-59bc-b669-9ae688d7811b",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B7 completed baseline pre-course evaluation for Wireframing & UX Design.",
+        "rationale": "Entry assessment identified growth areas in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_45efcc16",
+    "learner_id": "45efcc16-b34f-43f4-b06d-f522760c1a44",
+    "lx_id": "lx-post-45efcc16",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: Product Management Track",
+    "topic_id": "product_management_final_assessment",
+    "topic_title": "Product Management Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 93.0,
+    "max_score": 100.0,
+    "score_percentage": 93.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QB_01",
+        "domain": "Product Vision & Strategy",
+        "metric_key": "product_strategy_vision",
+        "learner_answer": "Comprehensive post-course final response from Learner B7 on Product Vision & Strategy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Product Vision & Strategy."
+      },
+      {
+        "question_id": "QB_02",
+        "domain": "User Research & Personas",
+        "metric_key": "user_research_personas",
+        "learner_answer": "Comprehensive post-course final response from Learner B7 on User Research & Personas. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in User Research & Personas."
+      },
+      {
+        "question_id": "QB_03",
+        "domain": "PRD & Functional Specs",
+        "metric_key": "prd_specification_quality",
+        "learner_answer": "Comprehensive post-course final response from Learner B7 on PRD & Functional Specs. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in PRD & Functional Specs."
+      },
+      {
+        "question_id": "QB_04",
+        "domain": "Metrics & KPI Taxonomy",
+        "metric_key": "kpi_metrics_framework",
+        "learner_answer": "Comprehensive post-course final response from Learner B7 on Metrics & KPI Taxonomy. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Metrics & KPI Taxonomy."
+      },
+      {
+        "question_id": "QB_05",
+        "domain": "Backlog Prioritization",
+        "metric_key": "rice_prioritization_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner B7 on Backlog Prioritization. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Backlog Prioritization."
+      },
+      {
+        "question_id": "QB_06",
+        "domain": "Wireframing & UX Design",
+        "metric_key": "ux_wireframe_design",
+        "learner_answer": "Comprehensive post-course final response from Learner B7 on Wireframing & UX Design. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Wireframing & UX Design."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "c253717f-bd66-5382-b20a-8e35bf2fe204",
+        "meeting_id": "ecda01a3-7cfc-5703-9c50-f641ba17a5a8",
+        "metric_key": "product_strategy_vision",
+        "content": "Learner B7 achieved advanced mastery in Product Vision & Strategy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Product Vision & Strategy.",
+        "profile_hints": [
+          "product_strategy",
+          "market_analysis",
+          "visionary"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "8a6d6f26-61cb-53a5-afcb-80034b467a9f",
+        "meeting_id": "ecda01a3-7cfc-5703-9c50-f641ba17a5a8",
+        "metric_key": "user_research_personas",
+        "content": "Learner B7 achieved advanced mastery in User Research & Personas.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in User Research & Personas.",
+        "profile_hints": [
+          "user_research",
+          "customer_empathy",
+          "persona_mapping"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "bb8f169a-9214-54cd-a271-cbb44f17459a",
+        "meeting_id": "ecda01a3-7cfc-5703-9c50-f641ba17a5a8",
+        "metric_key": "prd_specification_quality",
+        "content": "Learner B7 achieved advanced mastery in PRD & Functional Specs.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in PRD & Functional Specs.",
+        "profile_hints": [
+          "prd_authoring",
+          "functional_specs",
+          "technical_writing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "68547586-887e-5fca-8db0-51f2a2d90938",
+        "meeting_id": "ecda01a3-7cfc-5703-9c50-f641ba17a5a8",
+        "metric_key": "kpi_metrics_framework",
+        "content": "Learner B7 achieved advanced mastery in Metrics & KPI Taxonomy.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Metrics & KPI Taxonomy.",
+        "profile_hints": [
+          "north_star_metric",
+          "data_analytics",
+          "product_metrics"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "46d78c38-bb4d-58f3-b497-f52800f083d0",
+        "meeting_id": "ecda01a3-7cfc-5703-9c50-f641ba17a5a8",
+        "metric_key": "rice_prioritization_mastery",
+        "content": "Learner B7 achieved advanced mastery in Backlog Prioritization.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Backlog Prioritization.",
+        "profile_hints": [
+          "rice_scoring",
+          "backlog_management",
+          "feature_prioritization"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "9e588484-8e83-593b-8654-700ce3244f59",
+        "meeting_id": "ecda01a3-7cfc-5703-9c50-f641ba17a5a8",
+        "metric_key": "ux_wireframe_design",
+        "content": "Learner B7 achieved advanced mastery in Wireframing & UX Design.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Wireframing & UX Design.",
+        "profile_hints": [
+          "wireframing",
+          "ux_design",
+          "user_flow"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  }
+]

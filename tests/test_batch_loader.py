@@ -16,7 +16,7 @@ Safety: every test uses ids stamped with a per-run random prefix
 (``_RUN``) and only ever deletes rows carrying that prefix. Nothing here
 ever runs an unscoped ``MATCH (n) DETACH DELETE n`` against the target
 database - a blanket wipe was flagged as unsafe in review on a related
-script (scripts/verify_neo4j.py) and the same principle applies here.
+script (testing/verify_neo4j.py) and the same principle applies here.
 """
 
 from __future__ import annotations
@@ -45,7 +45,7 @@ from src.app.schemas.graph_schema import (
 
 # Imported through the entry point the task brief names, which re-exports the
 # implementation under src/app/. Testing through it keeps that contract honest.
-from src.loader.graph_loader import (
+from src.app.loader.graph_loader import (
     initialize_schema,
     load_graph,
     load_graph_atomic,

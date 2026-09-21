@@ -1,0 +1,96 @@
+00:02:53	Learner B5:	الحمد لله
+00:03:35	Learner B7:	لا
+00:03:48	Learner B7:	مش فاهمه
+00:04:10	Learner B7:	ايوا هو بيتبعت بس انا بدخل من الابلكيشن عادى
+00:04:20	Learner B5:	وانا كمان
+00:05:22	Learner B7:	ايوا هو اتبعت
+00:05:34	Learner B7:	هو انت هكرته هو كمان
+00:06:15	Learner B1:	Reacted to "هو انت هكرته هو كمان" with 😂
+00:06:35	Learner B7:	مستنيين ندا
+00:13:06	Learner B7:	ايوا ثوانى
+00:13:47	Learner B5:	Reacted to هو انت هكرته هو كمان with "😂"
+00:15:02	Learner B5:	لحد إيه تحس إن الفدباك والتقييمات الحالية مفيدة 
+وفعلاً بتوضحلك أخطائك وطرق تحسينها؟  
+
+مفيدة جداً ومخصصة لحالتي بدقة
+  مقبولة بس أحياناً بحسها عامة ومش واضحة  
+ضعيفة وجافة وبتحسني آلي بحت بدون توجيه حقيقي
+00:15:58	Learner B5:	إزاي بتقيم تأثير فترات الانتظار الطويلة أو الردود اللي شكلها آلي على حماسك وحرصك على الاستمرار في البروجرام؟
+  
+بتفقدني الحماس تماماً وبتسببلي قلق وتعطيل
+  
+بتأثر بشكل متوسط وبتخليني أكسل أبدأ في اللي بعده  
+
+مالهاش تأثير كبير على حماسي
+00:17:54	Learner B5:	هل قابلت مواقف قبل كده اتنقصت فيها درجات بسبب في داتا ناقصة؟  
+
+حصلت معايا كتير وضايقتني جداً  
+
+حصلت معايا مرة أو مرتين  
+
+محصلتش معايا خالص
+00:18:49	Learner B5:	لو في حاجة واحدة بس تقدر تغيّرها أو تحسنها في طريقة مراجعة التاسكات وتقديم الفدباك، تختار تكون إيه؟  
+
+سرعة الرد ووقت التقييم  
+
+إن الفدباك يكون بشري أو أعمق وأوضح مش مجرد درجات آلیة  
+
+مرونة أكتر في تقييم الداتا والبيانات الناقصة
+00:20:44	Learner B5:	من وجهة نظرك، إيه أكتر حاجة بتضايقك في طريقة تقييم التاسكات الحالية؟  
+
+التأخير الطويل في ظهور النتيجة  
+
+إن الفدباك جاف وعبارة عن درجات جاهزة من غير شرح  
+
+الخصومات غير العادلة بسبب أخطاء النظام أو نقص الداتا  
+
+صعوبة التواصل المباشر مع الشخص اللي راجع التاسك
+00:21:28	Learner B7:	ايوا بدور ع الفايل بس و اخده كوبى
+00:26:15	Learner B7:	In your last review, how many comments did you write that were similar to previous comments
+
+f you could remove ONE step from today's review process, which step would you remove
+
+At what point would you feel comfortable relying on AI-generated feedback?
+
+Never
+If mentor reviews it
+If accuracy is above 90%
+If it follows the rubric exactly
+
+You can only have ONE AI feature in the first release.
+
+Which would create the biggest improvement?
+
+AI First-pass Review
+AI Rubric Checker
+AI Feedback Generator
+
+Imagine AI generated the first draft of feedback with 85% accuracy, and you only needed to review and edit it before sending it to the learner.
+
+Would you:
+
+Always use it
+Use it only for some assignments
+Rarely use it
+Never use it
+
+
+How many days passed between submission and receiving the first meaningful feedback?
+
+Less than 24 hours
+1–2 days
+3–5 days
+More than 5 days
+During your last assignment review, approximately how much time did you spend writing repetitive comments that were similar
+00:28:26	Learner B7:	في آخر Assignmentكام دقيقة خدتها فى كتابة الـ Feedback؟
+إيه الجزء اللي أخد أكبر وقت؟ (Reading / Comparing with rubric / Writing / Editing)
+
+ده للمنتور
+00:44:13	Learner B3:	https://ideaboardz.com/for/R2%20Internship%20Retrospective%2020th%20July%20/5800614
+00:46:39	Learner B5:	بالنسبة للـ Data المطلوبة في التاسكات (زي الـ Masked Data)، هل بتقابل مشاكل في إنك تلاقيها أو تشتغل عليها؟
+
+أيوة، أوقات مبيكونش فيه داتا حقيقية أو كافية للشغل فبنحس إننا تايهين
+
+الداتا بتبقى واضحة وكافية متطلبات التاسك
+
+مش متأكد بس بتعملنا أزمة في تقييمات الـ AI

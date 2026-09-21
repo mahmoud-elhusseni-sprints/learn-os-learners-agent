@@ -1,0 +1,77 @@
+00:27:54	Learner A4:	Learner A4.Learner A537@msa.edu.eg
+00:27:57	Learner A6:	learner-a6@example.invalid
+00:28:06	Learner A3:	learner-a3@example.invalid
+00:28:22	Learner A2:	learner-a20@gmail.com
+00:33:34	Learner A4:	Benchmark & Integrate Open-Source Models
+Implement zero-quota / open-source alternatives to bypass Gemini API limits:
+Pollinations.ai (Flux.1): Primary generator for scene illustrations.
+Local SDXL-Turbo (diffusers): Offline backup engine.
+Kroki.io API: Dedicated vector renderer for flowcharts/Mermaid diagrams.
+Iconify API: Flat vector icons.
+00:38:24	Learner A4:	**Synthesizing My Role**
+
+
+**Refining My Contributions**
+
+
+
+**Condensing My Contributions**
+
+
+**Your Role Across Sprints:**
+
+*   **Sprint 1: The Fixer.** You repaired a broken pipeline, solving critical crashes and authentication errors to make the script runnable.
+
+*   **Sprint 2: The Integrator.** You proved the full system worked end-to-end and identified that it was only producing low-quality fallback prompts.
+
+*   **Sprint 3: The Quality Engineer.** You are now diagnosing *why* the AI fails, fixing the root cause, and enhancing the system to deliver final, high-quality visual assets that meet strict standards.
+00:49:41	Learner A4:	{
+        "video_id": "sprint_2_demo_video",
+        "asset_id": "asset_img_01",
+        "scene_id": "scene_1",
+        "cue_id": "cue_101",
+        "element": "a friendly robot waving hello",
+        "prompt": "flat 2d illustration, a friendly robot waving hello, no text, no shadows",
+        "url": "https://supabase-storage.local/assets/2bb46360-1335-48ac-ba3c-78b87c3c4fbb.png",
+        "type": "image",
+        "source": "generated",
+        "license": "open-source",
+        "registered_at": "2026-07-28T14:22:25.331354+00:00",
+        "prompt_used": "flat 2d illustration, a friendly robot waving hello, no text, no shadows",
+        "resolution": "1920x1080",
+        "aspect_ratio": "16:9"
+    },
+00:49:48	Learner A4:	{
+        "video_id": "sprint_2_demo_video",
+        "asset_id": "asset_img_02",
+        "scene_id": "scene_2",
+        "cue_id": "cue_102",
+        "element": "flowchart showing data moving from a client laptop to a cloud server",
+        "prompt": "flat 2d illustration, flowchart showing data moving from a client laptop to a cloud server, no text, no shadows",
+        "url": "https://supabase-storage.local/assets/1f2cfd8f-cdb6-4f32-8144-6be01eedc0e4.png",
+        "type": "image",
+        "source": "generated",
+        "license": "open-source",
+        "registered_at": "2026-07-28T14:22:25.332349+00:00",
+        "prompt_used": "flat 2d illustration, flowchart showing data moving from a client laptop to a cloud server, no text, no shadows",
+        "resolution": "1920x1080",
+        "aspect_ratio": "16:9"
+    },
+00:49:55	Learner A4:	{
+        "video_id": "sprint_2_demo_video",
+        "asset_id": "asset_img_03",
+        "scene_id": "scene_3",
+        "cue_id": "cue_103",
+        "element": "a bright glowing lightbulb symbolizing an innovative idea",
+        "prompt": "flat 2d illustration, a bright glowing lightbulb symbolizing an innovative idea, no text, no shadows",
+        "url": "https://supabase-storage.local/assets/107213d0-f79f-4445-866e-f919e28c67b0.png",
+        "type": "image",
+        "source": "generated",
+        "license": "open-source",
+        "registered_at": "2026-07-28T14:22:25.332349+00:00",
+        "prompt_used": "flat 2d illustration, a bright glowing lightbulb symbolizing an innovative idea, no text, no shadows",
+        "resolution": "1920x1080",
+        "aspect_ratio": "16:9"
+    }
+]
+00:59:30	Learner A2:	Hi, I'm transcribing this call with my Tactiq AI Extension. https://tactiq.io/r/transcribing

@@ -1,0 +1,8 @@
+00:00:17	Learner A2:	Learner A2 invited Fireflies.ai here to record & take notes.
+By continuing, you agree to https://fireflies.ai/privacy
+
+Type:
+'/ff pause' - pause recording
+'/ff leave' - to stop recording
+
+View Realtime notes here: https://app.fireflies.ai/live/01KXAJ7KTZFT02N0A0PGDQ4NCH?ref=live_chat

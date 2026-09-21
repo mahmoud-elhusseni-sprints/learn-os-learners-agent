@@ -61,7 +61,7 @@ TOOL_METADATA: dict[str, dict[str, Any]] = {
                 "second_learner": {"type": "string"},
                 "focus": {"type": "string"},
             },
-            "required": ["first_learner", "second_learner"],
+            "required": ["first_learner", "second_learner", "focus"],
         },
     },
     "get_skill_proofs": {

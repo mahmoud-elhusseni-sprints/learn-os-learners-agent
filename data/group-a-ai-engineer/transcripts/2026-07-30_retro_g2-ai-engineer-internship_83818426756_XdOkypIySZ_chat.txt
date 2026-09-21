@@ -1,0 +1,28 @@
+00:12:58	Learner A4:	# LiteLLM Configuration
+LITELLM_API_KEY="[REDACTED]"
+LITELLM_BASE_URL="https://learner-os.sprints.ai/litellm/v1"
+LITELLM_MODEL="kimi-k2.5"
+00:13:43	Learner A4:	LITELLM_API_BASE=https://learner-os.sprints.ai/litellm/v1
+LITELLM_API_KEY=[REDACTED]
+
+SUPABASE_URL=[REDACTED]
+SUPABASE_KEY=[REDACTED]
+GEMINI_API_KEY=[REDACTED]
+00:21:09	Mentor A:	eb3atly el file nfsooo fe glitch
+01:19:23	Learner A4:	Learner A4, welcome to Week 3. Here is your official task assignment and operational brief for this sprint.
+Task Context
+Task: Week 3 - Integration and UI
+You are required to unify the video-generation pipeline into a single orchestrator function and deliver a functional, integrated user interface ready for testing.
+What You Must Build
+Integrate the entire video-generation pipeline into a single orchestrator function using asynchronous functions (`async`/`await`).
+Build the frontend completely using React and connect it with the backend via RESTful API endpoints.
+Collaborate with your team on the final HTML generation.
+Required Deliverables
+Clean codebase and documentation for a working React UI integrated with the backend API.
+Submit your final work directly to your mentor.
+Assets and Links
+No external asset files or links are provided for this task.
+Deadline
+Thursday, July 30, 2026, at 11:59:59 PM Cairo time. The deadline stands; extensions or scope changes will not be granted.
+Success Standard
+A fully functional

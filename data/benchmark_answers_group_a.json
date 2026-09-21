@@ -1,0 +1,2088 @@
+[
+  {
+    "assessment_id": "asm_pre_127c834c",
+    "learner_id": "127c834c-f7ce-4cc7-9a73-c8f93c8648aa",
+    "lx_id": "lx-pre-127c834c",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_baseline_assessment",
+    "topic_title": "AI Engineer Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 43.0,
+    "max_score": 100.0,
+    "score_percentage": 43.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Initial baseline response from Learner A1 on Python Core & Scripting. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Initial baseline response from Learner A1 on HTML to MP4 Pipeline. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Initial baseline response from Learner A1 on LLM Integration. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Initial baseline response from Learner A1 on RAG & Retrieval. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Initial baseline response from Learner A1 on REST API & Backend. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Initial baseline response from Learner A1 on System Evals & Benchmarks. Familiar with basic principles but limited hands-on production experience.",
+        "score": 43.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "71bd2751-18f0-59f9-8adb-02d92e744de6",
+        "meeting_id": "69f4ee6a-81cf-50f2-8c7e-f47c197c8bc0",
+        "metric_key": "python_async_io",
+        "content": "Learner A1 completed baseline pre-course evaluation for Python Core & Scripting.",
+        "rationale": "Entry assessment identified growth areas in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "d0710297-7009-5192-a970-689c17f1873e",
+        "meeting_id": "69f4ee6a-81cf-50f2-8c7e-f47c197c8bc0",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A1 completed baseline pre-course evaluation for HTML to MP4 Pipeline.",
+        "rationale": "Entry assessment identified growth areas in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "7bc60ecb-08c9-51cc-8e28-af763e10bb33",
+        "meeting_id": "69f4ee6a-81cf-50f2-8c7e-f47c197c8bc0",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A1 completed baseline pre-course evaluation for LLM Integration.",
+        "rationale": "Entry assessment identified growth areas in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "a16e7472-80bc-5d4b-bab9-bc6ab5576483",
+        "meeting_id": "69f4ee6a-81cf-50f2-8c7e-f47c197c8bc0",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A1 completed baseline pre-course evaluation for RAG & Retrieval.",
+        "rationale": "Entry assessment identified growth areas in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "58a81238-c8bf-50b7-b166-113bd20fff5a",
+        "meeting_id": "69f4ee6a-81cf-50f2-8c7e-f47c197c8bc0",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A1 completed baseline pre-course evaluation for REST API & Backend.",
+        "rationale": "Entry assessment identified growth areas in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "9f829320-18c7-5817-994d-ae45eb8f55b7",
+        "meeting_id": "69f4ee6a-81cf-50f2-8c7e-f47c197c8bc0",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A1 completed baseline pre-course evaluation for System Evals & Benchmarks.",
+        "rationale": "Entry assessment identified growth areas in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_127c834c",
+    "learner_id": "127c834c-f7ce-4cc7-9a73-c8f93c8648aa",
+    "lx_id": "lx-post-127c834c",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_final_assessment",
+    "topic_title": "AI Engineer Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 90.0,
+    "max_score": 100.0,
+    "score_percentage": 90.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Comprehensive post-course final response from Learner A1 on Python Core & Scripting. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Comprehensive post-course final response from Learner A1 on HTML to MP4 Pipeline. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner A1 on LLM Integration. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Comprehensive post-course final response from Learner A1 on RAG & Retrieval. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Comprehensive post-course final response from Learner A1 on REST API & Backend. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Comprehensive post-course final response from Learner A1 on System Evals & Benchmarks. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "d57b87ff-7219-5c8c-ab0a-e81508ef93e8",
+        "meeting_id": "f77a7545-da47-54c1-9fac-abb76b23f18f",
+        "metric_key": "python_async_io",
+        "content": "Learner A1 achieved advanced mastery in Python Core & Scripting.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "438d5861-a10f-5bbb-ba79-e33f63e497b7",
+        "meeting_id": "f77a7545-da47-54c1-9fac-abb76b23f18f",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A1 achieved advanced mastery in HTML to MP4 Pipeline.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "8f3c03fb-8df7-5454-9398-772fb2153d88",
+        "meeting_id": "f77a7545-da47-54c1-9fac-abb76b23f18f",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A1 achieved advanced mastery in LLM Integration.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "66bc0203-a54d-522e-8095-45aab8bd8af3",
+        "meeting_id": "f77a7545-da47-54c1-9fac-abb76b23f18f",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A1 achieved advanced mastery in RAG & Retrieval.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "656b1c0c-2feb-51d9-9bac-8b2d51a22f69",
+        "meeting_id": "f77a7545-da47-54c1-9fac-abb76b23f18f",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A1 achieved advanced mastery in REST API & Backend.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "9dcb1482-b933-5355-82e4-4b7c82a13477",
+        "meeting_id": "f77a7545-da47-54c1-9fac-abb76b23f18f",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A1 achieved advanced mastery in System Evals & Benchmarks.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_9a1e29a3",
+    "learner_id": "9a1e29a3-b6f8-43cc-b4a7-6fcfb72bd201",
+    "lx_id": "lx-pre-9a1e29a3",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_baseline_assessment",
+    "topic_title": "AI Engineer Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 50.0,
+    "max_score": 100.0,
+    "score_percentage": 50.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Initial baseline response from Learner A2 on Python Core & Scripting. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Initial baseline response from Learner A2 on HTML to MP4 Pipeline. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Initial baseline response from Learner A2 on LLM Integration. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Initial baseline response from Learner A2 on RAG & Retrieval. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Initial baseline response from Learner A2 on REST API & Backend. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Initial baseline response from Learner A2 on System Evals & Benchmarks. Familiar with basic principles but limited hands-on production experience.",
+        "score": 50.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "54a065b3-3bae-5830-bf39-8dd49b66594a",
+        "meeting_id": "2d4350e2-86dd-5a7c-8f68-0bf8da5c731c",
+        "metric_key": "python_async_io",
+        "content": "Learner A2 completed baseline pre-course evaluation for Python Core & Scripting.",
+        "rationale": "Entry assessment identified growth areas in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "5fef5a35-347b-5556-82e7-b9725b61c876",
+        "meeting_id": "2d4350e2-86dd-5a7c-8f68-0bf8da5c731c",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A2 completed baseline pre-course evaluation for HTML to MP4 Pipeline.",
+        "rationale": "Entry assessment identified growth areas in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "e87013c8-1ba3-5a34-b530-520ad8831a2e",
+        "meeting_id": "2d4350e2-86dd-5a7c-8f68-0bf8da5c731c",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A2 completed baseline pre-course evaluation for LLM Integration.",
+        "rationale": "Entry assessment identified growth areas in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "2aef2788-cd76-5d31-8bd5-12490da7eca5",
+        "meeting_id": "2d4350e2-86dd-5a7c-8f68-0bf8da5c731c",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A2 completed baseline pre-course evaluation for RAG & Retrieval.",
+        "rationale": "Entry assessment identified growth areas in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "168779e2-6ad8-5bbb-9fcd-42692d045ad6",
+        "meeting_id": "2d4350e2-86dd-5a7c-8f68-0bf8da5c731c",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A2 completed baseline pre-course evaluation for REST API & Backend.",
+        "rationale": "Entry assessment identified growth areas in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "2dd310b7-166a-5113-ac1f-afeec55344f0",
+        "meeting_id": "2d4350e2-86dd-5a7c-8f68-0bf8da5c731c",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A2 completed baseline pre-course evaluation for System Evals & Benchmarks.",
+        "rationale": "Entry assessment identified growth areas in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_9a1e29a3",
+    "learner_id": "9a1e29a3-b6f8-43cc-b4a7-6fcfb72bd201",
+    "lx_id": "lx-post-9a1e29a3",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_final_assessment",
+    "topic_title": "AI Engineer Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 93.0,
+    "max_score": 100.0,
+    "score_percentage": 93.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Comprehensive post-course final response from Learner A2 on Python Core & Scripting. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Comprehensive post-course final response from Learner A2 on HTML to MP4 Pipeline. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner A2 on LLM Integration. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Comprehensive post-course final response from Learner A2 on RAG & Retrieval. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Comprehensive post-course final response from Learner A2 on REST API & Backend. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Comprehensive post-course final response from Learner A2 on System Evals & Benchmarks. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "63d6c5cf-40f9-5110-bcec-213104a38af1",
+        "meeting_id": "c20b3405-c08e-5e74-be80-49f81e0e4fd3",
+        "metric_key": "python_async_io",
+        "content": "Learner A2 achieved advanced mastery in Python Core & Scripting.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "8892cc17-40f7-5eda-9f73-137b2b6afc74",
+        "meeting_id": "c20b3405-c08e-5e74-be80-49f81e0e4fd3",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A2 achieved advanced mastery in HTML to MP4 Pipeline.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "f7ff4143-18a2-5bb1-8bf1-70570c138e6a",
+        "meeting_id": "c20b3405-c08e-5e74-be80-49f81e0e4fd3",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A2 achieved advanced mastery in LLM Integration.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "ebedb629-09c2-52c5-aacd-5b02273be8df",
+        "meeting_id": "c20b3405-c08e-5e74-be80-49f81e0e4fd3",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A2 achieved advanced mastery in RAG & Retrieval.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "4e6c4627-44e4-5c68-b605-c9a532c9b937",
+        "meeting_id": "c20b3405-c08e-5e74-be80-49f81e0e4fd3",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A2 achieved advanced mastery in REST API & Backend.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "317e5719-2688-5e7e-8e9b-d662c80546d2",
+        "meeting_id": "c20b3405-c08e-5e74-be80-49f81e0e4fd3",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A2 achieved advanced mastery in System Evals & Benchmarks.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_aad53cf0",
+    "learner_id": "aad53cf0-8a0e-4a87-aeb5-a89a376ba8f4",
+    "lx_id": "lx-pre-aad53cf0",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_baseline_assessment",
+    "topic_title": "AI Engineer Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 57.0,
+    "max_score": 100.0,
+    "score_percentage": 57.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Initial baseline response from Learner A3 on Python Core & Scripting. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Initial baseline response from Learner A3 on HTML to MP4 Pipeline. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Initial baseline response from Learner A3 on LLM Integration. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Initial baseline response from Learner A3 on RAG & Retrieval. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Initial baseline response from Learner A3 on REST API & Backend. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Initial baseline response from Learner A3 on System Evals & Benchmarks. Familiar with basic principles but limited hands-on production experience.",
+        "score": 57.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "a99ffd5e-e977-5e26-b854-a769e44c9491",
+        "meeting_id": "248e8435-a892-5288-8bad-cb83494b9353",
+        "metric_key": "python_async_io",
+        "content": "Learner A3 completed baseline pre-course evaluation for Python Core & Scripting.",
+        "rationale": "Entry assessment identified growth areas in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "9007117c-53fd-5446-8b9b-60888d6bb390",
+        "meeting_id": "248e8435-a892-5288-8bad-cb83494b9353",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A3 completed baseline pre-course evaluation for HTML to MP4 Pipeline.",
+        "rationale": "Entry assessment identified growth areas in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "032576e8-9379-505d-935a-6f1978e98968",
+        "meeting_id": "248e8435-a892-5288-8bad-cb83494b9353",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A3 completed baseline pre-course evaluation for LLM Integration.",
+        "rationale": "Entry assessment identified growth areas in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "6125b7e1-aed7-555f-ac60-4cad66fce7ed",
+        "meeting_id": "248e8435-a892-5288-8bad-cb83494b9353",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A3 completed baseline pre-course evaluation for RAG & Retrieval.",
+        "rationale": "Entry assessment identified growth areas in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "0513691f-1cf7-506e-b05f-77e56188eb66",
+        "meeting_id": "248e8435-a892-5288-8bad-cb83494b9353",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A3 completed baseline pre-course evaluation for REST API & Backend.",
+        "rationale": "Entry assessment identified growth areas in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "560e6118-2ed0-5eeb-b8be-6cfa422edb7f",
+        "meeting_id": "248e8435-a892-5288-8bad-cb83494b9353",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A3 completed baseline pre-course evaluation for System Evals & Benchmarks.",
+        "rationale": "Entry assessment identified growth areas in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_aad53cf0",
+    "learner_id": "aad53cf0-8a0e-4a87-aeb5-a89a376ba8f4",
+    "lx_id": "lx-post-aad53cf0",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_final_assessment",
+    "topic_title": "AI Engineer Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 96.0,
+    "max_score": 100.0,
+    "score_percentage": 96.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Comprehensive post-course final response from Learner A3 on Python Core & Scripting. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Comprehensive post-course final response from Learner A3 on HTML to MP4 Pipeline. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner A3 on LLM Integration. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Comprehensive post-course final response from Learner A3 on RAG & Retrieval. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Comprehensive post-course final response from Learner A3 on REST API & Backend. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Comprehensive post-course final response from Learner A3 on System Evals & Benchmarks. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 96.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "3f2cf09d-53c6-5606-a071-e661523b8e1d",
+        "meeting_id": "e74ba92b-99f8-5b2e-9631-5cd54ecb4080",
+        "metric_key": "python_async_io",
+        "content": "Learner A3 achieved advanced mastery in Python Core & Scripting.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "f917cc3b-7ef9-5594-b3fd-8414d4a45687",
+        "meeting_id": "e74ba92b-99f8-5b2e-9631-5cd54ecb4080",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A3 achieved advanced mastery in HTML to MP4 Pipeline.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "fdc4ae1b-03b8-536a-872d-f321a5c89217",
+        "meeting_id": "e74ba92b-99f8-5b2e-9631-5cd54ecb4080",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A3 achieved advanced mastery in LLM Integration.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "b014a626-1855-5de0-bb1b-c34bbeee1ed7",
+        "meeting_id": "e74ba92b-99f8-5b2e-9631-5cd54ecb4080",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A3 achieved advanced mastery in RAG & Retrieval.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "38c455c1-6193-5c46-983b-49e273baf16d",
+        "meeting_id": "e74ba92b-99f8-5b2e-9631-5cd54ecb4080",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A3 achieved advanced mastery in REST API & Backend.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "de945ae0-5b08-5274-a391-a7e658135537",
+        "meeting_id": "e74ba92b-99f8-5b2e-9631-5cd54ecb4080",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A3 achieved advanced mastery in System Evals & Benchmarks.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_900353f6",
+    "learner_id": "900353f6-f011-4d31-9a8a-b050b891c69c",
+    "lx_id": "lx-pre-900353f6",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_baseline_assessment",
+    "topic_title": "AI Engineer Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 64.0,
+    "max_score": 100.0,
+    "score_percentage": 64.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Initial baseline response from Learner A4 on Python Core & Scripting. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Initial baseline response from Learner A4 on HTML to MP4 Pipeline. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Initial baseline response from Learner A4 on LLM Integration. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Initial baseline response from Learner A4 on RAG & Retrieval. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Initial baseline response from Learner A4 on REST API & Backend. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Initial baseline response from Learner A4 on System Evals & Benchmarks. Familiar with basic principles but limited hands-on production experience.",
+        "score": 64.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "0d6fe673-37fe-56c4-9fd3-b0aedfae6677",
+        "meeting_id": "f7a218f3-0f74-5a93-b087-67f8bc581b8b",
+        "metric_key": "python_async_io",
+        "content": "Learner A4 completed baseline pre-course evaluation for Python Core & Scripting.",
+        "rationale": "Entry assessment identified growth areas in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "108e66e8-a15f-587a-91c9-d2b2c0e44698",
+        "meeting_id": "f7a218f3-0f74-5a93-b087-67f8bc581b8b",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A4 completed baseline pre-course evaluation for HTML to MP4 Pipeline.",
+        "rationale": "Entry assessment identified growth areas in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "d5f55772-b4eb-510b-9e93-6fdf951f3951",
+        "meeting_id": "f7a218f3-0f74-5a93-b087-67f8bc581b8b",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A4 completed baseline pre-course evaluation for LLM Integration.",
+        "rationale": "Entry assessment identified growth areas in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "11845770-dadf-525f-9cbb-f00a20d14faa",
+        "meeting_id": "f7a218f3-0f74-5a93-b087-67f8bc581b8b",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A4 completed baseline pre-course evaluation for RAG & Retrieval.",
+        "rationale": "Entry assessment identified growth areas in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "b8a6d8ba-3182-5224-8952-02a02135ca54",
+        "meeting_id": "f7a218f3-0f74-5a93-b087-67f8bc581b8b",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A4 completed baseline pre-course evaluation for REST API & Backend.",
+        "rationale": "Entry assessment identified growth areas in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "2027d7b3-ff35-55e4-8f8c-d8dbec85d1de",
+        "meeting_id": "f7a218f3-0f74-5a93-b087-67f8bc581b8b",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A4 completed baseline pre-course evaluation for System Evals & Benchmarks.",
+        "rationale": "Entry assessment identified growth areas in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_900353f6",
+    "learner_id": "900353f6-f011-4d31-9a8a-b050b891c69c",
+    "lx_id": "lx-post-900353f6",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_final_assessment",
+    "topic_title": "AI Engineer Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 99.0,
+    "max_score": 100.0,
+    "score_percentage": 99.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Comprehensive post-course final response from Learner A4 on Python Core & Scripting. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Comprehensive post-course final response from Learner A4 on HTML to MP4 Pipeline. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner A4 on LLM Integration. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Comprehensive post-course final response from Learner A4 on RAG & Retrieval. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Comprehensive post-course final response from Learner A4 on REST API & Backend. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Comprehensive post-course final response from Learner A4 on System Evals & Benchmarks. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 99.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "7a2e0f57-218d-5acf-a8e4-abec3554880c",
+        "meeting_id": "dc5c8c49-3562-57b0-a9a0-d6a9dfc8a394",
+        "metric_key": "python_async_io",
+        "content": "Learner A4 achieved advanced mastery in Python Core & Scripting.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "120b1708-b048-51e9-854d-948084c03dff",
+        "meeting_id": "dc5c8c49-3562-57b0-a9a0-d6a9dfc8a394",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A4 achieved advanced mastery in HTML to MP4 Pipeline.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "d4964e82-d2e2-588e-9337-fa1d5719e216",
+        "meeting_id": "dc5c8c49-3562-57b0-a9a0-d6a9dfc8a394",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A4 achieved advanced mastery in LLM Integration.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "4563c6bd-83a7-568e-91ed-189837a3dc68",
+        "meeting_id": "dc5c8c49-3562-57b0-a9a0-d6a9dfc8a394",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A4 achieved advanced mastery in RAG & Retrieval.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "099034ab-3ad7-59fa-a547-0dc050f7acef",
+        "meeting_id": "dc5c8c49-3562-57b0-a9a0-d6a9dfc8a394",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A4 achieved advanced mastery in REST API & Backend.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "d6791806-9587-5cab-9951-7429763cb8cd",
+        "meeting_id": "dc5c8c49-3562-57b0-a9a0-d6a9dfc8a394",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A4 achieved advanced mastery in System Evals & Benchmarks.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_10e095c3",
+    "learner_id": "10e095c3-3897-46b3-b468-d76120eaa4e4",
+    "lx_id": "lx-pre-10e095c3",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_baseline_assessment",
+    "topic_title": "AI Engineer Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 46.0,
+    "max_score": 100.0,
+    "score_percentage": 46.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Initial baseline response from Learner A5 on Python Core & Scripting. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Initial baseline response from Learner A5 on HTML to MP4 Pipeline. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Initial baseline response from Learner A5 on LLM Integration. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Initial baseline response from Learner A5 on RAG & Retrieval. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Initial baseline response from Learner A5 on REST API & Backend. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Initial baseline response from Learner A5 on System Evals & Benchmarks. Familiar with basic principles but limited hands-on production experience.",
+        "score": 46.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "417f25f9-6fa0-55ff-8018-54f86bfe0ce8",
+        "meeting_id": "4f2d4e12-b688-5006-9c54-ade0142fb09f",
+        "metric_key": "python_async_io",
+        "content": "Learner A5 completed baseline pre-course evaluation for Python Core & Scripting.",
+        "rationale": "Entry assessment identified growth areas in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "49784c3a-3c8a-52d6-b6a2-05351037a973",
+        "meeting_id": "4f2d4e12-b688-5006-9c54-ade0142fb09f",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A5 completed baseline pre-course evaluation for HTML to MP4 Pipeline.",
+        "rationale": "Entry assessment identified growth areas in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "4996b1a1-5725-5daf-9840-f80407c263c4",
+        "meeting_id": "4f2d4e12-b688-5006-9c54-ade0142fb09f",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A5 completed baseline pre-course evaluation for LLM Integration.",
+        "rationale": "Entry assessment identified growth areas in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "f68c09a2-55b8-520a-9b4a-0ce7b0cbff2a",
+        "meeting_id": "4f2d4e12-b688-5006-9c54-ade0142fb09f",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A5 completed baseline pre-course evaluation for RAG & Retrieval.",
+        "rationale": "Entry assessment identified growth areas in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "db0ea4aa-59eb-5757-b521-84554c7bac13",
+        "meeting_id": "4f2d4e12-b688-5006-9c54-ade0142fb09f",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A5 completed baseline pre-course evaluation for REST API & Backend.",
+        "rationale": "Entry assessment identified growth areas in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "1c916da9-2bdd-53d0-81aa-e657ae822fa7",
+        "meeting_id": "4f2d4e12-b688-5006-9c54-ade0142fb09f",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A5 completed baseline pre-course evaluation for System Evals & Benchmarks.",
+        "rationale": "Entry assessment identified growth areas in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_10e095c3",
+    "learner_id": "10e095c3-3897-46b3-b468-d76120eaa4e4",
+    "lx_id": "lx-post-10e095c3",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_final_assessment",
+    "topic_title": "AI Engineer Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 87.0,
+    "max_score": 100.0,
+    "score_percentage": 87.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Comprehensive post-course final response from Learner A5 on Python Core & Scripting. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Comprehensive post-course final response from Learner A5 on HTML to MP4 Pipeline. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner A5 on LLM Integration. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Comprehensive post-course final response from Learner A5 on RAG & Retrieval. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Comprehensive post-course final response from Learner A5 on REST API & Backend. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Comprehensive post-course final response from Learner A5 on System Evals & Benchmarks. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 87.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "4cdd1738-a828-5a34-bb93-870cf4950047",
+        "meeting_id": "15a122d6-0363-5e36-a486-bedb562a32e9",
+        "metric_key": "python_async_io",
+        "content": "Learner A5 achieved advanced mastery in Python Core & Scripting.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "703a2a8d-3d17-50d0-a5e3-8bf20e98d208",
+        "meeting_id": "15a122d6-0363-5e36-a486-bedb562a32e9",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A5 achieved advanced mastery in HTML to MP4 Pipeline.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "6fda1987-11ef-5b1a-81e5-be0c87a4eaa1",
+        "meeting_id": "15a122d6-0363-5e36-a486-bedb562a32e9",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A5 achieved advanced mastery in LLM Integration.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "4c2c15eb-2026-5e4f-a85a-21f194e2edf2",
+        "meeting_id": "15a122d6-0363-5e36-a486-bedb562a32e9",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A5 achieved advanced mastery in RAG & Retrieval.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "7e1b2f6e-fb66-500e-a4e5-78fb39388cba",
+        "meeting_id": "15a122d6-0363-5e36-a486-bedb562a32e9",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A5 achieved advanced mastery in REST API & Backend.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "214daf76-6c08-5751-b053-c855f7acd6f3",
+        "meeting_id": "15a122d6-0363-5e36-a486-bedb562a32e9",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A5 achieved advanced mastery in System Evals & Benchmarks.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_745e8928",
+    "learner_id": "745e8928-4d19-440e-8102-6015eea14458",
+    "lx_id": "lx-pre-745e8928",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_baseline_assessment",
+    "topic_title": "AI Engineer Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 53.0,
+    "max_score": 100.0,
+    "score_percentage": 53.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Initial baseline response from Learner A6 on Python Core & Scripting. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Initial baseline response from Learner A6 on HTML to MP4 Pipeline. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Initial baseline response from Learner A6 on LLM Integration. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Initial baseline response from Learner A6 on RAG & Retrieval. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Initial baseline response from Learner A6 on REST API & Backend. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Initial baseline response from Learner A6 on System Evals & Benchmarks. Familiar with basic principles but limited hands-on production experience.",
+        "score": 53.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "f2069e95-0d99-5a74-94d4-8dcef43450b7",
+        "meeting_id": "27c30730-231b-5021-8bae-df5179598ae4",
+        "metric_key": "python_async_io",
+        "content": "Learner A6 completed baseline pre-course evaluation for Python Core & Scripting.",
+        "rationale": "Entry assessment identified growth areas in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "e8e90494-85b9-553a-b032-55ffd0070536",
+        "meeting_id": "27c30730-231b-5021-8bae-df5179598ae4",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A6 completed baseline pre-course evaluation for HTML to MP4 Pipeline.",
+        "rationale": "Entry assessment identified growth areas in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "ee09f978-b44c-5ac4-8566-e9f1fba184f5",
+        "meeting_id": "27c30730-231b-5021-8bae-df5179598ae4",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A6 completed baseline pre-course evaluation for LLM Integration.",
+        "rationale": "Entry assessment identified growth areas in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "409555a8-7b7b-5783-941b-1aba00adc902",
+        "meeting_id": "27c30730-231b-5021-8bae-df5179598ae4",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A6 completed baseline pre-course evaluation for RAG & Retrieval.",
+        "rationale": "Entry assessment identified growth areas in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "98f06391-38cd-5381-8078-fef9dfc1ce43",
+        "meeting_id": "27c30730-231b-5021-8bae-df5179598ae4",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A6 completed baseline pre-course evaluation for REST API & Backend.",
+        "rationale": "Entry assessment identified growth areas in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "d426f6d1-e05a-53aa-a3b3-38bb7c46c245",
+        "meeting_id": "27c30730-231b-5021-8bae-df5179598ae4",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A6 completed baseline pre-course evaluation for System Evals & Benchmarks.",
+        "rationale": "Entry assessment identified growth areas in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_745e8928",
+    "learner_id": "745e8928-4d19-440e-8102-6015eea14458",
+    "lx_id": "lx-post-745e8928",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_final_assessment",
+    "topic_title": "AI Engineer Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 90.0,
+    "max_score": 100.0,
+    "score_percentage": 90.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Comprehensive post-course final response from Learner A6 on Python Core & Scripting. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Comprehensive post-course final response from Learner A6 on HTML to MP4 Pipeline. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner A6 on LLM Integration. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Comprehensive post-course final response from Learner A6 on RAG & Retrieval. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Comprehensive post-course final response from Learner A6 on REST API & Backend. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Comprehensive post-course final response from Learner A6 on System Evals & Benchmarks. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 90.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "ae47161a-2e54-557b-af99-50b564157d05",
+        "meeting_id": "a368024e-cc05-512d-b7e7-b502bff4219b",
+        "metric_key": "python_async_io",
+        "content": "Learner A6 achieved advanced mastery in Python Core & Scripting.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "497f6b9e-43a8-58c6-a122-0533e1e15a61",
+        "meeting_id": "a368024e-cc05-512d-b7e7-b502bff4219b",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A6 achieved advanced mastery in HTML to MP4 Pipeline.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "12f4b189-73c6-5636-be12-0a2cee686368",
+        "meeting_id": "a368024e-cc05-512d-b7e7-b502bff4219b",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A6 achieved advanced mastery in LLM Integration.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "3c53d6a2-4d65-5c5d-938c-1c2b2f78ccef",
+        "meeting_id": "a368024e-cc05-512d-b7e7-b502bff4219b",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A6 achieved advanced mastery in RAG & Retrieval.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "8979a87b-36e1-5b55-b219-5880fba15c66",
+        "meeting_id": "a368024e-cc05-512d-b7e7-b502bff4219b",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A6 achieved advanced mastery in REST API & Backend.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "e6fd1321-bcc1-5de8-bcb4-e063b20540ed",
+        "meeting_id": "a368024e-cc05-512d-b7e7-b502bff4219b",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A6 achieved advanced mastery in System Evals & Benchmarks.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_pre_087a2843",
+    "learner_id": "087a2843-3c98-44d3-8ed1-81eeaccd440a",
+    "lx_id": "lx-pre-087a2843",
+    "assessment_type": "pre_course",
+    "phase": "beginning",
+    "module_title": "Pre-Course Baseline Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_baseline_assessment",
+    "topic_title": "AI Engineer Track Entry Baseline Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 60.0,
+    "max_score": 100.0,
+    "score_percentage": 60.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-07-15T11:00:00.000000+00:00",
+    "terminated_at": "2026-07-15T12:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Initial baseline response from Learner A7 on Python Core & Scripting. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Initial baseline response from Learner A7 on HTML to MP4 Pipeline. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Initial baseline response from Learner A7 on LLM Integration. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Initial baseline response from Learner A7 on RAG & Retrieval. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Initial baseline response from Learner A7 on REST API & Backend. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Initial baseline response from Learner A7 on System Evals & Benchmarks. Familiar with basic principles but limited hands-on production experience.",
+        "score": 60.0,
+        "evaluation_notes": "Demonstrates introductory foundational knowledge in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "d1ed56d2-584f-528b-bac2-6057e9ac71e1",
+        "meeting_id": "bd1096bc-6b8c-5544-a6b6-43f0990eccf2",
+        "metric_key": "python_async_io",
+        "content": "Learner A7 completed baseline pre-course evaluation for Python Core & Scripting.",
+        "rationale": "Entry assessment identified growth areas in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "1f2bd225-1b71-5ab3-9486-04a38cbe3d95",
+        "meeting_id": "bd1096bc-6b8c-5544-a6b6-43f0990eccf2",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A7 completed baseline pre-course evaluation for HTML to MP4 Pipeline.",
+        "rationale": "Entry assessment identified growth areas in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "1f6aef98-f916-5444-b3fb-7e75dce6f4cd",
+        "meeting_id": "bd1096bc-6b8c-5544-a6b6-43f0990eccf2",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A7 completed baseline pre-course evaluation for LLM Integration.",
+        "rationale": "Entry assessment identified growth areas in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "d8bb51f6-3df0-5d38-a0c4-d4afae45da85",
+        "meeting_id": "bd1096bc-6b8c-5544-a6b6-43f0990eccf2",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A7 completed baseline pre-course evaluation for RAG & Retrieval.",
+        "rationale": "Entry assessment identified growth areas in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "0f4c76ec-daa5-5a6a-94c3-21ebe8491e52",
+        "meeting_id": "bd1096bc-6b8c-5544-a6b6-43f0990eccf2",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A7 completed baseline pre-course evaluation for REST API & Backend.",
+        "rationale": "Entry assessment identified growth areas in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      },
+      {
+        "card_id": "0ecffd04-eb1b-5494-9e44-cc3b134e2b93",
+        "meeting_id": "bd1096bc-6b8c-5544-a6b6-43f0990eccf2",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A7 completed baseline pre-course evaluation for System Evals & Benchmarks.",
+        "rationale": "Entry assessment identified growth areas in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-07-15T12:00:00.000000Z"
+      }
+    ]
+  },
+  {
+    "assessment_id": "asm_post_087a2843",
+    "learner_id": "087a2843-3c98-44d3-8ed1-81eeaccd440a",
+    "lx_id": "lx-post-087a2843",
+    "assessment_type": "post_course",
+    "phase": "end",
+    "module_title": "Post-Course Final Assessment: AI Engineer Track",
+    "topic_id": "ai_engineer_final_assessment",
+    "topic_title": "AI Engineer Track Final Capstone Competency Assessment",
+    "status": "terminated",
+    "outcome": "completed_success",
+    "score": 93.0,
+    "max_score": 100.0,
+    "score_percentage": 93.0,
+    "trial_count": 1,
+    "extension_used": false,
+    "activated_at": "2026-08-30T15:00:00.000000+00:00",
+    "terminated_at": "2026-08-30T17:30:00.000000+00:00",
+    "answers": [
+      {
+        "question_id": "QA_01",
+        "domain": "Python Core & Scripting",
+        "metric_key": "python_async_io",
+        "learner_answer": "Comprehensive post-course final response from Learner A7 on Python Core & Scripting. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in Python Core & Scripting."
+      },
+      {
+        "question_id": "QA_02",
+        "domain": "HTML to MP4 Pipeline",
+        "metric_key": "html_to_mp4_pipeline",
+        "learner_answer": "Comprehensive post-course final response from Learner A7 on HTML to MP4 Pipeline. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in HTML to MP4 Pipeline."
+      },
+      {
+        "question_id": "QA_03",
+        "domain": "LLM Integration",
+        "metric_key": "prompt_engineering_mastery",
+        "learner_answer": "Comprehensive post-course final response from Learner A7 on LLM Integration. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in LLM Integration."
+      },
+      {
+        "question_id": "QA_04",
+        "domain": "RAG & Retrieval",
+        "metric_key": "vector_rag_retrieval",
+        "learner_answer": "Comprehensive post-course final response from Learner A7 on RAG & Retrieval. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in RAG & Retrieval."
+      },
+      {
+        "question_id": "QA_05",
+        "domain": "REST API & Backend",
+        "metric_key": "fastapi_backend_design",
+        "learner_answer": "Comprehensive post-course final response from Learner A7 on REST API & Backend. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in REST API & Backend."
+      },
+      {
+        "question_id": "QA_06",
+        "domain": "System Evals & Benchmarks",
+        "metric_key": "ai_system_evaluations",
+        "learner_answer": "Comprehensive post-course final response from Learner A7 on System Evals & Benchmarks. Successfully implemented production workflows, test suites, and deliverables.",
+        "score": 93.0,
+        "evaluation_notes": "Mastered core requirements and demonstrated high autonomy in System Evals & Benchmarks."
+      }
+    ],
+    "mastery_memory_cards": [
+      {
+        "card_id": "fba156ee-5420-5e27-bd46-bdeb4ba9e4b6",
+        "meeting_id": "6d3b1a30-0a8b-5260-9929-494911bd0b08",
+        "metric_key": "python_async_io",
+        "content": "Learner A7 achieved advanced mastery in Python Core & Scripting.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in Python Core & Scripting.",
+        "profile_hints": [
+          "python_proficient",
+          "async_architecture",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "f6bffb0d-b355-5525-b8bd-fa6fa64f7080",
+        "meeting_id": "6d3b1a30-0a8b-5260-9929-494911bd0b08",
+        "metric_key": "html_to_mp4_pipeline",
+        "content": "Learner A7 achieved advanced mastery in HTML to MP4 Pipeline.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in HTML to MP4 Pipeline.",
+        "profile_hints": [
+          "video_pipeline",
+          "automation",
+          "media_processing"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "0f08587f-53ec-5a8e-b1bc-92a72e1bb3b2",
+        "meeting_id": "6d3b1a30-0a8b-5260-9929-494911bd0b08",
+        "metric_key": "prompt_engineering_mastery",
+        "content": "Learner A7 achieved advanced mastery in LLM Integration.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in LLM Integration.",
+        "profile_hints": [
+          "prompt_engineering",
+          "llm_integration",
+          "ai_skills"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "2bbc1050-1953-59cc-962e-3814d82ecbf2",
+        "meeting_id": "6d3b1a30-0a8b-5260-9929-494911bd0b08",
+        "metric_key": "vector_rag_retrieval",
+        "content": "Learner A7 achieved advanced mastery in RAG & Retrieval.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in RAG & Retrieval.",
+        "profile_hints": [
+          "rag_architecture",
+          "vector_databases",
+          "embeddings"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "58902798-07d1-5865-83f3-1911155a5ed2",
+        "meeting_id": "6d3b1a30-0a8b-5260-9929-494911bd0b08",
+        "metric_key": "fastapi_backend_design",
+        "content": "Learner A7 achieved advanced mastery in REST API & Backend.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in REST API & Backend.",
+        "profile_hints": [
+          "fastapi",
+          "api_design",
+          "backend_engineering"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      },
+      {
+        "card_id": "53932646-d842-5576-96df-dec47e2ac458",
+        "meeting_id": "6d3b1a30-0a8b-5260-9929-494911bd0b08",
+        "metric_key": "ai_system_evaluations",
+        "content": "Learner A7 achieved advanced mastery in System Evals & Benchmarks.",
+        "rationale": "Final post-course capstone demonstrated proficiency and independence in System Evals & Benchmarks.",
+        "profile_hints": [
+          "system_evals",
+          "benchmarking",
+          "quality_assurance"
+        ],
+        "created_at": "2026-08-30T17:00:00.000000Z"
+      }
+    ]
+  }
+]
