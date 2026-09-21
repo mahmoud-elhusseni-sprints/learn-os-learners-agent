@@ -1,18 +1,18 @@
-"""Google Gemini image generation for conceptual/illustrative assets.
-
-Uses the Gemini API REST endpoint (models.generateContent) through the
-standard library, so no extra SDK dependency is needed. Every failure is
-returned as an unsuccessful VisualizationResponse instead of being raised.
-"""
-
-from __future__ import annotations
-
 import base64
 import json
 import urllib.request
 from typing import Any
 
-from src.app.core.config import GOOGLE_API_KEY, GOOGLE_IMAGE_MODEL
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import chain
+
+from src.app.core.config import (
+    API_URL,
+    DEFAULT_MODEL,
+    GOOGLE_API_KEY,
+    GOOGLE_IMAGE_MODEL,
+    PNG_SIGNATURE,
+)
 from src.app.schemas.models import (
     Theme,
     VisualizationFormat,
@@ -20,10 +20,10 @@ from src.app.schemas.models import (
     get_theme,
 )
 
-DEFAULT_MODEL = "gemini-3.1-flash-image"
-PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
-API_URL = (
-    "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+IMAGE_PROMPT_TEMPLATE = PromptTemplate.from_template(
+    "{prompt}\n\nCreate a clean conceptual illustration using this "
+    "color palette: primary {primary}, secondary {secondary}, "
+    "accent {accent}, background {background}."
 )
 
 
@@ -51,33 +51,51 @@ def _first_image(payload: dict[str, Any]) -> tuple[str, bytes, str]:
     raise ValueError("Response did not contain an image.")
 
 
-def generate_concept_image(
-    prompt: str,
-    theme: Theme | None = None,
-    timeout: float = 60.0,
-) -> VisualizationResponse:
-    """Ask Gemini for an illustration styled with the theme (Sprints by default)."""
-    model = (GOOGLE_IMAGE_MODEL or "").strip() or DEFAULT_MODEL
-    if not prompt.strip():
-        return _failure(model, "An image prompt is required.")
-    api_key = (GOOGLE_API_KEY or "").strip()
-    if not api_key:
-        return _failure(model, "GOOGLE_API_KEY is not configured.")
+@chain
+def concept_image_chain(inputs: dict[str, Any]) -> VisualizationResponse:
+    """LangChain chain that queries Google Gemini for a themed concept illustration."""
+    prompt = str(inputs.get("prompt") or "")
+    theme_arg = inputs.get("theme")
+    timeout = float(inputs.get("timeout", 60.0))
 
-    colors = get_theme(theme)
-    styled_prompt = (
-        f"{prompt.strip()}\n\nCreate a clean conceptual illustration using this "
-        f"color palette: primary {colors.primary}, secondary {colors.secondary}, "
-        f"accent {colors.accent}, background {colors.background}."
+    # Resolve configuration dynamically so monkeypatching during tests is respected
+    model_override = globals().get("GOOGLE_IMAGE_MODEL")
+    default_model = globals().get("DEFAULT_MODEL") or DEFAULT_MODEL
+    current_model = (
+        model_override if model_override is not None else GOOGLE_IMAGE_MODEL
+    ) or default_model
+    current_model = str(current_model).strip() or default_model
+    current_api_key = (
+        globals().get("GOOGLE_API_KEY")
+        if "GOOGLE_API_KEY" in globals()
+        else GOOGLE_API_KEY
     )
+    current_api_key = (current_api_key or "").strip()
+    current_api_url = globals().get("API_URL") or API_URL
+    current_png_signature = globals().get("PNG_SIGNATURE") or PNG_SIGNATURE
+
+    if not prompt.strip():
+        return _failure(current_model, "An image prompt is required.")
+    if not current_api_key:
+        return _failure(current_model, "GOOGLE_API_KEY is not configured.")
+
+    colors = get_theme(theme_arg)
+    styled_prompt = IMAGE_PROMPT_TEMPLATE.format(
+        prompt=prompt.strip(),
+        primary=colors.primary,
+        secondary=colors.secondary,
+        accent=colors.accent,
+        background=colors.background,
+    )
+
     body = {
         "contents": [{"parts": [{"text": styled_prompt}]}],
         "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]},
     }
     request = urllib.request.Request(
-        API_URL.format(model=model),
+        current_api_url.format(model=current_model),
         data=json.dumps(body).encode("utf-8"),
-        headers={"Content-Type": "application/json", "x-goog-api-key": api_key},
+        headers={"Content-Type": "application/json", "x-goog-api-key": current_api_key},
         method="POST",
     )
     try:
@@ -86,21 +104,24 @@ def generate_concept_image(
         mime_type, asset, model_text = _first_image(payload)
     except Exception:
         return _failure(
-            model, "Google image generation failed, timed out, or returned no image."
+            current_model,
+            "Google image generation failed, timed out, or returned no image.",
         )
-    if not asset.startswith(PNG_SIGNATURE):
+
+    if not asset.startswith(current_png_signature):
         return _failure(
-            model,
+            current_model,
             f"Google returned {mime_type[:40]}, but only PNG images are supported.",
         )
 
     commentary = (
-        f"Conceptual illustration generated by Google {model} for: "
+        f"Conceptual illustration generated by Google {current_model} for: "
         f"{prompt.strip()[:200]}. It is illustrative only and does not represent "
         "learner data."
     )
     if model_text:
         commentary += f" Model note: {model_text[:300]}"
+
     return VisualizationResponse(
         success=True,
         format=VisualizationFormat.PNG,
@@ -108,8 +129,38 @@ def generate_concept_image(
         commentary=commentary,
         metadata={
             "provider": "google",
-            "model": model,
+            "model": current_model,
             "content_type": mime_type,
             "theme": colors.model_dump(),
         },
     )
+
+
+def generate_concept_image(
+    prompt: str,
+    theme: Theme | None = None,
+    timeout: float = 60.0,
+) -> VisualizationResponse:
+    """Ask Gemini for an illustration styled with the theme via LangChain."""
+    return concept_image_chain.invoke(
+        {"prompt": prompt, "theme": theme, "timeout": timeout},
+        config={
+            "run_name": "google_concept_image_generator",
+            "metadata": {
+                "agent": "visualizer",
+                "provider": "google",
+            },
+            "tags": ["visualizer", "google-image", "concept-art"],
+        },
+    )
+
+
+__all__ = [
+    "API_URL",
+    "GOOGLE_API_KEY",
+    "GOOGLE_IMAGE_MODEL",
+    "IMAGE_PROMPT_TEMPLATE",
+    "PNG_SIGNATURE",
+    "concept_image_chain",
+    "generate_concept_image",
+]

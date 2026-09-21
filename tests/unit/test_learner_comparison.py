@@ -53,3 +53,57 @@ def test_compare_learners_rejects_unknown_learner():
 
     assert result.status == "not_found"
     assert result.data == []
+
+
+def test_handlers_support_explicit_learner_id_when_session_learner_is_none():
+    from src.app.agents.talent_intelligence.registry import (
+        MISSING_LEARNER,
+        build_active_handlers,
+    )
+
+    invocations = []
+
+    def mock_invoke(name, function, *arguments):
+        invocations.append((name, arguments))
+        return {"status": "ok", "data": arguments, "message": ""}
+
+    handlers = build_active_handlers(None, mock_invoke)
+
+    # Calling without learner_id when none is active returns MISSING_LEARNER
+    missing_result = handlers["get_learner_profile"]({})
+    assert missing_result == MISSING_LEARNER
+
+    # Calling with explicit learner_id resolves and invokes the tool
+    with patch.object(
+        tools, "_find_learner", return_value={"learner_id": "resolved-id-4"}
+    ):
+        result = handlers["get_learner_profile"]({"learner_id": "Learner A4"})
+    assert result["status"] == "ok"
+    assert invocations[-1] == ("get_learner_profile", ("resolved-id-4",))
+
+    # Calling get_skill_proofs with explicit learner_id also works
+    with patch.object(
+        tools, "_find_learner", return_value={"learner_id": "resolved-id-6"}
+    ):
+        result2 = handlers["get_skill_proofs"](
+            {"learner_id": "Learner A6", "skill": "python"}
+        )
+    assert result2["status"] == "ok"
+    assert invocations[-1] == ("get_skill_proofs", ("resolved-id-6", "python"))
+
+
+def test_handlers_fallback_to_session_learner_id_when_omitted():
+    from src.app.agents.talent_intelligence.registry import build_active_handlers
+
+    invocations = []
+
+    def mock_invoke(name, function, *arguments):
+        invocations.append((name, arguments))
+        return {"status": "ok", "data": arguments, "message": ""}
+
+    handlers = build_active_handlers("session-active-learner", mock_invoke)
+
+    with patch.object(tools, "_find_learner", return_value=None):
+        result = handlers["get_learner_profile"]({})
+    assert result["status"] == "ok"
+    assert invocations[-1] == ("get_learner_profile", ("session-active-learner",))

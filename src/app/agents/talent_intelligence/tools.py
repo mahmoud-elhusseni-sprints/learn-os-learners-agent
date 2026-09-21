@@ -37,6 +37,37 @@ def _find_learner(learner_query: str) -> dict[str, Any] | None:
         """,
         q=query,
     )
+    if rows:
+        return rows[0]
+
+    normalized = query.replace("-", " ").replace("_", " ")
+    parts = normalized.split()
+    core_parts = [p for p in parts if p not in {"learner", "leraner", "student"}]
+    core_id = " ".join(core_parts) if core_parts else normalized
+    full_candidate = f"learner {core_id}"
+
+    rows = _run(
+        """
+        MATCH (l:LearnerProfile)
+        WHERE toLower(l.learner_id) = $core_id
+           OR toLower(l.name) = $full_candidate
+           OR toLower(l.name) = 'learner ' + $core_id
+           OR toLower(replace(replace(l.name, '-', ' '), '_', ' ')) = $normalized
+           OR toLower(l.name) ENDS WITH (' ' + $core_id)
+        RETURN
+            l.learner_id    AS learner_id,
+            l.name          AS name,
+            l.role          AS role,
+            l.group_name    AS group_name,
+            l.round_name    AS round_name,
+            l.learner_status AS learner_status,
+            l.added_at      AS added_at
+        LIMIT 1
+        """,
+        core_id=core_id,
+        full_candidate=full_candidate,
+        normalized=normalized,
+    )
     return rows[0] if rows else None
 
 

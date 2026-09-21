@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass, field
 from enum import Enum, StrEnum
-from typing import Annotated, Any, Dict, List, Optional, Union
+from typing import Annotated, Any, Dict, List, Optional, TypedDict, Union
 from uuid import UUID
 
 from pydantic import (
@@ -73,6 +73,28 @@ class VisualizationResponse(BaseModel):
 
 def get_theme(theme: Theme | None) -> Theme:
     return theme if theme is not None else SPRINTS_DEFAULT_THEME
+
+
+@dataclass(frozen=True)
+class ChartRow:
+    label: str
+    value: float
+    note: str = ""
+
+
+class VisualizerState(TypedDict, total=False):
+    request: VisualizationRequest
+    format: VisualizationFormat
+    theme: Theme
+    rows: list[ChartRow]
+    height: int
+    content: str | None
+    asset: bytes | None
+    commentary: str
+    metadata: dict[str, Any]
+    error: str | None
+    success: bool
+    response: VisualizationResponse
 
 
 @dataclass
@@ -287,6 +309,8 @@ __all__ = [
     "VisualizationRequest",
     "VisualizationResponse",
     "get_theme",
+    "ChartRow",
+    "VisualizerState",
     "ToolResult",
     "ConversationState",
     "MemoryCard",

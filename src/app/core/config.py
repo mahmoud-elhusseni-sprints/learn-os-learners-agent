@@ -72,7 +72,12 @@ CORS_ORIGINS = [
     if origin.strip()
 ]
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+DEFAULT_MODEL = "gemini-3.1-flash-image"
 GOOGLE_IMAGE_MODEL = os.getenv("GOOGLE_IMAGE_MODEL")
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+API_URL = (
+    "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+)
 LANGSMITH_TRACING = os.getenv("LANGSMITH_TRACING", "false").lower() == "true"
 LANGSMITH_ENDPOINT = os.getenv("LANGSMITH_ENDPOINT")
 LANGSMITH_API_KEY = os.getenv("LANGSMITH_API_KEY")
