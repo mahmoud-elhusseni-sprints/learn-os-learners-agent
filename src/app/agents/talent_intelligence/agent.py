@@ -25,10 +25,13 @@ class TalentIntelligenceAgent:
         query: str,
         learner_name_or_id: str | None = None,
         visual_options: VisualOptions | None = None,
+        history: str | None = None,
     ) -> EmployerResponse:
         """Return text plus optional artifacts; respond() stays text-only."""
         from .visual_delegation import delegate
 
+        if history:
+            query = f"{history}\n\nCurrent question:\n{query}"
         markdown = self.respond(query, learner_name_or_id)
         return delegate(query, markdown, self._visual_evidence, visual_options)
 

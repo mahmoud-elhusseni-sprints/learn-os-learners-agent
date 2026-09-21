@@ -14,7 +14,7 @@ from src.app.schemas.auth import SignupRequest
 def signup(
     db: Session,
     signup_data: SignupRequest,
-)-> User:
+) -> User:
     email = str(signup_data.email).lower()
 
     existing_user = user_repository.get_user_by_email(
@@ -39,7 +39,7 @@ def signin(
     db: Session,
     email: str,
     password: str,
-)-> str:
+) -> str:
     email = email.lower()
 
     user = user_repository.get_user_by_email(
@@ -61,7 +61,6 @@ def signin(
         raise ValueError("Invalid email or password")
 
     return create_access_token(user.id)
-
 
 
 def get_user_by_id(

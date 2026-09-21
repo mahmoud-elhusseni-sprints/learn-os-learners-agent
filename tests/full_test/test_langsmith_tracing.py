@@ -15,9 +15,7 @@ def test_tool_loop_attaches_langsmith_run_context():
     model = Mock()
     model.bind_tools.return_value = model
     compiled_graph = Mock()
-    compiled_graph.invoke.return_value = {
-        "messages": [AIMessage(content="answer")]
-    }
+    compiled_graph.invoke.return_value = {"messages": [AIMessage(content="answer")]}
 
     with (
         patch(

@@ -40,7 +40,6 @@ def get_user_conversations(
     return list(db.scalars(statement).all())
 
 
-
 def create_message(
     db: Session,
     conversation_id: int,
