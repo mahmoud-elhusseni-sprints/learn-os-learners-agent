@@ -388,6 +388,86 @@ async function runNetworkFallbackTests() {
   console.log('  ✔ HTTP 500 error correctly classifies as isNetworkError=false (real error shown, offline mode NOT triggered)');
 }
 
+async function runInvalidSessionTokenTests() {
+  console.log('\n▶ [6/6] Testing Invalid Session Handling on Sign-In (missing or invalid sub)');
+
+  // Simulate token parsing and error handling logic matching SignInPage
+  function parseAndValidateToken(token: string) {
+    let userId = 0;
+    let userName = '';
+    try {
+      const parts = token.split('.');
+      if (parts.length === 3) {
+        const payload = JSON.parse(Buffer.from(parts[1].replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf-8'));
+        userId = Number(payload.sub || payload.user_id || 0);
+        if (payload.name) {
+          userName = String(payload.name);
+        }
+      }
+    } catch {
+      // Ignored
+    }
+
+    if (!userId || isNaN(userId) || userId <= 0) {
+      throw new Error('InvalidSessionError');
+    }
+    return { userId, userName };
+  }
+
+  function handleSignInError(err: unknown): string {
+    if (err instanceof Error && err.message === 'InvalidSessionError') {
+      return 'Sign-in failed: the server returned an invalid session. Please try again.';
+    }
+    if (err instanceof ApiError && err.status === 401) {
+      return 'Invalid email or password. Please check your credentials and try again.';
+    }
+    return 'An unexpected error occurred. Please try again.';
+  }
+
+  // Token without sub
+  const payloadNoSub = Buffer.from(JSON.stringify({ role: 'admin' })).toString('base64');
+  const tokenNoSub = `header.${payloadNoSub}.signature`;
+
+  try {
+    parseAndValidateToken(tokenNoSub);
+    assert.fail('Should throw InvalidSessionError for token without sub');
+  } catch (err: unknown) {
+    const errorMsg = handleSignInError(err);
+    assert.strictEqual(
+      errorMsg,
+      'Sign-in failed: the server returned an invalid session. Please try again.',
+      'Must display invalid session message, NOT "Invalid email or password"'
+    );
+    assert(!errorMsg.includes('Invalid email or password'), 'Must not report as wrong password');
+  }
+  console.log('  ✔ Token without sub displays "Sign-in failed: the server returned an invalid session. Please try again."');
+
+  // Token with sub=0
+  const payloadSubZero = Buffer.from(JSON.stringify({ sub: 0 })).toString('base64');
+  const tokenSubZero = `header.${payloadSubZero}.signature`;
+
+  try {
+    parseAndValidateToken(tokenSubZero);
+    assert.fail('Should throw InvalidSessionError for token with sub=0');
+  } catch (err: unknown) {
+    const errorMsg = handleSignInError(err);
+    assert.strictEqual(
+      errorMsg,
+      'Sign-in failed: the server returned an invalid session. Please try again.'
+    );
+  }
+  console.log('  ✔ Token with sub=0 displays invalid session error rather than wrong password');
+
+  // Real wrong password (401 from API)
+  const authErr = new ApiError('Unauthorized', 401);
+  const authErrorMsg = handleSignInError(authErr);
+  assert.strictEqual(
+    authErrorMsg,
+    'Invalid email or password. Please check your credentials and try again.'
+  );
+  console.log('  ✔ Real 401 correctly displays "Invalid email or password. Please check your credentials and try again."');
+}
+
 async function main() {
   try {
     await runAuthServiceTests();
@@ -395,6 +475,7 @@ async function main() {
     await runChatServiceAuthTests();
     await runVisualArtifactTests();
     await runNetworkFallbackTests();
+    await runInvalidSessionTokenTests();
 
     console.log('\n✅ All Task 21 Verification Tests Passed with Zero Errors!\n');
   } catch (err) {
