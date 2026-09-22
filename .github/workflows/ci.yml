@@ -5,6 +5,9 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
 
 jobs:
   quality:
@@ -12,11 +15,36 @@ jobs:
 
     env:
       NEO4J_PASSWORD: ${{ secrets.NEO4J_PASSWORD }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
       JWT_ACCESS_TOKEN_EXPIRE_MINUTES: 30
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Create CI environment file
+        run: |
+          cat > .env <<EOF
+          NEO4J_PASSWORD=${NEO4J_PASSWORD}
+          NEO4J_URI=bolt://neo4j:7687
+          NEO4J_USERNAME=neo4j
+
+          POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+          JWT_SECRET_KEY=${JWT_SECRET_KEY}
+          JWT_ACCESS_TOKEN_EXPIRE_MINUTES=${JWT_ACCESS_TOKEN_EXPIRE_MINUTES}
+
+          CELERY_BROKER_URL=redis://redis:6379/0
+
+          LANGSMITH_TRACING=false
+          LANGSMITH_ENDPOINT=https://api.smith.langchain.com
+          LANGSMITH_API_KEY=
+          LANGSMITH_PROJECT=Hiring Agent
+
+          PROFILE_UPDATE_MAX_RETRIES=3
+          PROFILE_UPDATE_RETRY_SECONDS=30
+          EOF
 
       - name: Build Docker services
         run: |
@@ -34,10 +62,25 @@ jobs:
         run: |
           docker compose run --rm --no-deps api mypy src
 
-      - name: Start Neo4j
+      - name: Start databases
         run: |
-          docker compose up -d neo4j
+          docker compose up -d neo4j postgres
+
+      - name: Wait for databases
+        run: |
+          docker compose ps
+          sleep 10
+
+      - name: Run database migrations
+        run: |
+          docker compose run --rm --no-deps api alembic upgrade head
 
       - name: Run Pytest
         run: |
           docker compose run --rm --no-deps api pytest
+
+      - name: Show service logs on failure
+        if: failure()
+        run: |
+          docker compose logs neo4j
+          docker compose logs postgres
