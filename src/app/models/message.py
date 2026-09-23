@@ -27,6 +27,11 @@ class Message(Base):
         nullable=False,
     )
 
+    artifacts: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
     timestamp: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

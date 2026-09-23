@@ -1,3 +1,5 @@
+import json
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -22,6 +24,17 @@ from src.app.services.agent_orchestration import (
 router = APIRouter(
     tags=["Conversations"],
 )
+
+
+def _message_response(message: Message) -> MessageResponse:
+    return MessageResponse(
+        id=message.id,
+        conversation_id=message.conversation_id,
+        sender_role=message.sender_role,
+        content=message.content,
+        timestamp=message.timestamp,
+        artifacts=json.loads(message.artifacts) if message.artifacts else None,
+    )
 
 
 @router.post(
@@ -79,15 +92,16 @@ def add_message(
     message_data: MessageCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> Message:
+) -> MessageResponse:
     try:
-        return conversation_service.add_message(
+        message = conversation_service.add_message(
             db,
             conversation_id,
             message_data.sender_role,
             message_data.content,
             current_user.id,
         )
+        return _message_response(message)
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -103,13 +117,14 @@ def get_messages(
     conversation_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> list[Message]:
+) -> list[MessageResponse]:
     try:
-        return conversation_service.get_messages(
+        messages = conversation_service.get_messages(
             db,
             conversation_id,
             current_user.id,
         )
+        return [_message_response(message) for message in messages]
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -138,7 +153,7 @@ def chat(
         )
 
         return ChatResponse(
-            message=MessageResponse.model_validate(message),
+            message=_message_response(message),
             response=response,
         )
     except ValueError as exc:

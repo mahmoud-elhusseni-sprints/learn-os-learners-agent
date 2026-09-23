@@ -1,3 +1,5 @@
+import json
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -45,12 +47,14 @@ def create_message(
     conversation_id: int,
     sender_role: str,
     content: str,
+    artifacts: list[dict] | None = None,
     commit: bool = True,
 ) -> Message:
     message = Message(
         conversation_id=conversation_id,
         sender_role=sender_role,
         content=content,
+        artifacts=json.dumps(artifacts) if artifacts else None,
     )
 
     db.add(message)
