@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, ForeignKey
+from sqlalchemy import DateTime, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.app.database.base import Base
@@ -10,6 +10,9 @@ class ConversationSession(Base):
     __tablename__ = "conversation_sessions"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+
+    # Explicit UI selection, scoped to this conversation; not inferred from prose.
+    learner_name_or_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"),

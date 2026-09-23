@@ -1,9 +1,57 @@
-from unittest.mock import patch
+import json
+from unittest.mock import Mock, patch
+
+import pytest
+from langchain_core.messages import AIMessage, ToolMessage
 
 from src.app.agents.talent_intelligence import tools
 from src.app.agents.talent_intelligence.agent import TalentIntelligenceAgent
 from src.app.graph.helpers import get_command, run_command
 from src.app.schemas.models import ToolResult
+
+
+@pytest.fixture
+def scripted_model(monkeypatch):
+    """Script only the model; execute the real graph, handlers and serialization.
+
+    These unit cases verify dispatch, not a live model's language understanding.
+    Unexpected database access fails immediately rather than falling back silently.
+    """
+    monkeypatch.setenv("LANGSMITH_TRACING", "false")
+    monkeypatch.setattr("src.app.core.llm_client.DEFAULT_API_KEY", "")
+    monkeypatch.setattr(tools, "_find_learner", lambda target: {"learner_id": target})
+    monkeypatch.setattr(
+        tools,
+        "_run",
+        Mock(side_effect=AssertionError("Unexpected database call")),
+    )
+
+    def configure(name, arguments, answer="Insufficient evidence"):
+        model = Mock()
+        model.bind_tools.return_value = model
+        model.invoke.side_effect = [
+            AIMessage(
+                content="",
+                tool_calls=[{"name": name, "args": arguments, "id": "unit-call"}],
+            ),
+            AIMessage(content=answer),
+        ]
+        monkeypatch.setattr(
+            "src.app.agents.talent_intelligence.graph.get_chat_model", lambda: model
+        )
+        return model
+
+    return configure
+
+
+def assert_tool_result(model, expected_status):
+    assert model.invoke.call_count == 2
+    returned = model.invoke.call_args.args[0][-1]
+    assert isinstance(returned, ToolMessage)
+    assert returned.tool_call_id == "unit-call"
+    payload = json.loads(returned.content)
+    assert payload["status"] == expected_status
+    return payload
 
 
 def test_registry_exposes_employer_commands():
@@ -116,7 +164,8 @@ def test_assessment_results_support_legacy_datasource_name():
     assert result.data[0]["max_score"] == 10
 
 
-def test_agent_routes_new_evidence_tools():
+def test_agent_routes_new_evidence_tools(scripted_model):
+    model = scripted_model("get_review_outcomes", {}, "Observed review-1")
     agent = TalentIntelligenceAgent()
     agent.state.active_learner_id = "learner-1"
     with patch.object(
@@ -139,6 +188,7 @@ def test_agent_routes_new_evidence_tools():
     get_reviews.assert_called_once_with("learner-1")
     assert agent.state.last_tool_calls[-1]["tool"] == "get_review_outcomes"
     assert "review-1" in answer
+    assert assert_tool_result(model, "ok")["data"][0]["event_id"] == "review-1"
 
 
 def test_find_learners_with_skill_groups_and_orders_evidence():
@@ -176,7 +226,12 @@ def test_find_learners_with_skill_groups_and_orders_evidence():
     assert result.data[0]["evidence_count"] == 2
 
 
-def test_agent_routes_cross_learner_skill_question_without_active_learner():
+def test_agent_routes_cross_learner_skill_question_without_active_learner(
+    scripted_model,
+):
+    model = scripted_model(
+        "find_learners_with_skill", {"skill": "python"}, "Compare evidence coverage"
+    )
     agent = TalentIntelligenceAgent()
     with patch.object(
         tools,
@@ -199,9 +254,11 @@ def test_agent_routes_cross_learner_skill_question_without_active_learner():
     find_learners.assert_called_once_with("python")
     assert agent.state.last_tool_calls[-1]["tool"] == "find_learners_with_skill"
     assert "evidence coverage" in answer
+    assert assert_tool_result(model, "ok")["data"][0]["learner_id"] == "learner-1"
 
 
-def test_agent_extracts_skill_from_hiring_question():
+def test_agent_passes_model_skill_from_hiring_question(scripted_model):
+    model = scripted_model("find_learners_with_skill", {"skill": "python"})
     agent = TalentIntelligenceAgent()
     with patch.object(
         tools,
@@ -213,9 +270,11 @@ def test_agent_extracts_skill_from_hiring_question():
         )
 
     find_learners.assert_called_once_with("python")
+    assert_tool_result(model, "insufficient_evidence")
 
 
-def test_agent_extracts_skill_after_hiring_context():
+def test_agent_passes_model_skill_after_hiring_context(scripted_model):
+    model = scripted_model("find_learners_with_skill", {"skill": "python"})
     agent = TalentIntelligenceAgent()
     with patch.object(
         tools,
@@ -225,6 +284,7 @@ def test_agent_extracts_skill_after_hiring_context():
         agent.respond("Which should I hire in my company if I need a Python developer?")
 
     find_learners.assert_called_once_with("python")
+    assert_tool_result(model, "insufficient_evidence")
 
 
 def test_next_steps_are_derived_from_coverage_gaps():
@@ -243,7 +303,10 @@ def test_next_steps_are_derived_from_coverage_gaps():
     assert "Collect" in result.data[0]["action"]
 
 
-def test_agent_routes_investigation_command():
+def test_agent_routes_investigation_command(scripted_model):
+    model = scripted_model(
+        "investigate_employer", {"focus": "Investigate their recent work"}
+    )
     agent = TalentIntelligenceAgent()
     agent.state.active_learner_id = "learner-1"
     with patch.object(
@@ -255,9 +318,11 @@ def test_agent_routes_investigation_command():
 
     investigate.assert_called_once_with("learner-1", "Investigate their recent work")
     assert agent.state.last_tool_calls[-1]["tool"] == "investigate_employer"
+    assert_tool_result(model, "insufficient_evidence")
 
 
-def test_agent_routes_next_steps_command():
+def test_agent_routes_next_steps_command(scripted_model):
+    model = scripted_model("suggest_next_steps", {}, "Collect more evidence")
     agent = TalentIntelligenceAgent()
     agent.state.active_learner_id = "learner-1"
     with patch.object(
@@ -272,9 +337,11 @@ def test_agent_routes_next_steps_command():
     suggest.assert_called_once_with("learner-1")
     assert agent.state.last_tool_calls[-1]["tool"] == "suggest_next_steps"
     assert "Collect" in answer
+    assert assert_tool_result(model, "ok")["data"][0]["action"] == "Collect"
 
 
-def test_agent_routes_canonical_taxonomy_tags_to_behavioral_context():
+def test_agent_routes_canonical_taxonomy_tags_to_behavioral_context(scripted_model):
+    model = scripted_model("get_behavioral_context", {})
     agent = TalentIntelligenceAgent()
     agent.state.active_learner_id = "learner-1"
     with patch.object(
@@ -285,3 +352,4 @@ def test_agent_routes_canonical_taxonomy_tags_to_behavioral_context():
         agent.respond("What evidence shows teamwork collaboration?")
 
     get_behavior.assert_called_once_with("learner-1")
+    assert_tool_result(model, "insufficient_evidence")

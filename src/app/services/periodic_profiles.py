@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any, Protocol
 
+from langsmith import traceable
+
 from src.app.schemas.models import LearnerProfile, MemoryCard, ProfileUpdateInput
 
 
@@ -33,6 +35,10 @@ class ProfileStorage(Protocol):
     ) -> None: ...
 
 
+@traceable(
+    name="profile_update_worker",
+    process_inputs=lambda inputs: {"learner_id": inputs.get("learner_id")},
+)
 def update_learner(
     learner_id: str,
     storage: ProfileStorage,

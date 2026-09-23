@@ -138,11 +138,25 @@ def chat(
 
         adapter = agent_adapter or AgentOrchestrationAdapter()
 
+        selected_learner = (
+            learner_name_or_id
+            if learner_name_or_id is not None
+            else conversation.learner_name_or_id
+        )
+
         answer = adapter.respond(
             content,
             history=history,
-            learner_name_or_id=learner_name_or_id,
+            learner_name_or_id=selected_learner,
         )
+
+        # Persist with the messages, so exceptions roll back the selection too.
+        if getattr(adapter, "preserve_selection", False) is not True:
+            conversation.learner_name_or_id = (
+                adapter.resolved_selection
+                if getattr(adapter, "selection_resolved", False) is True
+                else selected_learner
+            )
 
         assistant_message = conversation_repository.create_message(
             db,
