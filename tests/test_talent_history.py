@@ -112,6 +112,9 @@ def test_real_graph_tool_retrieval_renderer_and_chat_serialization():
         patch.object(
             agent, "_tool_handlers", return_value={"get_skill_proofs": handler}
         ),
+        patch(
+            "src.app.services.agent_orchestration.learner_directory", return_value=[]
+        ),
     ):
         response = AgentOrchestrationAdapter(agent).respond("Show a chart")
     assert response.fallback is None
