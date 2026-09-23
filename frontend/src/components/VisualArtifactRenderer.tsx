@@ -25,6 +25,7 @@ export const VisualArtifactRenderer: React.FC<VisualArtifactRendererProps> = ({
   const [viewMode, setViewMode] = useState<'preview' | 'code'>('preview');
   const [copied, setCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [hasImgError, setHasImgError] = useState(false);
 
   const handleCopy = async (text: string) => {
     try {
@@ -118,13 +119,20 @@ export const VisualArtifactRenderer: React.FC<VisualArtifactRendererProps> = ({
         {/* Content Area */}
         {viewMode === 'preview' ? (
           <div className="p-4 flex flex-col items-center justify-center bg-slate-900/30 overflow-x-auto min-h-[160px]">
-            {/* Rendered as sandboxed image data-URI to prevent XSS script execution from untrusted assistant SVG output */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(artifact.content)}`}
-              alt={artifact.title || 'Visual Graphic (SVG)'}
-              className="max-w-full h-auto rounded-lg shadow-sm"
-            />
+            {!hasImgError ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={formatSvgDataUri(artifact.content)}
+                alt={artifact.title || 'Visual Graphic (SVG)'}
+                className="max-w-full h-auto rounded-lg shadow-sm"
+                onError={() => setHasImgError(true)}
+              />
+            ) : (
+              <div
+                className="w-full flex justify-center [&>svg]:max-w-full [&>svg]:h-auto [&>svg]:rounded-lg"
+                dangerouslySetInnerHTML={{ __html: sanitizeSvg(artifact.content || '') }}
+              />
+            )}
             {artifact.caption && (
               <p className="mt-2 text-[11px] text-slate-400 text-center italic">
                 {artifact.caption}
@@ -230,10 +238,49 @@ export const VisualArtifactRenderer: React.FC<VisualArtifactRendererProps> = ({
 };
 
 /**
+ * Strips active script tags, inline event handlers, and dangerous external embeds from SVG.
+ */
+export function sanitizeSvg(svg: string): string {
+  return svg
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/on\w+\s*=\s*(?:'[^']*'|"[^"]*"|[^\s>]+)/gi, '')
+    .replace(/href\s*=\s*['"]?javascript:[^'"]*['"]?/gi, '')
+    .replace(/<foreignObject\b[^<]*(?:(?!<\/foreignObject>)<[^<]*)*<\/foreignObject>/gi, '');
+}
+
+/**
+ * Encodes SVG string into a safe, sandboxed data-URI.
+ * Supports full Unicode (em-dashes, special symbols) via UTF-8 Base64.
+ */
+function formatSvgDataUri(svg?: string): string {
+  if (!svg) return '';
+  let cleanSvg = svg.trim();
+  if (!cleanSvg.includes('xmlns=')) {
+    cleanSvg = cleanSvg.replace(/<svg\b/i, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+
+  // Use Node Buffer on server / SSR
+  if (typeof Buffer !== 'undefined') {
+    const base64 = Buffer.from(cleanSvg, 'utf-8').toString('base64');
+    return `data:image/svg+xml;base64,${base64}`;
+  }
+
+  try {
+    if (typeof window !== 'undefined' && typeof window.btoa === 'function') {
+      const base64 = window.btoa(unescape(encodeURIComponent(cleanSvg)));
+      return `data:image/svg+xml;base64,${base64}`;
+    }
+  } catch {
+    // Fallback if browser environment doesn't allow btoa
+  }
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(cleanSvg)}`;
+}
+
+/**
  * Utility helper to parse embedded visual artifacts from message content strings.
  * Automatically extracts:
- * 1. Raw inline `<svg ... </svg>` blocks.
- * 2. Fenced code blocks with language `svg` or `xml` containing `<svg>`.
+ * 1. Fenced code blocks containing SVGs: ```svg ... ``` or ```xml ... ``` or ``` ... ```
+ * 2. Raw inline `<svg ... </svg>` blocks.
  * 3. Markdown images `![title](url)`.
  */
 export function extractArtifactsFromContent(content: string): {
@@ -243,42 +290,40 @@ export function extractArtifactsFromContent(content: string): {
   const extractedArtifacts: VisualArtifact[] = [];
   let cleanContent = content;
 
-  // 1. Extract fenced ```svg ... ``` code blocks
-  const codeBlockSvgRegex = /```(?:svg|xml)\s*(<svg[\s\S]*?<\/svg>)\s*```/gi;
-  let codeMatch;
-  while ((codeMatch = codeBlockSvgRegex.exec(content)) !== null) {
+  // 1. Extract fenced code blocks containing SVGs
+  const fencedSvgRegex = /```(?:svg|xml)?\s*(<svg[\s\S]*?<\/svg>)\s*```/gi;
+  let match;
+  while ((match = fencedSvgRegex.exec(content)) !== null) {
     extractedArtifacts.push({
       type: 'svg',
       title: 'Vector Diagram Artifact',
-      content: codeMatch[1].trim(),
+      content: match[1].trim(),
     });
   }
-  cleanContent = cleanContent.replace(codeBlockSvgRegex, '');
+  cleanContent = cleanContent.replace(/```(?:svg|xml)?\s*<svg[\s\S]*?<\/svg>\s*```/gi, '');
 
   // 2. Extract raw inline <svg ... </svg> tags if not already extracted
-  const inlineSvgRegex = /(<svg\b[^>]*>[\s\S]*?<\/svg>)/gi;
-  let inlineMatch;
-  while ((inlineMatch = inlineSvgRegex.exec(cleanContent)) !== null) {
+  const rawSvgRegex = /(<svg\b[\s\S]*?<\/svg>)/gi;
+  while ((match = rawSvgRegex.exec(cleanContent)) !== null) {
     extractedArtifacts.push({
       type: 'svg',
       title: 'Vector Diagram Artifact',
-      content: inlineMatch[1].trim(),
+      content: match[1].trim(),
     });
   }
-  cleanContent = cleanContent.replace(inlineSvgRegex, '');
+  cleanContent = cleanContent.replace(/<svg\b[\s\S]*?<\/svg>/gi, '');
 
   // 3. Extract markdown images: ![caption](url)
   const imgRegex = /!\[(.*?)\]\((.*?)\)/g;
-  let imgMatch;
-  while ((imgMatch = imgRegex.exec(cleanContent)) !== null) {
+  while ((match = imgRegex.exec(cleanContent)) !== null) {
     extractedArtifacts.push({
       type: 'image',
-      title: imgMatch[1] || 'Image Artifact',
-      url: imgMatch[2],
-      caption: imgMatch[1],
+      title: match[1] || 'Image Artifact',
+      url: match[2],
+      caption: match[1],
     });
   }
-  cleanContent = cleanContent.replace(imgRegex, '');
+  cleanContent = cleanContent.replace(/!\[(.*?)\]\((.*?)\)/g, '');
 
   return {
     cleanContent: cleanContent.trim(),

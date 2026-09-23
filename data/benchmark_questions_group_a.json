@@ -1,0 +1,402 @@
+[
+  {
+    "question_id": "QA_01",
+    "domain": "Python Core & Scripting",
+    "question": "How effectively does the learner handle synchronous and asynchronous I/O in Python processing scripts?",
+    "evaluation_criteria": "Uses clean asyncio or multi-threading patterns with robust try/except error handling.",
+    "metric_key": "python_async_io",
+    "profile_hints": ["python_proficient", "async_architecture", "backend_engineering"]
+  },
+  {
+    "question_id": "QA_02",
+    "domain": "HTML to MP4 Pipeline",
+    "question": "Does the learner implement dynamic HTML to MP4 video conversion workflows as specified in Week 3 tasks?",
+    "evaluation_criteria": "Generates valid video files from HTML templates using Playwright/Puppeteer and FFmpeg.",
+    "metric_key": "html_to_mp4_pipeline",
+    "profile_hints": ["video_pipeline", "automation", "media_processing"]
+  },
+  {
+    "question_id": "QA_03",
+    "domain": "LLM Integration",
+    "question": "How well does the learner construct structured prompt templates for OpenAI/Anthropic LLM API calls?",
+    "evaluation_criteria": "Uses system instructions, zero-shot/few-shot examples, and JSON schema constraints.",
+    "metric_key": "prompt_engineering_mastery",
+    "profile_hints": ["prompt_engineering", "llm_integration", "ai_skills"]
+  },
+  {
+    "question_id": "QA_04",
+    "domain": "RAG & Retrieval",
+    "question": "Does the learner integrate vector stores (Chroma/FAISS/Qdrant) for document retrieval?",
+    "evaluation_criteria": "Properly chunks text documents, computes embeddings, and performs top-k similarity search.",
+    "metric_key": "vector_rag_retrieval",
+    "profile_hints": ["rag_architecture", "vector_databases", "embeddings"]
+  },
+  {
+    "question_id": "QA_05",
+    "domain": "REST API & Backend",
+    "question": "Does the learner build scalable REST endpoints using FastAPI or Flask for AI services?",
+    "evaluation_criteria": "Defines Pydantic request/response models, dynamic route handlers, and status codes.",
+    "metric_key": "fastapi_backend_design",
+    "profile_hints": ["fastapi", "api_design", "backend_engineering"]
+  },
+  {
+    "question_id": "QA_06",
+    "domain": "System Evals & Benchmarks",
+    "question": "How does the learner evaluate model performance against ground truth benchmark data?",
+    "evaluation_criteria": "Uses quantitative metrics (accuracy, ROUGE, BLEU, latency, token cost) and evaluation harnesses.",
+    "metric_key": "ai_system_evaluations",
+    "profile_hints": ["system_evals", "benchmarking", "quality_assurance"]
+  },
+  {
+    "question_id": "QA_07",
+    "domain": "Git & Repository Management",
+    "question": "Does the learner maintain organized GitHub repositories with documentation and commits?",
+    "evaluation_criteria": "Includes clear README.md, requirements.txt, structured src/ folders, and meaningful commits.",
+    "metric_key": "github_repo_hygiene",
+    "profile_hints": ["git_workflow", "documentation", "code_organization"]
+  },
+  {
+    "question_id": "QA_08",
+    "domain": "Function Calling & Tools",
+    "question": "How effectively does the learner implement LLM function calling and tool execution?",
+    "evaluation_criteria": "Defines JSON schema tool definitions, parses function arguments, and executes external APIs.",
+    "metric_key": "llm_function_calling",
+    "profile_hints": ["agentic_workflows", "tool_use", "function_calling"]
+  },
+  {
+    "question_id": "QA_09",
+    "domain": "Error Handling & Logging",
+    "question": "Does the learner implement comprehensive logging and exception handling across modules?",
+    "evaluation_criteria": "Uses Python standard logging, custom exceptions, and fallback mechanisms for API failures.",
+    "metric_key": "robust_error_handling",
+    "profile_hints": ["error_handling", "logging", "production_readiness"]
+  },
+  {
+    "question_id": "QA_10",
+    "domain": "Data Cleaning & Parsing",
+    "question": "How proficient is the learner at parsing JSON, JSONL, and VTT transcript data?",
+    "evaluation_criteria": "Handles corrupted/missing fields gracefully and extracts key signals into structured formats.",
+    "metric_key": "data_parsing_proficiency",
+    "profile_hints": ["data_wrangling", "json_processing", "python_proficient"]
+  },
+  {
+    "question_id": "QA_11",
+    "domain": "Embedding Models",
+    "question": "Does the learner correctly select and configure text embedding models for semantic search?",
+    "evaluation_criteria": "Compares embedding dimensions, cosine similarity metrics, and normalization.",
+    "metric_key": "embedding_model_selection",
+    "profile_hints": ["embeddings", "semantic_search", "vector_databases"]
+  },
+  {
+    "question_id": "QA_12",
+    "domain": "Containerization & Environment",
+    "question": "How well does the learner manage dependencies and virtual environments (venv, Docker)?",
+    "evaluation_criteria": "Provides pinned requirement files, virtual environment setup scripts, or Dockerfiles.",
+    "metric_key": "environment_dependency_management",
+    "profile_hints": ["docker", "devops", "environment_setup"]
+  },
+  {
+    "question_id": "QA_13",
+    "domain": "Token Optimization",
+    "question": "Does the learner optimize LLM context window usage and token consumption?",
+    "evaluation_criteria": "Implements context truncation, message summarization, and cost estimation.",
+    "metric_key": "token_cost_optimization",
+    "profile_hints": ["token_optimization", "cost_efficiency", "llm_architecture"]
+  },
+  {
+    "question_id": "QA_14",
+    "domain": "Fine-Tuning & Model Adaption",
+    "question": "Does the learner understand data formatting requirements for LLM fine-tuning?",
+    "evaluation_criteria": "Prepares prompt-response pairs in JSONL format adhering to platform specifications.",
+    "metric_key": "fine_tuning_data_prep",
+    "profile_hints": ["fine_tuning", "dataset_curation", "ai_skills"]
+  },
+  {
+    "question_id": "QA_15",
+    "domain": "Structured Output Parsing",
+    "question": "How does the learner enforce structured JSON outputs from language models?",
+    "evaluation_criteria": "Uses Pydantic validation, instructor library, or json_object response formats.",
+    "metric_key": "structured_json_parsing",
+    "profile_hints": ["pydantic", "structured_outputs", "json_parsing"]
+  },
+  {
+    "question_id": "QA_16",
+    "domain": "Testing & Unit Verification",
+    "question": "Does the learner write unit tests using unittest or pytest for backend logic?",
+    "evaluation_criteria": "Includes test cases for core helper functions, mock API responses, and edge cases.",
+    "metric_key": "unit_testing_rigor",
+    "profile_hints": ["unit_testing", "pytest", "code_quality"]
+  },
+  {
+    "question_id": "QA_17",
+    "domain": "Async Workflow Automation",
+    "question": "How effectively does the learner build multi-step automated pipelines?",
+    "evaluation_criteria": "Chains asynchronous nodes, state transitions, and background execution tasks.",
+    "metric_key": "workflow_automation_engineering",
+    "profile_hints": ["pipeline_design", "automation", "backend_engineering"]
+  },
+  {
+    "question_id": "QA_18",
+    "domain": "Media Asset Processing",
+    "question": "Does the learner process audio/video streams, captions, or sub-titles correctly?",
+    "evaluation_criteria": "Parses VTT files, aligns timestamps, and handles media encoding formats.",
+    "metric_key": "media_processing_skills",
+    "profile_hints": ["media_processing", "vtt_parsing", "ffmpeg"]
+  },
+  {
+    "question_id": "QA_19",
+    "domain": "Security & API Keys",
+    "question": "Does the learner handle API keys and secrets securely using environment variables?",
+    "evaluation_criteria": "Uses .env files, python-dotenv, and avoids hardcoding secret credentials.",
+    "metric_key": "security_secrets_management",
+    "profile_hints": ["security_best_practices", "devops", "secrets_management"]
+  },
+  {
+    "question_id": "QA_20",
+    "domain": "Multi-Agent System Architecture",
+    "question": "How well does the learner design multi-agent coordination frameworks?",
+    "evaluation_criteria": "Defines agent roles, handoff mechanisms, shared memory, and state persistence.",
+    "metric_key": "multi_agent_system_design",
+    "profile_hints": ["multi_agent_systems", "agentic_workflows", "ai_architecture"]
+  },
+  {
+    "question_id": "QA_21",
+    "domain": "Database & State Persistence",
+    "question": "Does the learner design clear database models or file persistence mechanisms?",
+    "evaluation_criteria": "Uses SQLite, PostgreSQL, or structured JSON file storage for application state.",
+    "metric_key": "data_persistence_modeling",
+    "profile_hints": ["database_design", "state_management", "backend_engineering"]
+  },
+  {
+    "question_id": "QA_22",
+    "domain": "Code Modularization",
+    "question": "How cleanly does the learner structure modules, packages, and helper functions?",
+    "evaluation_criteria": "Follows SOLID principles, avoids duplicate logic, and uses clean imports.",
+    "metric_key": "clean_code_architecture",
+    "profile_hints": ["clean_code", "refactoring", "software_design"]
+  },
+  {
+    "question_id": "QA_23",
+    "domain": "Latency & Optimization",
+    "question": "Does the learner analyze and reduce pipeline execution latency?",
+    "evaluation_criteria": "Measures response times, implements caching, and parallelizes independent steps.",
+    "metric_key": "performance_latency_optimization",
+    "profile_hints": ["performance_tuning", "caching", "optimization"]
+  },
+  {
+    "question_id": "QA_24",
+    "domain": "HTML/CSS Template Rendering",
+    "question": "How proficiently does the learner construct responsive HTML/CSS templates for output generation?",
+    "evaluation_criteria": "Uses modern flexbox/grid layout, typography, and dynamic template engines (Jinja2).",
+    "metric_key": "html_css_rendering",
+    "profile_hints": ["frontend_basics", "html_templates", "jinja2"]
+  },
+  {
+    "question_id": "QA_25",
+    "domain": "Memory Management & Caching",
+    "question": "Does the learner implement caching strategies (Redis, memory cache) for LLM prompts?",
+    "evaluation_criteria": "Stores frequent embeddings/responses to reduce latency and API bill costs.",
+    "metric_key": "llm_response_caching",
+    "profile_hints": ["caching", "cost_efficiency", "redis"]
+  },
+  {
+    "question_id": "QA_26",
+    "domain": "Prompt Security & Injection Defense",
+    "question": "Does the learner sanitize user inputs against prompt injection vulnerabilities?",
+    "evaluation_criteria": "Implements input validation, system prompt boundary protection, and output filtering.",
+    "metric_key": "prompt_injection_defense",
+    "profile_hints": ["ai_security", "prompt_defense", "cybersecurity"]
+  },
+  {
+    "question_id": "QA_27",
+    "domain": "Knowledge Graph Construction",
+    "question": "Does the learner construct entity-relationship triples for knowledge graph ingestion?",
+    "evaluation_criteria": "Extracts entities, relations, and formats nodes/edges for graph databases.",
+    "metric_key": "knowledge_graph_extraction",
+    "profile_hints": ["knowledge_graphs", "graph_databases", "data_engineering"]
+  },
+  {
+    "question_id": "QA_28",
+    "domain": "Streaming Responses",
+    "question": "How does the learner handle real-time SSE or WebSocket response streaming from LLMs?",
+    "evaluation_criteria": "Implements generator functions and asynchronous chunk processing.",
+    "metric_key": "llm_stream_processing",
+    "profile_hints": ["streaming_api", "asyncio", "realtime_systems"]
+  },
+  {
+    "question_id": "QA_29",
+    "domain": "Deadline & Time Management",
+    "question": "Does the learner consistently deliver task submissions on or before official deadlines?",
+    "evaluation_criteria": "Calculates submitted_on_time flag as true with positive hours remaining.",
+    "metric_key": "punctuality_time_management",
+    "profile_hints": ["punctuality", "task_execution", "reliability"]
+  },
+  {
+    "question_id": "QA_30",
+    "domain": "Problem Solving & Struggle Recovery",
+    "question": "How effectively does the learner resolve mentor review feedback after initial retry verdicts?",
+    "evaluation_criteria": "Demonstrates clear code modifications resolving failed rubric points on subsequent trials.",
+    "metric_key": "mentor_feedback_responsiveness",
+    "profile_hints": ["adaptability", "struggle_recovery", "learning_speed"]
+  },
+  {
+    "question_id": "QA_31",
+    "domain": "Docstrings & Inline Documentation",
+    "question": "Does the learner write clear docstrings and comments explaining complex algorithms?",
+    "evaluation_criteria": "Includes Google/Sphinx style docstrings detailing parameter types and return values.",
+    "metric_key": "code_documentation_quality",
+    "profile_hints": ["documentation", "clean_code", "readability"]
+  },
+  {
+    "question_id": "QA_32",
+    "domain": "API Rate Limiting & Backoff",
+    "question": "How does the learner handle API rate limits (429 errors) and network retry logic?",
+    "evaluation_criteria": "Implements exponential backoff using tenacity or custom retry decorators.",
+    "metric_key": "api_resilience_retry_logic",
+    "profile_hints": ["api_resilience", "tenacity", "backend_engineering"]
+  },
+  {
+    "question_id": "QA_33",
+    "domain": "CLI Tool Engineering",
+    "question": "Does the learner build ergonomic CLI tools using argparse or click?",
+    "evaluation_criteria": "Provides help messages, argument flags, verbose modes, and clean terminal outputs.",
+    "metric_key": "cli_tool_design",
+    "profile_hints": ["cli_engineering", "developer_tools", "python_proficient"]
+  },
+  {
+    "question_id": "QA_34",
+    "domain": "Semantic Chunking Strategies",
+    "question": "How effectively does the learner chunk documents for vector search?",
+    "evaluation_criteria": "Uses sliding windows, sentence boundary splitters, or recursive character chunkers.",
+    "metric_key": "semantic_document_chunking",
+    "profile_hints": ["chunking_strategies", "rag_architecture", "nlp"]
+  },
+  {
+    "question_id": "QA_35",
+    "domain": "Multi-Modal AI Integration",
+    "question": "Does the learner process vision, image, or audio inputs with multi-modal LLMs?",
+    "evaluation_criteria": "Encodes images to base64 or processes audio transcription inputs via Whisper API.",
+    "metric_key": "multimodal_ai_processing",
+    "profile_hints": ["multimodal_ai", "vision_models", "whisper_api"]
+  },
+  {
+    "question_id": "QA_36",
+    "domain": "Algorithm Efficiency",
+    "question": "How optimized are the learner's data processing algorithms?",
+    "evaluation_criteria": "Avoids O(n^2) nested loops on large dataset iterations, using dict lookups.",
+    "metric_key": "algorithmic_efficiency",
+    "profile_hints": ["algorithms", "optimization", "computer_science"]
+  },
+  {
+    "question_id": "QA_37",
+    "domain": "Model Context Management",
+    "question": "Does the learner dynamic prune conversation history to prevent context truncation?",
+    "evaluation_criteria": "Maintains sliding window of turns or dynamically summarizes old message turns.",
+    "metric_key": "context_window_pruning",
+    "profile_hints": ["llm_architecture", "context_management", "ai_skills"]
+  },
+  {
+    "question_id": "QA_38",
+    "domain": "Schema Validation with Pydantic",
+    "question": "How thoroughly does the learner validate inputs and configuration objects?",
+    "evaluation_criteria": "Defines Pydantic v2 BaseModels with field constraints and validators.",
+    "metric_key": "pydantic_schema_validation",
+    "profile_hints": ["pydantic", "data_validation", "python_proficient"]
+  },
+  {
+    "question_id": "QA_39",
+    "domain": "Git Branching & PR Workflow",
+    "question": "Does the learner follow proper Git branching and PR conventions?",
+    "evaluation_criteria": "Uses feature branches, clear PR titles, and avoids committing binary junk.",
+    "metric_key": "git_version_control",
+    "profile_hints": ["git_workflow", "collaboration", "software_engineering"]
+  },
+  {
+    "question_id": "QA_40",
+    "domain": "Synthetic Data Generation",
+    "question": "Does the learner generate synthetic dataset records for model testing?",
+    "evaluation_criteria": "Uses Faker or LLM-based synthetic generation with schema verification.",
+    "metric_key": "synthetic_data_generation",
+    "profile_hints": ["synthetic_data", "data_generation", "testing"]
+  },
+  {
+    "question_id": "QA_41",
+    "domain": "Debugging & Troubleshooting",
+    "question": "How quickly does the learner diagnose and resolve stack traces and execution bugs?",
+    "evaluation_criteria": "Uses tracebacks, debugger breakpoints, and empirical log analysis.",
+    "metric_key": "debugging_troubleshooting",
+    "profile_hints": ["debugging", "problem_solving", "engineering_mindset"]
+  },
+  {
+    "question_id": "QA_42",
+    "domain": "API Endpoint Testing",
+    "question": "Does the learner write automated integration tests for HTTP endpoints?",
+    "evaluation_criteria": "Uses TestClient or requests library to verify HTTP status codes and payload responses.",
+    "metric_key": "api_integration_testing",
+    "profile_hints": ["testing", "fastapi", "quality_assurance"]
+  },
+  {
+    "question_id": "QA_43",
+    "domain": "LLM Guardrails & Formatting",
+    "question": "Does the learner integrate guardrail libraries (Guardrails AI, NeMo) for response safety?",
+    "evaluation_criteria": "Validates model outputs against toxic content, bias, and schema hallucination.",
+    "metric_key": "llm_guardrails_safety",
+    "profile_hints": ["ai_safety", "guardrails", "responsible_ai"]
+  },
+  {
+    "question_id": "QA_44",
+    "domain": "Asynchronous Task Queues",
+    "question": "Does the learner use message queues (Celery, Redis Queue) for background job processing?",
+    "evaluation_criteria": "Offloads heavy LLM or media generation tasks to background worker tasks.",
+    "metric_key": "async_task_queues",
+    "profile_hints": ["celery", "distributed_systems", "backend_engineering"]
+  },
+  {
+    "question_id": "QA_45",
+    "domain": "Data Pipeline Lineage",
+    "question": "Does the learner record provenance and execution metadata for pipeline outputs?",
+    "evaluation_criteria": "Attaches timestamps, source file markers, and SHA-256 hashes for data auditability.",
+    "metric_key": "data_provenance_auditability",
+    "profile_hints": ["data_provenance", "auditability", "data_engineering"]
+  },
+  {
+    "question_id": "QA_46",
+    "domain": "Code Refactoring",
+    "question": "Does the learner refactor legacy code into modular, reusable components?",
+    "evaluation_criteria": "Reduces function complexity, removes dead code, and unifies duplicate logic.",
+    "metric_key": "code_refactoring_quality",
+    "profile_hints": ["refactoring", "clean_code", "software_architecture"]
+  },
+  {
+    "question_id": "QA_47",
+    "domain": "Human-in-the-Loop AI",
+    "question": "Does the learner implement Human-in-the-Loop (HITL) review mechanisms?",
+    "evaluation_criteria": "Provides human override options, approval gates, and escalation notifications.",
+    "metric_key": "hitl_workflow_design",
+    "profile_hints": ["human_in_the_loop", "agentic_workflows", "ai_ethics"]
+  },
+  {
+    "question_id": "QA_48",
+    "domain": "Prompt Versioning",
+    "question": "Does the learner maintain version control for prompt templates?",
+    "evaluation_criteria": "Stores prompts in YAML/JSON config files separate from executable Python code.",
+    "metric_key": "prompt_version_management",
+    "profile_hints": ["prompt_engineering", "configuration", "best_practices"]
+  },
+  {
+    "question_id": "QA_49",
+    "domain": "Memory Persistence in Agents",
+    "question": "How effectively does the learner manage conversation memory across sessions?",
+    "evaluation_criteria": "Uses episodic or persistent vector memory to recall prior user context.",
+    "metric_key": "agent_memory_persistence",
+    "profile_hints": ["agent_memory", "ai_architecture", "state_management"]
+  },
+  {
+    "question_id": "QA_50",
+    "domain": "End-to-End Internship Delivery",
+    "question": "Overall, does the learner demonstrate comprehensive mastery of AI Engineering concepts throughout the round?",
+    "evaluation_criteria": "Consistently completes deliverables, clears rubrics, and maintains high code quality.",
+    "metric_key": "ai_engineer_overall_mastery",
+    "profile_hints": ["overall_mastery", "ai_engineer_lead", "top_performer"]
+  }
+]

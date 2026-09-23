@@ -27,7 +27,7 @@ OUT_PY = ROOT / "src" / "app" / "graph" / "constraints.py"
 OUT_CQL = ROOT / "docs" / "data" / "schema_constraints.cql"
 #: Same DDL, at the path the task brief names as a deliverable. One
 #: generator, two destinations - so the two files cannot drift apart.
-OUT_SCHEMA_INIT = ROOT / "db" / "schema_init.cypher"
+OUT_SCHEMA_INIT = ROOT / "src" / "app" / "schemas" / "schema_init.cypher"
 
 #: business_key: the property that uniquely identifies the node in the real
 #: world - its own natural key from the source system.

@@ -87,7 +87,7 @@ Data lives in the `neo4j_data` volume. `docker compose down` keeps it;
 
 ### 2. Initialize the schema
 
-Constraints and indexes are in `db/schema_init.cypher` (generated from
+Constraints and indexes are in `src/app/schemas/schema_init.cypher` (generated from
 `src/app/schemas/graph_schema.py` by `scripts/generate_constraints.py` — do not
 hand-edit). Applying them is idempotent: every statement is
 `IF NOT EXISTS`, so re-running is a no-op rather than an error.

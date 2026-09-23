@@ -7,13 +7,19 @@ from src.app.graph.connections import get_driver
 from src.app.schemas.models import ToolResult
 
 
+class EvidenceRetrievalError(RuntimeError):
+    """Raised when the graph cannot execute an evidence query."""
+
+
 def _run(cypher: str, **params: Any) -> list[dict[str, Any]]:
     try:
         with get_driver().session() as session:
             result = session.run(cypher, **params)
             return [dict(record) for record in result]
-    except Exception:
-        return []
+    except Exception as exc:
+        raise EvidenceRetrievalError(
+            "Evidence retrieval failed. Please retry."
+        ) from exc
 
 
 def _find_learner(learner_query: str) -> dict[str, Any] | None:

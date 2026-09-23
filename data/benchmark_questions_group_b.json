@@ -1,0 +1,402 @@
+[
+  {
+    "question_id": "QB_01",
+    "domain": "Product Vision & Strategy",
+    "question": "How clearly does the learner articulate the core value proposition and product strategy?",
+    "evaluation_criteria": "Defines target market segments, user pain points, and strategic differentiators.",
+    "metric_key": "product_strategy_vision",
+    "profile_hints": ["product_strategy", "market_analysis", "visionary"]
+  },
+  {
+    "question_id": "QB_02",
+    "domain": "User Research & Personas",
+    "question": "Does the learner construct evidence-backed user personas and customer journey maps?",
+    "evaluation_criteria": "Uses interview insights, behavioral archetypes, and user empathy maps.",
+    "metric_key": "user_research_personas",
+    "profile_hints": ["user_research", "customer_empathy", "persona_mapping"]
+  },
+  {
+    "question_id": "QB_03",
+    "domain": "PRD & Functional Specs",
+    "question": "How thoroughly does the learner write Product Requirement Documents (PRDs)?",
+    "evaluation_criteria": "Includes problem statement, user stories, acceptance criteria, wireframes, and out-of-scope boundaries.",
+    "metric_key": "prd_specification_quality",
+    "profile_hints": ["prd_authoring", "functional_specs", "technical_writing"]
+  },
+  {
+    "question_id": "QB_04",
+    "domain": "Metrics & KPI Taxonomy",
+    "question": "Does the learner define clear North Star Metrics and supporting input KPIs?",
+    "evaluation_criteria": "Distinguishes retention, conversion, engagement, and monetization metrics.",
+    "metric_key": "kpi_metrics_framework",
+    "profile_hints": ["north_star_metric", "data_analytics", "product_metrics"]
+  },
+  {
+    "question_id": "QB_05",
+    "domain": "Backlog Prioritization",
+    "question": "How effectively does the learner prioritize feature backlogs using frameworks like RICE or ICE?",
+    "evaluation_criteria": "Calculates Reach, Impact, Confidence, Effort score matrices for feature trade-offs.",
+    "metric_key": "rice_prioritization_mastery",
+    "profile_hints": ["rice_scoring", "backlog_management", "feature_prioritization"]
+  },
+  {
+    "question_id": "QB_06",
+    "domain": "Wireframing & UX Design",
+    "question": "Does the learner design intuitive user flows and low/high-fidelity wireframes?",
+    "evaluation_criteria": "Demonstrates clear navigation paths, UI components, and accessibility considerations.",
+    "metric_key": "ux_wireframe_design",
+    "profile_hints": ["wireframing", "ux_design", "user_flow"]
+  },
+  {
+    "question_id": "QB_07",
+    "domain": "Competitive Analysis",
+    "question": "How well does the learner analyze direct and indirect competitor landscapes?",
+    "evaluation_criteria": "Builds feature comparison matrices, pricing benchmarks, and SWOT analysis.",
+    "metric_key": "competitive_market_analysis",
+    "profile_hints": ["competitive_analysis", "swot", "market_intelligence"]
+  },
+  {
+    "question_id": "QB_08",
+    "domain": "Agile & Scrum Execution",
+    "question": "Does the learner structure epics, user stories, and sprint backlog items correctly?",
+    "evaluation_criteria": "Uses INVEST criteria (Independent, Negotiable, Valuable, Estimable, Small, Testable) for stories.",
+    "metric_key": "agile_scrum_story_writing",
+    "profile_hints": ["agile_pm", "scrum", "user_stories"]
+  },
+  {
+    "question_id": "QB_09",
+    "domain": "A/B Testing & Experimentation",
+    "question": "How rigorously does the learner design product experiments and hypothesis tests?",
+    "evaluation_criteria": "Formulates null hypotheses, sample size estimations, and statistical significance thresholds.",
+    "metric_key": "ab_testing_experiment_design",
+    "profile_hints": ["experimentation", "ab_testing", "data_driven"]
+  },
+  {
+    "question_id": "QB_10",
+    "domain": "Customer Feedback Analysis",
+    "question": "Does the learner synthesize quantitative and qualitative user feedback into feature requests?",
+    "evaluation_criteria": "Categorizes NPS surveys, support tickets, and interview quotes into themes.",
+    "metric_key": "customer_feedback_synthesis",
+    "profile_hints": ["voice_of_customer", "feedback_loops", "product_insights"]
+  },
+  {
+    "question_id": "QB_11",
+    "domain": "Product Roadmap Planning",
+    "question": "Does the learner build strategic Now/Next/Later product roadmaps?",
+    "evaluation_criteria": "Aligns roadmap initiatives with business goals and engineering capacity.",
+    "metric_key": "strategic_roadmap_planning",
+    "profile_hints": ["product_roadmap", "strategic_planning", "stakeholder_management"]
+  },
+  {
+    "question_id": "QB_12",
+    "domain": "Go-to-Market (GTM) Strategy",
+    "question": "How effectively does the learner plan launch channels and positioning for product release?",
+    "evaluation_criteria": "Outlines marketing channels, sales enablement, onboarding funnels, and press releases.",
+    "metric_key": "gtm_launch_strategy",
+    "profile_hints": ["gtm_strategy", "product_launch", "marketing_alignment"]
+  },
+  {
+    "question_id": "QB_13",
+    "domain": "Technical Feasibility & Architecture",
+    "question": "How well does the learner communicate with engineering teams on API and system constraints?",
+    "evaluation_criteria": "Understands data flow diagrams, API dependencies, and non-functional requirements.",
+    "metric_key": "engineering_collaboration",
+    "profile_hints": ["technical_pm", "engineering_alignment", "system_understanding"]
+  },
+  {
+    "question_id": "QB_14",
+    "domain": "Funnel Optimization",
+    "question": "Does the learner analyze conversion funnels and identify drop-off points?",
+    "evaluation_criteria": "Tracks activation, retention, and churn cohorts with recommended product fixes.",
+    "metric_key": "conversion_funnel_optimization",
+    "profile_hints": ["funnel_analysis", "retention", "growth_pm"]
+  },
+  {
+    "question_id": "QB_15",
+    "domain": "Pricing & Monetization Models",
+    "question": "How does the learner evaluate pricing tiers, freemium models, or unit economics?",
+    "evaluation_criteria": "Calculates LTV (Lifetime Value), CAC (Customer Acquisition Cost), and payback periods.",
+    "metric_key": "monetization_unit_economics",
+    "profile_hints": ["pricing_strategy", "unit_economics", "business_model"]
+  },
+  {
+    "question_id": "QB_16",
+    "domain": "Stakeholder Management",
+    "question": "Does the learner communicate trade-offs effectively to mentors, peers, and executive leads?",
+    "evaluation_criteria": "Presents clear decision rationale, manages conflicting requests, and sets expectations.",
+    "metric_key": "stakeholder_communication",
+    "profile_hints": ["stakeholder_alignment", "communication", "leadership"]
+  },
+  {
+    "question_id": "QB_17",
+    "domain": "User Acceptance Testing (UAT)",
+    "question": "Does the learner define UAT test scripts and validation criteria before release?",
+    "evaluation_criteria": "Creates edge case scenarios, bug triage severity matrices, and sign-off checklists.",
+    "metric_key": "uat_quality_signoff",
+    "profile_hints": ["uat", "quality_assurance", "release_management"]
+  },
+  {
+    "question_id": "QB_18",
+    "domain": "Product Lifecycle Management",
+    "question": "Does the learner understand feature sunsetting, deprecation, and legacy migration?",
+    "evaluation_criteria": "Outlines migration plans, communication schedules, and fallback mechanisms.",
+    "metric_key": "product_lifecycle_deprecated",
+    "profile_hints": ["lifecycle_management", "feature_sunset", "product_operations"]
+  },
+  {
+    "question_id": "QB_19",
+    "domain": "Product Analytics Setup",
+    "question": "How effectively does the learner design analytics event tracking schemas (Mixpanel/Amplitude)?",
+    "evaluation_criteria": "Defines event names, properties, user attributes, and triggers.",
+    "metric_key": "product_analytics_schema",
+    "profile_hints": ["mixpanel", "amplitude", "event_tracking"]
+  },
+  {
+    "question_id": "QB_20",
+    "domain": "Data-Driven Decision Making",
+    "question": "Does the learner rely on quantitative data over subjective opinion when pivoting?",
+    "evaluation_criteria": "Cites concrete analytics data points and benchmark metrics to support product decisions.",
+    "metric_key": "data_backed_decision_making",
+    "profile_hints": ["data_driven", "analytical_mindset", "objectivity"]
+  },
+  {
+    "question_id": "QB_21",
+    "domain": "Problem Framing & Job-to-be-Done",
+    "question": "How effectively does the learner apply the Jobs-to-be-Done (JTBD) framework?",
+    "evaluation_criteria": "Frames user goals as 'When [situation], I want to [action], so I can [outcome]'.",
+    "metric_key": "jtbd_problem_framing",
+    "profile_hints": ["jtbd", "problem_framing", "user_centricity"]
+  },
+  {
+    "question_id": "QB_22",
+    "domain": "Feature Discovery & Usability",
+    "question": "Does the learner design onboarding flows that drive rapid time-to-value (TTV)?",
+    "evaluation_criteria": "Minimizes friction in initial setup, sign-up forms, and feature discovery.",
+    "metric_key": "onboarding_ttv_optimization",
+    "profile_hints": ["onboarding", "time_to_value", "ux_optimization"]
+  },
+  {
+    "question_id": "QB_23",
+    "domain": "Risk Assessment & Mitigation",
+    "question": "Does the learner identify product, technical, legal, and compliance risks early?",
+    "evaluation_criteria": "Constructs risk mitigation matrix covering GDPR/privacy, security, and operational risks.",
+    "metric_key": "product_risk_mitigation",
+    "profile_hints": ["risk_management", "compliance", "privacy"]
+  },
+  {
+    "question_id": "QB_24",
+    "domain": "Growth Loops & Viral Mechanics",
+    "question": "Does the learner integrate viral loops or referral mechanics into product design?",
+    "evaluation_criteria": "Designs user invite incentives, shareable content hooks, and K-factor growth engines.",
+    "metric_key": "growth_loops_virality",
+    "profile_hints": ["growth_hacking", "viral_loops", "product_led_growth"]
+  },
+  {
+    "question_id": "QB_25",
+    "domain": "Sprint Retrospective Contribution",
+    "question": "How constructively does the learner participate in sprint plannings and retrospectives?",
+    "evaluation_criteria": "Shares actionable process improvements, velocity learnings, and team feedback.",
+    "metric_key": "agile_retro_participation",
+    "profile_hints": ["scrum_retro", "teamwork", "continuous_improvement"]
+  },
+  {
+    "question_id": "QB_26",
+    "domain": "Design System Alignment",
+    "question": "Does the learner adhere to established brand guidelines and design systems?",
+    "evaluation_criteria": "Uses consistent UI patterns, color tokens, and typography in mockups.",
+    "metric_key": "design_system_consistency",
+    "profile_hints": ["design_systems", "brand_alignment", "ui_standards"]
+  },
+  {
+    "question_id": "QB_27",
+    "domain": "API & Third-Party Integration Specs",
+    "question": "Does the learner specify requirements for external integrations (e.g. Stripe, Zapier)?",
+    "evaluation_criteria": "Defines integration scope, data mapping, webhook expectations, and failure states.",
+    "metric_key": "third_party_integration_spec",
+    "profile_hints": ["integrations", "api_specs", "ecosystem_strategy"]
+  },
+  {
+    "question_id": "QB_28",
+    "domain": "Customer Interview Execution",
+    "question": "How skillfully does the learner conduct non-leading user discovery interviews?",
+    "evaluation_criteria": "Uses open-ended questions, avoids confirmation bias, and extracts core motivations.",
+    "metric_key": "user_interview_technique",
+    "profile_hints": ["user_interviews", "qualitative_research", "empathy"]
+  },
+  {
+    "question_id": "QB_29",
+    "domain": "Deadline & Punctuality",
+    "question": "Does the learner consistently submit task deliverables prior to configured deadlines?",
+    "evaluation_criteria": "Calculates submitted_on_time flag as true with positive hours remaining.",
+    "metric_key": "punctuality_time_management",
+    "profile_hints": ["punctuality", "execution_reliability", "time_management"]
+  },
+  {
+    "question_id": "QB_30",
+    "domain": "Mentor Review Responsiveness",
+    "question": "How effectively does the learner address mentor rubric feedback on trial resubmissions?",
+    "evaluation_criteria": "Demonstrates clear revisions in response to failed rubric items on subsequent trials.",
+    "metric_key": "mentor_feedback_responsiveness",
+    "profile_hints": ["adaptability", "struggle_recovery", "coachability"]
+  },
+  {
+    "question_id": "QB_31",
+    "domain": "Localization & Accessibility",
+    "question": "Does the learner consider internationalization (i18n) and WCAG accessibility standards?",
+    "evaluation_criteria": "Includes alt text, screen reader compatibility, and multi-language support specs.",
+    "metric_key": "accessibility_localization_spec",
+    "profile_hints": ["accessibility", "i18n", "inclusive_design"]
+  },
+  {
+    "question_id": "QB_32",
+    "domain": "Product Operations & Tooling",
+    "question": "How well does the learner utilize PM tools (Jira, Linear, Notion, Figma)?",
+    "evaluation_criteria": "Maintains well-formatted Notion PRDs, linked Jira tickets, and interactive Figma prototypes.",
+    "metric_key": "pm_tooling_mastery",
+    "profile_hints": ["jira", "notion", "figma", "linear"]
+  },
+  {
+    "question_id": "QB_33",
+    "domain": "Release Notes & Changelogs",
+    "question": "Does the learner draft clear release communications for customers and internal teams?",
+    "evaluation_criteria": "Highlights new features, bug fixes, known issues, and user impact.",
+    "metric_key": "release_notes_authoring",
+    "profile_hints": ["product_communication", "changelog", "user_education"]
+  },
+  {
+    "question_id": "QB_34",
+    "domain": "Customer Retention Strategies",
+    "question": "How does the learner approach churn reduction and re-engagement campaigns?",
+    "evaluation_criteria": "Identifies early churn indicators, win-back incentives, and feature adoption nudges.",
+    "metric_key": "retention_churn_reduction",
+    "profile_hints": ["retention_strategy", "churn_prevention", "growth"]
+  },
+  {
+    "question_id": "QB_35",
+    "domain": "Minimum Viable Product (MVP) Scope",
+    "question": "Can the learner ruthlessly cut scope to deliver a functional MVP on schedule?",
+    "evaluation_criteria": "Separates 'must-have' v1 features from 'nice-to-have' post-launch enhancements.",
+    "metric_key": "mvp_scope_scrapping",
+    "profile_hints": ["mvp_definition", "scope_management", "lean_startup"]
+  },
+  {
+    "question_id": "QB_36",
+    "domain": "Quantitative Survey Design",
+    "question": "Does the learner build unbiased quantitative user surveys (CSAT, Likert scale)?",
+    "evaluation_criteria": "Presents clear rating scales, screening questions, and representative sampling.",
+    "metric_key": "quantitative_survey_design",
+    "profile_hints": ["surveys", "quantitative_research", "data_collection"]
+  },
+  {
+    "question_id": "QB_37",
+    "domain": "Product Taxonomy & Hierarchy",
+    "question": "How logically does the learner structure product categories, modules, and navigation menus?",
+    "evaluation_criteria": "Demonstrates clear information architecture (IA) and logical breadcrumb navigation.",
+    "metric_key": "information_architecture_design",
+    "profile_hints": ["information_architecture", "navigation", "ux_structure"]
+  },
+  {
+    "question_id": "QB_38",
+    "domain": "Cross-Functional Alignment",
+    "question": "How effectively does the learner bridge gaps between Design, Engineering, and Business?",
+    "evaluation_criteria": "Synthesizes feedback from design critiques, tech specs, and sales targets into one plan.",
+    "metric_key": "cross_functional_leadership",
+    "profile_hints": ["cross_functional", "collaboration", "leadership"]
+  },
+  {
+    "question_id": "QB_39",
+    "domain": "Value Stream Mapping",
+    "question": "Does the learner map business process steps to identify friction and delays?",
+    "evaluation_criteria": "Quantifies lead times, bottleneck steps, and waste reduction strategies.",
+    "metric_key": "value_stream_process_mapping",
+    "profile_hints": ["process_optimization", "value_stream", "operations"]
+  },
+  {
+    "question_id": "QB_40",
+    "domain": "Hypothesis-Driven Product Design",
+    "question": "Does the learner state explicit assumptions before investing in feature development?",
+    "evaluation_criteria": "Structures features as 'We believe [X] will lead to [Y], measured by [Z]'.",
+    "metric_key": "hypothesis_driven_design",
+    "profile_hints": ["hypothesis_driven", "lean_pm", "experimentation"]
+  },
+  {
+    "question_id": "QB_41",
+    "domain": "Product Security & Compliance",
+    "question": "Does the learner account for data privacy rights (cookie consent, data deletion requests)?",
+    "evaluation_criteria": "Includes compliance workflows for GDPR, CCPA, and SOC2 in product specs.",
+    "metric_key": "privacy_compliance_spec",
+    "profile_hints": ["gdpr", "compliance", "data_privacy"]
+  },
+  {
+    "question_id": "QB_42",
+    "domain": "Customer Onboarding Funnels",
+    "question": "Does the learner optimize the step-by-step product walkthrough for new users?",
+    "evaluation_criteria": "Tracks completion rates of initial setup wizards and checklist items.",
+    "metric_key": "onboarding_funnel_design",
+    "profile_hints": ["onboarding", "product_led_growth", "user_activation"]
+  },
+  {
+    "question_id": "QB_43",
+    "domain": "Market Sizing (TAM/SAM/SOM)",
+    "question": "How accurately does the learner estimate Total Addressable Market size?",
+    "evaluation_criteria": "Uses top-down and bottom-up market sizing calculations with realistic assumptions.",
+    "metric_key": "market_sizing_tam_sam",
+    "profile_hints": ["tam_sam_som", "market_sizing", "financial_modeling"]
+  },
+  {
+    "question_id": "QB_44",
+    "domain": "Product Pitching & Storytelling",
+    "question": "How persuasively does the learner pitch product proposals to executives or investors?",
+    "evaluation_criteria": "Uses compelling narratives, visual slide decks, and data-backed ROI arguments.",
+    "metric_key": "product_pitching_storytelling",
+    "profile_hints": ["pitching", "executive_presence", "storytelling"]
+  },
+  {
+    "question_id": "QB_45",
+    "domain": "Feature Adoption Tracking",
+    "question": "How does the learner track post-launch adoption rates of newly released features?",
+    "evaluation_criteria": "Monitors DAU/MAU ratios, feature usage velocity, and user feedback post-release.",
+    "metric_key": "post_launch_feature_adoption",
+    "profile_hints": ["feature_adoption", "post_launch", "analytics"]
+  },
+  {
+    "question_id": "QB_46",
+    "domain": "Ethical Product Design",
+    "question": "Does the learner proactively avoid dark patterns and deceptive UI practices?",
+    "evaluation_criteria": "Ensures transparent subscription terms, easy cancellation flows, and honest messaging.",
+    "metric_key": "ethical_product_design",
+    "profile_hints": ["ethical_design", "user_trust", "responsible_pm"]
+  },
+  {
+    "question_id": "QB_47",
+    "domain": "Product Operations Workflow",
+    "question": "Does the learner streamline internal feedback loops between Customer Support and Product?",
+    "evaluation_criteria": "Establishes bug tagging systems, weekly support syncs, and feedback aggregation.",
+    "metric_key": "product_operations_feedback",
+    "profile_hints": ["product_ops", "support_alignment", "process_design"]
+  },
+  {
+    "question_id": "QB_48",
+    "domain": "Product Roadmap Trade-Offs",
+    "question": "How does the learner manage emergency hotfixes vs planned roadmap features?",
+    "evaluation_criteria": "Allocates buffer capacity in sprints and balances tech debt resolution with new features.",
+    "metric_key": "roadmap_tradeoff_management",
+    "profile_hints": ["tech_debt_balance", "capacity_planning", "roadmap"]
+  },
+  {
+    "question_id": "QB_49",
+    "domain": "Competitive Response Strategy",
+    "question": "How does the learner respond when a competitor launches a copycat feature?",
+    "evaluation_criteria": "Evaluates core competitive advantage rather than blindly copying competitor moves.",
+    "metric_key": "competitive_response_strategy",
+    "profile_hints": ["strategic_thinking", "competitive_strategy", "differentiation"]
+  },
+  {
+    "question_id": "QB_50",
+    "domain": "End-to-End PM Internship Mastery",
+    "question": "Overall, does the learner demonstrate comprehensive Product Management mastery throughout the round?",
+    "evaluation_criteria": "Consistently delivers high quality PRDs, strategic roadmaps, clear metrics, and strong collaboration.",
+    "metric_key": "pm_overall_internship_mastery",
+    "profile_hints": ["overall_mastery", "product_management_lead", "top_performer"]
+  }
+]

@@ -381,7 +381,7 @@ def test_adapter_output_loads_into_neo4j() -> None:
     from neo4j.exceptions import ServiceUnavailable
 
     from src.app.graph import connections
-    from src.loader.graph_loader import initialize_schema, load_graph
+    from src.app.loader.graph_loader import initialize_schema, load_graph
 
     driver = connections.get_driver()
     try:

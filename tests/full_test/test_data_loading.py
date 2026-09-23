@@ -36,7 +36,7 @@ def main() -> int:
         GraphConnectionError,
         close_driver,
     )
-    from src.loader.graph_loader import load_pipeline_output  # noqa: PLC0415
+    from src.app.loader.graph_loader import load_pipeline_output  # noqa: PLC0415
 
     pipeline_dir = args.pipeline_dir or Path(MEMORY_CARDS_OUTPUT_FILE).parent
     paths = {
