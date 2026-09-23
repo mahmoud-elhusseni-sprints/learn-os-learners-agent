@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import Any, Protocol
 
+from langsmith import traceable
+
 from src.app.core.config import (
     AI_MODEL,
     LITE_LLM_KEY,
@@ -56,6 +58,13 @@ class LLMMetricSynthesizer:
             )
         return cls(model)
 
+    @traceable(
+        name="profile_metric_synthesis",
+        process_inputs=lambda inputs: {
+            "metric_key": inputs.get("metric_key"),
+            "card_ids": [card.card_id for card in inputs.get("cards", [])],
+        },
+    )
     def synthesize(
         self,
         metric_key: str,

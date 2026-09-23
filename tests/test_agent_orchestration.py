@@ -10,6 +10,13 @@ from src.app.services.agent_orchestration import (
 )
 
 
+@pytest.fixture(autouse=True)
+def identity_directory(monkeypatch):
+    monkeypatch.setattr(
+        "src.app.services.agent_orchestration.learner_directory", lambda: []
+    )
+
+
 def make_response(markdown: str = "Agent response") -> EmployerResponse:
     return EmployerResponse(
         markdown=markdown,
@@ -34,6 +41,19 @@ def test_format_history():
     assert "User: Hello" in formatted
     assert "Assistant: Hello! How can I help?" in formatted
     assert "User: Tell me about Python experience." in formatted
+
+
+def test_directory_failure_is_not_missing_evidence(monkeypatch):
+    def unavailable():
+        raise RuntimeError("Storage unavailable")
+
+    monkeypatch.setattr(
+        "src.app.services.agent_orchestration.learner_directory", unavailable
+    )
+    agent = Mock()
+    with pytest.raises(AgentUpstreamError):
+        AgentOrchestrationAdapter(agent).respond("Tell me about Sara")
+    agent.respond_structured.assert_not_called()
 
 
 def test_format_empty_history():
@@ -69,11 +89,7 @@ def test_respond_passes_current_message_and_formatted_history():
 
     mock_agent.respond_structured.assert_called_once_with(
         "Current question",
-        history=(
-            "Previous conversation:\n"
-            "User: Previous question\n"
-            "Assistant: Previous answer"
-        ),
+        history=history,
         learner_name_or_id="L001",
     )
 
@@ -109,11 +125,7 @@ def test_respond_does_not_prepend_history_to_current_message():
     assert "Tell me about Python." not in call_args[0]
     assert "Python evidence was found." not in call_args[0]
 
-    assert call_kwargs["history"] == (
-        "Previous conversation:\n"
-        "User: Tell me about Python.\n"
-        "Assistant: Python evidence was found."
-    )
+    assert call_kwargs["history"] == history
 
     assert call_kwargs["learner_name_or_id"] == "L001"
 
@@ -130,7 +142,7 @@ def test_respond_without_history():
 
     mock_agent.respond_structured.assert_called_once_with(
         "Hello",
-        history="",
+        history=[],
         learner_name_or_id=None,
     )
 
@@ -148,7 +160,7 @@ def test_respond_without_learner():
 
     mock_agent.respond_structured.assert_called_once_with(
         "Compare the learners based on Python experience.",
-        history="",
+        history=[],
         learner_name_or_id=None,
     )
 

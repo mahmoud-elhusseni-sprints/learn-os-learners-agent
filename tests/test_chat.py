@@ -1,6 +1,7 @@
 from unittest.mock import patch
 from uuid import uuid4
 
+import pytest
 from fastapi.testclient import TestClient
 
 from src.app.main import app
@@ -11,6 +12,167 @@ from src.app.services.agent_orchestration import (
 )
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def identity_directory(monkeypatch):
+    monkeypatch.setattr(
+        "src.app.services.agent_orchestration.learner_directory",
+        lambda: [
+            {"learner_id": "L001", "name": "Ahmed"},
+            {"learner_id": "L002", "name": "Sara"},
+        ],
+    )
+
+
+def test_soft_default_switch_comparison_and_ambiguous_message():
+    from unittest.mock import Mock
+
+    from src.app.services.agent_orchestration import AgentOrchestrationAdapter
+
+    user_id, headers = create_test_user()
+    conversation = create_conversation(user_id, headers)
+    agent = Mock()
+    agent.respond_structured.return_value = make_response("Verified evidence")
+    adapter = AgentOrchestrationAdapter(agent)
+    with patch(
+        "src.app.services.conversation_service.AgentOrchestrationAdapter",
+        return_value=adapter,
+    ):
+
+        def send(text, **kwargs):
+            response = client.post(
+                f"/conversations/{conversation}/chat",
+                headers=headers,
+                json={"content": text, **kwargs},
+            )
+            assert response.status_code == 201
+            return response.json()
+
+        result = send("What are his skills?")
+        assert "Which learner" in result["response"]["markdown"]
+        agent.respond_structured.assert_not_called()
+        send("Tell me about Ahmed")
+        assert agent.respond_structured.call_args.kwargs["learner_name_or_id"] == "L001"
+        send("Tell me about Sara")
+        send("What are her skills?")
+        assert agent.respond_structured.call_args.kwargs["learner_name_or_id"] == "L002"
+        send("Compare Ahmed and Sara", learner_name_or_id="L001")
+        send("What are her skills?")
+        assert agent.respond_structured.call_args.kwargs["learner_name_or_id"] == "L002"
+        agent.respond_structured.side_effect = TimeoutError()
+        response = client.post(
+            f"/conversations/{conversation}/chat",
+            headers=headers,
+            json={"content": "Tell me about Ahmed"},
+        )
+        assert response.status_code == 504
+        agent.respond_structured.side_effect = None
+        send("What are her skills?")
+        assert agent.respond_structured.call_args.kwargs["learner_name_or_id"] == "L002"
+
+
+def test_followup_endpoint_uses_real_graph_and_returns_real_visual():
+    """Real API/DB/adapter/graph/renderer; only LLM and graph data are doubles."""
+    from unittest.mock import Mock
+
+    from langchain_core.messages import AIMessage
+
+    from src.app.schemas.models import ToolResult
+
+    user_id, headers = create_test_user()
+    conversation = create_conversation(user_id, headers)
+    model = Mock()
+    model.bind_tools.return_value = model
+    model.invoke.side_effect = [
+        AIMessage(content="I can investigate this learner."),
+        AIMessage(
+            content="",
+            tool_calls=[
+                {"name": "get_skill_proofs", "args": {"skill": "python"}, "id": "proof"}
+            ],
+        ),
+        AIMessage(content="One Python observation was retrieved."),
+    ]
+    with (
+        patch(
+            "src.app.agents.talent_intelligence.graph.get_chat_model",
+            return_value=model,
+        ),
+        patch(
+            "src.app.agents.talent_intelligence.tools.get_learner_profile",
+            return_value=ToolResult("ok", {"learner_id": "L001"}),
+        ),
+        patch(
+            "src.app.agents.talent_intelligence.tools._find_learner",
+            return_value={"learner_id": "L001"},
+        ),
+        patch(
+            "src.app.agents.talent_intelligence.tools.get_skill_proofs",
+            return_value=ToolResult(
+                "ok",
+                [
+                    {
+                        "evidence_id": "offline-card",
+                        "source_type": "review",
+                        "observation": "Used Python",
+                    }
+                ],
+            ),
+        ) as proofs,
+    ):
+        initial = client.post(
+            f"/conversations/{conversation}/chat",
+            headers=headers,
+            json={"content": "Investigate this learner", "learner_name_or_id": "L001"},
+        )
+        assert initial.status_code == 201
+        followup = client.post(
+            f"/conversations/{conversation}/chat",
+            headers=headers,
+            json={"content": "Chart their Python evidence"},
+        )
+    assert followup.status_code == 201
+    proofs.assert_called_once_with("L001", "python")
+    messages = model.invoke.call_args_list[1].args[0]
+    assert [m.type for m in messages] == ["system", "human", "ai", "human"]
+    assert messages[1].content == "Investigate this learner"
+    assert messages[-1].content == "Chart their Python evidence"
+    response = followup.json()["response"]
+    assert response["fallback"] is None
+    assert "<svg" in response["artifacts"][0]["data"]
+
+
+def test_selection_survives_requests_and_is_isolated_and_rolled_back():
+    user_id, headers = create_test_user()
+    first = create_conversation(user_id, headers)
+    second = create_conversation(user_id, headers)
+    with patch(
+        "src.app.services.conversation_service.AgentOrchestrationAdapter"
+    ) as factory:
+        respond = factory.return_value.respond
+        respond.return_value = make_response("Evidence summary")
+
+        def send(conversation, **payload):
+            return client.post(
+                f"/conversations/{conversation}/chat",
+                headers=headers,
+                json={"content": "What about their skills?", **payload},
+            )
+
+        assert send(first, learner_name_or_id="L001").status_code == 201
+        assert send(first).status_code == 201
+        assert respond.call_args.kwargs["learner_name_or_id"] == "L001"
+        assert send(second).status_code == 201
+        assert respond.call_args.kwargs["learner_name_or_id"] is None
+        assert send(first, learner_name_or_id="L002").status_code == 201
+        assert send(first).status_code == 201
+        assert respond.call_args.kwargs["learner_name_or_id"] == "L002"
+        respond.side_effect = AgentUpstreamError("Unavailable")
+        assert send(first, learner_name_or_id="L003").status_code == 502
+        respond.side_effect = None
+        assert send(first).status_code == 201
+        assert respond.call_args.kwargs["learner_name_or_id"] == "L002"
 
 
 def create_test_user(name: str = "Chat Test User"):
