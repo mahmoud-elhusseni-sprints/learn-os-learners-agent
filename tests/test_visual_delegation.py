@@ -135,6 +135,45 @@ def test_failed_tool_not_charted():
     assert agent._visual_evidence == []
 
 
+def test_assessment_and_review_events_are_chartable():
+    agent = TalentIntelligenceAgent()
+    agent._call(
+        "get_assessment_results",
+        lambda: ToolResult(
+            "ok",
+            [
+                {
+                    "event_id": "assessment-1",
+                    "source_type": "assessment",
+                    "date": "2026-08-30",
+                    "score": 99,
+                    "max_score": 100,
+                }
+            ],
+        ),
+    )
+    agent._call(
+        "get_review_outcomes",
+        lambda: ToolResult(
+            "ok",
+            [
+                {
+                    "event_id": "review-1",
+                    "source_type": "review",
+                    "date": "2026-08-04",
+                    "verdict": "passed",
+                }
+            ],
+        ),
+    )
+
+    assert [row["evidence_id"] for row in agent._visual_evidence] == [
+        "assessment-1",
+        "review-1",
+    ]
+    assert all(row["observation"] for row in agent._visual_evidence)
+
+
 def test_conflicting_ids_rejected():
     result = delegate(
         "chart", "answer", [RECORD, dict(RECORD, observation="Different")]

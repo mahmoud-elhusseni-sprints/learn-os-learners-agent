@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -31,6 +32,7 @@ class MessageResponse(BaseModel):
     sender_role: str
     content: str
     timestamp: datetime
+    artifacts: list[dict[str, Any]] | None = None
 
 
 class ChatResponse(BaseModel):

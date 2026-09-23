@@ -23,6 +23,18 @@ interface FormErrors {
   password?: string;
 }
 
+/**
+ * Sentinel thrown when the server returns a JWT whose `sub` claim is absent or zero.
+ * Distinct from ApiError(401) so the catch block can show the right message:
+ * "invalid session" rather than "wrong password".
+ */
+class InvalidSessionError extends Error {
+  constructor() {
+    super('InvalidSessionError');
+    this.name = 'InvalidSessionError';
+  }
+}
+
 export default function SignInPage() {
   const router = useRouter();
   const { signIn } = useAuth();
@@ -100,13 +112,10 @@ export default function SignInPage() {
         // Will be rejected by the validation check below
       }
 
-      // Treat a JWT without a usable subject user ID as a failed sign-in
+      // A token whose sub is missing or zero is a server-side problem, not a wrong password.
+      // Throw a typed sentinel so the catch block can show the right message.
       if (!userId || isNaN(userId) || userId <= 0) {
-        throw new ApiError(
-          'Authentication failed: Invalid token payload received from server (missing user ID).',
-          401,
-          'Invalid Token'
-        );
+        throw new InvalidSessionError();
       }
 
       // Persist token + user into AuthContext (writes storage + cookie)
@@ -119,7 +128,9 @@ export default function SignInPage() {
       // Navigate to protected chat dashboard
       router.push('/');
     } catch (err: unknown) {
-      if (err instanceof ApiError) {
+      if (err instanceof InvalidSessionError) {
+        setApiError('Sign-in failed: the server returned an invalid session. Please try again.');
+      } else if (err instanceof ApiError) {
         if (err.status === 401) {
           setApiError('Invalid email or password. Please check your credentials and try again.');
         } else if (err.isNetworkError) {
