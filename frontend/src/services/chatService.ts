@@ -3,9 +3,11 @@ import {
     Session,
     BackendConversation,
     BackendMessage,
+    BackendChatResponse,
+    BackendArtifact,
     ConnectionStatus,
+    VisualArtifact,
 } from "../types/chat";
-import { BackendChatResponse } from "../types/chat";
 import {
     apiRequest,
     authenticatedRequest,
@@ -151,6 +153,28 @@ export function mapBackendMessage(msg: BackendMessage): Message {
         role,
         content: msg.content,
         timestamp,
+        artifacts: msg.artifacts?.map(mapBackendArtifact),
+    };
+}
+
+function mapBackendArtifact(artifact: BackendArtifact): VisualArtifact {
+    let type: VisualArtifact["type"];
+    if (artifact.format === "svg") {
+        type = "svg";
+    } else if (artifact.format === "html") {
+        type = "container";
+    } else {
+        type = "image";
+    }
+
+    return {
+        type,
+        content: artifact.encoding === "text" ? artifact.data : undefined,
+        url:
+            artifact.encoding === "base64"
+                ? `data:image/${artifact.format};base64,${artifact.data}`
+                : undefined,
+        caption: artifact.commentary,
     };
 }
 
@@ -422,19 +446,7 @@ export const ChatService = {
                               artifacts: agentResponse.response.artifacts?.map(
                                   (artifact) => ({
                                       id: `${agentResponse.message.id}-${artifact.format}`,
-                                      type:
-                                          artifact.format === "svg"
-                                              ? "svg"
-                                              : "image",
-                                      content:
-                                          artifact.encoding === "text"
-                                              ? artifact.data
-                                              : undefined,
-                                      url:
-                                          artifact.encoding === "base64"
-                                              ? artifact.data
-                                              : undefined,
-                                      caption: artifact.commentary,
+                                      ...mapBackendArtifact(artifact),
                                   }),
                               ),
                           }

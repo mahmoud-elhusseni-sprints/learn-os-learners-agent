@@ -117,9 +117,13 @@ class TalentIntelligenceAgent:
             "search_evidence",
             "get_behavioral_context",
             "investigate_employer",
+            "get_review_outcomes",
+            "get_assessment_results",
         }:
             self._visual_evidence.extend(
-                deepcopy(row) for row in rows if isinstance(row, dict)
+                self._to_visual_evidence(name, row)
+                for row in rows
+                if isinstance(row, dict)
             )
         self.state.last_tool_calls.append(
             {
@@ -132,6 +136,28 @@ class TalentIntelligenceAgent:
             }
         )
         return result
+
+    @staticmethod
+    def _to_visual_evidence(name: str, row: dict[str, Any]) -> dict[str, Any]:
+        """Normalize tool-specific event fields for the visualizer contract."""
+        normalized = deepcopy(row)
+        normalized["evidence_id"] = normalized.get("evidence_id") or normalized.get(
+            "event_id"
+        )
+        if not normalized.get("observation"):
+            if name == "get_assessment_results":
+                normalized["observation"] = (
+                    f"{normalized.get('assessment_type') or 'Assessment'}: "
+                    f"{normalized.get('score')}/{normalized.get('max_score')}"
+                )
+            else:
+                normalized["observation"] = (
+                    normalized.get("feedback_summary")
+                    or normalized.get("task_headline")
+                    or normalized.get("verdict")
+                    or "Review outcome"
+                )
+        return normalized
 
     @staticmethod
     def _error_answer() -> str:

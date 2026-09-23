@@ -60,6 +60,15 @@ export interface BackendMessage {
     content: string;
     timestamp?: string;
     created_at?: string;
+    artifacts?: BackendArtifact[] | null;
+}
+
+export interface BackendArtifact {
+    format: string;
+    data: string;
+    encoding: "text" | "base64";
+    commentary: string;
+    evidence: Array<Record<string, unknown>>;
 }
 
 export interface BackendChatResponse {

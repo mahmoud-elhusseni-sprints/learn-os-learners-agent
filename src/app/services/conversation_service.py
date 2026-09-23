@@ -149,6 +149,9 @@ def chat(
             conversation_id,
             "assistant",
             answer.markdown,
+            artifacts=[
+                artifact.model_dump(mode="json") for artifact in answer.artifacts
+            ],
             commit=False,
         )
 

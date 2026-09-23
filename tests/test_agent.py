@@ -97,6 +97,11 @@ class AgentTests(unittest.TestCase):
         self.assertIn("Never invent", SYSTEM_PROMPT)
         self.assertIn("Do not diagnose personality", SYSTEM_PROMPT)
 
+    def test_prompt_does_not_expose_visualization_architecture(self):
+        self.assertNotIn("rendered separately by the system platform", SYSTEM_PROMPT)
+        self.assertNotIn("use a sub-agent", SYSTEM_PROMPT)
+        self.assertIn("The application adds the chart", SYSTEM_PROMPT)
+
     def test_litellm_settings_are_optional(self):
         # The deterministic MVP must run even when no API credentials exist.
         settings = (LITELLM_BASE_URL, LITE_LLM_KEY, PRIMARY_MODEL or AI_MODEL)
