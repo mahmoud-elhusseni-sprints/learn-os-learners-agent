@@ -31,6 +31,14 @@ from neo4j.exceptions import ClientError, ServiceUnavailable
 
 from src.app.graph import connections
 from src.app.graph.ids import node_id
+
+# Imported through the entry point the task brief names, which re-exports the
+# implementation under src/app/. Testing through it keeps that contract honest.
+from src.app.loader.graph_loader import (
+    initialize_schema,
+    load_graph,
+    load_graph_atomic,
+)
 from src.app.schemas.graph_schema import (
     DataSource,
     DataSourceName,
@@ -41,14 +49,6 @@ from src.app.schemas.graph_schema import (
     LearnerRole,
     MemoryCard,
     ReviewPayload,
-)
-
-# Imported through the entry point the task brief names, which re-exports the
-# implementation under src/app/. Testing through it keeps that contract honest.
-from src.app.loader.graph_loader import (
-    initialize_schema,
-    load_graph,
-    load_graph_atomic,
 )
 
 NOW = datetime(2026, 8, 31, 12, 0, tzinfo=timezone.utc)

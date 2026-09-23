@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
 import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -36,12 +36,12 @@ DEFAULT_QUESTIONS = (
         "Learner A4",
     ),
     QuestionCase(
-        "strengths and gaps", "What are their strengths and evidence gaps?", "Learner A4"
+        "strengths and gaps",
+        "What are their strengths and evidence gaps?",
+        "Learner A4",
     ),
     QuestionCase("milestones", "What is their milestone history?", "Learner A4"),
-    QuestionCase(
-        "next steps", "What should the employer verify next?", "Learner A4"
-    ),
+    QuestionCase("next steps", "What should the employer verify next?", "Learner A4"),
     QuestionCase(
         "comparison",
         "Compare Learner A4 and Learner A6 based on Python evidence.",
@@ -92,11 +92,15 @@ def _guardrail_failures(answer: str, case: QuestionCase) -> list[str]:
         re.IGNORECASE,
     ):
         failures.append("contains a hiring or suitability conclusion")
-    if "timeline" in case.question.lower() and re.search(
-        r"\b(?:strong evidence|rendered timeline|skill trajectory visualization)\b",
-        answer,
-        re.IGNORECASE,
-    ) and not re.search(r"unsupported|not supported", answer, re.IGNORECASE):
+    if (
+        "timeline" in case.question.lower()
+        and re.search(
+            r"\b(?:strong evidence|rendered timeline|skill trajectory visualization)\b",
+            answer,
+            re.IGNORECASE,
+        )
+        and not re.search(r"unsupported|not supported", answer, re.IGNORECASE)
+    ):
         failures.append("treats an unsupported timeline as retrieved evidence")
     return failures
 

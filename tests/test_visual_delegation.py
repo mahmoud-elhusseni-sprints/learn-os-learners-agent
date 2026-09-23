@@ -8,8 +8,8 @@ from unittest.mock import Mock, patch
 import pytest
 from pydantic import ValidationError
 
-from src.app.agents.talent_intelligence.agent import TalentIntelligenceAgent
 from src.app.agents.talent_intelligence import tools
+from src.app.agents.talent_intelligence.agent import TalentIntelligenceAgent
 from src.app.agents.talent_intelligence.visual_delegation import delegate, visual_intent
 from src.app.schemas.agent_response import EmployerResponse, VisualOptions
 from src.app.schemas.models import ToolResult, VisualizationFormat
