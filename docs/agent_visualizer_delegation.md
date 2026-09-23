@@ -106,3 +106,25 @@ tests/test_visualizer_agent.py`. These use a fake LLM/retrieval boundary with th
 real LangGraph and chart renderer; they do not certify live LLM behavior or the
 frontend. The frontend must map `ChatResponse.message` and
 `ChatResponse.response.artifacts`; frontend changes are outside this patch.
+# Soft learner defaults and integration tracing
+
+The conversation selection is a default, not a learner restriction. The chat
+adapter reads verified graph identity metadata and matches explicit whole names
+or IDs in the current message (case-insensitive). One unambiguous identity
+replaces the saved selection; multiple identities or a comparison leave the
+saved selection unchanged. Duplicate names produce a clarification request.
+Pronoun-only learner questions without a saved selection also request a name/ID.
+Partial names, spelling corrections, and aliases are not guessed for persistence;
+use the graph's full name or ID. Cross-learner discovery remains available.
+
+Selection updates commit atomically with conversation messages. An upstream
+failure rolls them back. Comparison turns do not persist a request's temporary
+selector either. The existing nullable-column migration is unchanged; no new
+migration is needed. Coordinate application to shared PostgreSQL after review.
+
+The existing LangSmith environment controls `talent_conversation`,
+`visualizer_delegation`, `profile_update_worker`, and
+`profile_metric_synthesis` spans. No second tracing project/client is configured.
+Worker span inputs exclude storage/client objects; synthesis inputs record metric
+keys and card IDs rather than arbitrary client internals. Renderer threads copy
+the tracing context. Fallback codes are included in service log records.

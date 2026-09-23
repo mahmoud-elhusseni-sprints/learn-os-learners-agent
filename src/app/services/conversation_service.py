@@ -151,7 +151,12 @@ def chat(
         )
 
         # Persist with the messages, so exceptions roll back the selection too.
-        conversation.learner_name_or_id = selected_learner
+        if getattr(adapter, "preserve_selection", False) is not True:
+            conversation.learner_name_or_id = (
+                adapter.resolved_selection
+                if getattr(adapter, "selection_resolved", False) is True
+                else selected_learner
+            )
 
         assistant_message = conversation_repository.create_message(
             db,

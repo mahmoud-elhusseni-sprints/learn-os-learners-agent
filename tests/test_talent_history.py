@@ -20,10 +20,22 @@ def test_persisted_history_reaches_real_graph_and_does_not_trigger_old_chart():
         {"role": "user", "content": "Show a chart for Sam"},
         {"role": "assistant", "content": "Which Sam?"},
     ]
-    with patch(
-        "src.app.agents.talent_intelligence.graph.get_chat_model", return_value=model
+    with (
+        patch(
+            "src.app.agents.talent_intelligence.graph.get_chat_model",
+            return_value=model,
+        ),
+        patch(
+            "src.app.services.agent_orchestration.learner_directory", return_value=[]
+        ),
+        patch(
+            "src.app.agents.talent_intelligence.tools.get_learner_profile",
+            return_value=ToolResult("ok", {"learner_id": "sam-id"}),
+        ),
     ):
-        result = AgentOrchestrationAdapter().respond("What are their skills?", history)
+        result = AgentOrchestrationAdapter().respond(
+            "What are their skills?", history, "sam-id"
+        )
     messages = model.invoke.call_args.args[0]
     assert [m.type for m in messages] == ["system", "human", "ai", "human"]
     assert [m.content for m in messages[1:]] == [

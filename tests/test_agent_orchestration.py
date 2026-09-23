@@ -10,6 +10,13 @@ from src.app.services.agent_orchestration import (
 )
 
 
+@pytest.fixture(autouse=True)
+def identity_directory(monkeypatch):
+    monkeypatch.setattr(
+        "src.app.services.agent_orchestration.learner_directory", lambda: []
+    )
+
+
 def make_response(markdown: str = "Agent response") -> EmployerResponse:
     return EmployerResponse(
         markdown=markdown,
@@ -34,6 +41,19 @@ def test_format_history():
     assert "User: Hello" in formatted
     assert "Assistant: Hello! How can I help?" in formatted
     assert "User: Tell me about Python experience." in formatted
+
+
+def test_directory_failure_is_not_missing_evidence(monkeypatch):
+    def unavailable():
+        raise RuntimeError("Storage unavailable")
+
+    monkeypatch.setattr(
+        "src.app.services.agent_orchestration.learner_directory", unavailable
+    )
+    agent = Mock()
+    with pytest.raises(AgentUpstreamError):
+        AgentOrchestrationAdapter(agent).respond("Tell me about Sara")
+    agent.respond_structured.assert_not_called()
 
 
 def test_format_empty_history():

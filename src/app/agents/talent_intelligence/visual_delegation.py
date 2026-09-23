@@ -1,13 +1,17 @@
 """Evidence-only delegation to Task 15, with a bounded non-waiting fallback."""
 
 import base64
+import logging
 import math
 import os
 import re
 from collections import Counter
+from contextvars import copy_context
 from queue import Empty, Queue
 from threading import BoundedSemaphore, Thread
 from typing import Any, Literal
+
+from langsmith import traceable
 
 from src.app.agents.visualizer.agent import VisualizerAgent
 from src.app.schemas.agent_response import (
@@ -21,6 +25,7 @@ from src.app.schemas.models import VisualizationRequest, VisualizationResponse
 
 # Timed-out Python rendering cannot be killed safely. Bound abandoned work globally.
 _SLOTS = BoundedSemaphore(2)
+logger = logging.getLogger(__name__)
 
 
 def visual_intent(query: str) -> str:
@@ -36,6 +41,13 @@ def visual_intent(query: str) -> str:
     return "none"
 
 
+@traceable(
+    name="visualizer_delegation",
+    process_inputs=lambda inputs: {
+        "query": inputs.get("query"),
+        "evidence_count": len(inputs.get("records", [])),
+    },
+)
 def delegate(
     query: str,
     markdown: str,
@@ -52,6 +64,7 @@ def delegate(
     response = EmployerResponse(markdown=markdown)
 
     def fallback(code: Any, notice: str) -> EmployerResponse:
+        logger.info("visualizer_fallback", extra={"fallback_code": code})
         response.fallback = VisualFallback(code=code, notice=notice)
         return response
 
@@ -129,7 +142,8 @@ def delegate(
             finally:
                 _SLOTS.release()
 
-        thread = Thread(target=render, daemon=True)
+        context = copy_context()
+        thread = Thread(target=lambda: context.run(render), daemon=True)
         try:
             thread.start()
         except Exception:
