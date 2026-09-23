@@ -35,13 +35,51 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
     }
   })();
 
-  // Format assistant content with basic markdown support (headers, lists, bold, inline code, tables)
+  // Format assistant content with basic markdown support (headers, lists, bold, inline code, tables, evidence cards)
   const renderFormattedContent = (content: string) => {
     const lines = content.split('\n');
+    const SECTION_HEADERS = [
+      'direct conclusion',
+      'observed evidence',
+      'interpretation',
+      'recency and coverage',
+      'uncertainty / gaps',
+      'uncertainty/gaps',
+    ];
+
+    const EVIDENCE_REGEX =
+      /^[-*•]?\s*\[([a-zA-Z0-9_-]+)\]\s*([a-zA-Z0-9_-]+)\s*(?:—|–|-)\s*([^:]+):\s*([\s\S]+)$/i;
+
+    const getSourceBadgeStyle = (sourceType: string) => {
+      const lower = sourceType.toLowerCase();
+      if (lower.includes('meeting')) {
+        return 'bg-purple-950/70 text-purple-300 border-purple-800/50';
+      }
+      if (lower.includes('review')) {
+        return 'bg-emerald-950/70 text-emerald-300 border-emerald-800/50';
+      }
+      if (lower.includes('assessment')) {
+        return 'bg-amber-950/70 text-amber-300 border-amber-800/50';
+      }
+      return 'bg-blue-950/70 text-blue-300 border-blue-800/50';
+    };
+
     return (
       <div className="space-y-2 text-sm leading-relaxed">
         {lines.map((line, idx) => {
           const trimmed = line.trim();
+
+          // Standard section headers from agent format contract
+          if (SECTION_HEADERS.includes(trimmed.toLowerCase())) {
+            return (
+              <div key={idx} className="pt-2.5 pb-1 flex items-center gap-2">
+                <span className="w-1.5 h-3.5 rounded-full bg-blue-500 inline-block"></span>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                  {trimmed}
+                </h4>
+              </div>
+            );
+          }
 
           // Markdown headers
           if (trimmed.startsWith('### ')) {
@@ -57,6 +95,67 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
               <h4 key={idx} className="text-sm font-semibold text-slate-200 mt-2 mb-1">
                 {trimmed.replace('#### ', '')}
               </h4>
+            );
+          }
+
+          // Evidence Citation Cards: [id] source_type — date: observation. Context: context
+          const evidenceMatch = trimmed.match(EVIDENCE_REGEX);
+          if (evidenceMatch) {
+            const [, evidenceId, sourceType, date, rest] = evidenceMatch;
+            const contextParts = rest.split(/\.?\s*Context:\s*/i);
+            const observation = contextParts[0]?.trim();
+            const context = contextParts[1]?.trim().replace(/\.$/, '');
+
+            const shortId = evidenceId.length > 8 ? `${evidenceId.slice(0, 8)}…` : evidenceId;
+
+            return (
+              <div
+                key={idx}
+                className="my-2 p-3 rounded-xl bg-slate-950/80 border border-slate-800/90 hover:border-slate-700/80 transition-all text-xs space-y-2 shadow-sm"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-900 pb-1.5">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {/* Truncated Evidence ID Badge */}
+                    <span
+                      className="px-1.5 py-0.5 rounded font-mono text-[10px] font-medium bg-slate-900 text-blue-400 border border-slate-800 cursor-help"
+                      title={`Full Evidence ID: ${evidenceId}`}
+                    >
+                      #{shortId}
+                    </span>
+
+                    {/* Source Type Badge */}
+                    <span
+                      className={`px-2 py-0.5 rounded-md font-medium text-[10px] border ${getSourceBadgeStyle(
+                        sourceType
+                      )}`}
+                    >
+                      {sourceType.replace(/_/g, ' ')}
+                    </span>
+                  </div>
+
+                  {/* Evidence Date */}
+                  {date && (
+                    <span className="text-slate-400 font-mono text-[10px]">
+                      {date.trim()}
+                    </span>
+                  )}
+                </div>
+
+                {/* Observation content */}
+                <p className="text-slate-200 leading-relaxed font-normal text-xs">
+                  {renderInlineFormatting(observation)}
+                </p>
+
+                {/* Context badge if present */}
+                {context && (
+                  <div className="text-[11px] text-slate-400 flex items-center gap-1.5 pt-0.5">
+                    <span className="text-slate-500 font-medium">Context:</span>
+                    <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 font-mono text-[10px]">
+                      {context}
+                    </span>
+                  </div>
+                )}
+              </div>
             );
           }
 
